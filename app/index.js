@@ -2,10 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class DrawPassCanvas extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            canvas: null
+        };
+    }
+
     componentDidMount() {
-        var canvasContext = document.getElementById('drawpass-canvas').getContext('2d');
+        var canvas = document.getElementById('drawpass-canvas'),
+            canvasContext = canvas.getContext('2d');
 
         this.canvasContext = canvasContext;
+        this.canvas = canvas;
         this.isPenDown = false;
     }
 
@@ -25,14 +35,50 @@ class DrawPassCanvas extends React.Component {
         this.isPenDown = false;
     }
 
+
+    saveCanvas() {
+        var canvas = this.canvas.toDataURL(),
+            img = new Image();
+
+        img.src = canvas;
+
+        this.setState({
+            canvas: img
+        });
+    }
+
+    loadCanvas() {
+        this.canvasContext.drawImage(this.state.canvas, 0, 0);
+    }
+
+    clearCanvas() {
+        this.canvasContext.clearRect(0, 0, this.canvas.height, this.canvas.width);
+    }
+
     render() {
         return (
-            <canvas
-                onMouseDown={() => this.startPath()}
-                onMouseMove={(e) => this.drawPath(e)}
-                onMouseUp={() => this.endPath()}
-                id="drawpass-canvas"
-            ></canvas>
+            <div>
+                <canvas
+                    onMouseDown={() => this.startPath()}
+                    onMouseMove={(e) => this.drawPath(e)}
+                    onMouseUp={() => this.endPath()}
+                    width="600"
+                    height="600"
+                    id="drawpass-canvas"
+                ></canvas>
+
+                <button
+                    onClick={() => this.saveCanvas()}
+                >save</button>
+
+                <button
+                    onClick={() => this.loadCanvas()}
+                >load</button>
+
+                <button
+                    onClick={() => this.clearCanvas()}
+                >clear</button>
+            </div>
         );
     }
 }
