@@ -1,2 +1,2 @@
 # DrawPass
-App that allows users to share drawing sessions amongst friends.
+App that allows users to share drawing sessions amongst friends and create simple animations.
