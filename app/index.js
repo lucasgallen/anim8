@@ -6,7 +6,10 @@ class DrawPassCanvas extends React.Component {
         super(props);
 
         this.state = {
-            canvas: null
+            pages: [{
+                canvasImg: new Image(),
+            }],
+            currentPage: 0,
         };
     }
 
@@ -37,27 +40,108 @@ class DrawPassCanvas extends React.Component {
 
 
     saveCanvas() {
-        var canvas = this.canvas.toDataURL(),
-            img = new Image();
+        const pagesCopy = JSON.parse(JSON.stringify(this.state.pages));
+        const canvas = this.canvas.toDataURL();
 
+        let img = new Image();
         img.src = canvas;
 
-        this.setState({
-            canvas: img
+        this.cloneHTML(pagesCopy);
+
+        pagesCopy[this.state.currentPage].canvasImg = img;
+
+        const savePromise = new Promise((resolve) => {
+            this.setState({
+                pages: pagesCopy
+            }, () => {
+                resolve();
+            });
         });
+
+        return savePromise;
     }
 
-    loadCanvas() {
-        this.canvasContext.drawImage(this.state.canvas, 0, 0);
+    loadCanvas(page) {
+        const canvasImage = this.state.pages[page].canvasImg;
+        this.canvasContext.drawImage(canvasImage, 0, 0);
+    }
+
+    setPageNumber(page) {
+        let pageNumPromise = new Promise((resolve) => {
+            this.setState({
+                currentPage: page
+            }, () => resolve());
+        });
+
+        return pageNumPromise;
     }
 
     clearCanvas() {
         this.canvasContext.clearRect(0, 0, this.canvas.height, this.canvas.width);
     }
 
+    prevPage() {
+        if (this.state.currentPage === 0) {
+            return;
+        }
+
+        this.clearCanvas();
+        this.setPageNumber(this.state.currentPage - 1).then(() => {
+            this.loadCanvas(this.state.currentPage);
+        });
+    }
+
+    /*
+        Using JSON.stringify doesn't copy HTML objects,
+        thus this method is required to pick up the canvas
+        images.
+    */
+    cloneHTML(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].canvasImg = this.state.pages[i].canvasImg.cloneNode(false);
+        }
+    }
+
+    appendEmptyPage() {
+        const pagesCopy = JSON.parse(JSON.stringify(this.state.pages));
+
+        let canvas;
+        let img = new Image();
+
+        this.cloneHTML(pagesCopy);
+
+        this.clearCanvas();
+
+        canvas = this.canvas.toDataURL();
+        img.src = canvas;
+
+        pagesCopy.push({ canvasImg: img });
+
+        this.setState({
+            pages: pagesCopy
+        });
+    }
+
+    nextPage() {
+        if (this.state.currentPage + 1 === this.state.pages.length) {
+            this.saveCanvas().then(() => {
+                this.appendEmptyPage();
+            });
+        } else {
+            this.clearCanvas();
+        }
+
+        this.setPageNumber(this.state.currentPage + 1).then(() => {
+            this.loadCanvas(this.state.currentPage);
+        });
+    }
+
     render() {
+        let pageNumber = this.state.currentPage + 1;
+
         return (
             <div>
+                <h2>{pageNumber}</h2>
                 <canvas
                     onMouseDown={() => this.startPath()}
                     onMouseMove={(e) => this.drawPath(e)}
@@ -72,8 +156,12 @@ class DrawPassCanvas extends React.Component {
                 >save</button>
 
                 <button
-                    onClick={() => this.loadCanvas()}
-                >load</button>
+                    onClick={() => this.prevPage()}
+                >prev</button>
+
+                <button
+                    onClick={() => this.nextPage()}
+                >next</button>
 
                 <button
                     onClick={() => this.clearCanvas()}
