@@ -27,9 +27,20 @@ class DrawPassCanvas extends React.Component {
         this.isPenDown = true;
     }
 
+    relativeMousePos(e) {
+        let rect = this.canvas.getBoundingClientRect();
+
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+
     drawPath(e) {
         if (this.isPenDown) {
-            this.canvasContext.lineTo(e.clientX, e.clientY);
+            let mousePos = this.relativeMousePos(e);
+
+            this.canvasContext.lineTo(mousePos.x, mousePos.y);
             this.canvasContext.stroke();
         }
     }
