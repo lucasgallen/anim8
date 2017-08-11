@@ -5,14 +5,30 @@ const initialState = {
     drawing: {}
 };
 
+const savePage = (state, action) => {
+    let pages = JSON.parse(JSON.stringify(state.pages));
+
+    pages[action.id] = {
+        canvasImg: action.canvasImg
+    };
+
+    return pages;
+};
+
 const canvas = (state = initialState, action) => {
     switch (action.type) {
-    case 'SAVE_PAGE':
+    case 'ADD_PAGE':
         return (Object.assign({}, state,
             {
                 pages: [...state.pages,
                     { canvasImg: action.newPage, pageID: action.id }
                 ]
+            }
+        ));
+    case 'SAVE_PAGE':
+        return (Object.assign({}, state,
+            {
+                pages: savePage(state, action)
             }
         ));
     case 'SAVE_DRAWING':
