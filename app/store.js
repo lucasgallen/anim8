@@ -1,6 +1,11 @@
 import { createStore } from 'redux';
 
-const canvas = (state = {pages: [], drawing: {}}, action) => {
+const initialState = {
+    pages: [],
+    drawing: {}
+};
+
+const canvas = (state = initialState, action) => {
     switch (action.type) {
     case 'SAVE_PAGE':
         return (Object.assign({}, state,
@@ -24,11 +29,3 @@ const canvas = (state = {pages: [], drawing: {}}, action) => {
 let store = createStore(canvas);
 
 export default store;
-
-/*
-state:
-{
-    pages: [{},{},...],
-    drawing: {}
-}
-*/
