@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Canvas from './components/Canvas';
+import Flipbook from './components/Flipbook';
 import store from './store';
 
 const render = () => {
     ReactDOM.render(
-        <Canvas store={store} />,
+        <Flipbook store={store} pages={store.getState().pages} />,
         document.getElementById('root')
     );
 };
