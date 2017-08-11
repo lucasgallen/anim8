@@ -21,7 +21,7 @@ const canvas = (state = initialState, action) => {
         return (Object.assign({}, state,
             {
                 pages: [...state.pages,
-                    { canvasImg: action.newPage, pageID: action.id }
+                    { canvasImg: action.canvasImg, pageID: action.id }
                 ]
             }
         ));
