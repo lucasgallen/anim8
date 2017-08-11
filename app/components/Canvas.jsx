@@ -56,11 +56,8 @@ class Canvas extends React.Component {
     }
 
     render() {
-        let pageNumber = this.state.currentPage + 1;
-
         return (
             <div>
-                <h2>{pageNumber}</h2>
                 <canvas
                     onMouseDown={() => this.startPath()}
                     onMouseMove={(e) => this.drawPath(e)}
