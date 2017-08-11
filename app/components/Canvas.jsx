@@ -50,28 +50,13 @@ class Canvas extends React.Component {
         this.isPenDown = false;
     }
 
-   ///
-   //   Using JSON.stringify doesn't copy HTML objects,
-   //   thus this method is required to pick up the canvas
-   //   images.
-   ///
-
-    cloneHTML(arr) {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i].canvasImg = this.state.pages[i].canvasImg.cloneNode(false);
-        }
-    }
-
     saveCanvas() {
         const pagesCopy = JSON.parse(JSON.stringify(this.state.pages));
         const canvas = this.canvas.toDataURL();
 
-        let img = new Image();
-        img.src = canvas;
-
         this.cloneHTML(pagesCopy);
 
-        pagesCopy[this.state.currentPage].canvasImg = img;
+        pagesCopy[this.state.currentPage].canvasImg = canvas;
 
         const savePromise = new Promise((resolve) => {
             this.setState({
@@ -86,7 +71,10 @@ class Canvas extends React.Component {
 
     loadCanvas(page) {
         const canvasImage = this.state.pages[page].canvasImg;
-        this.canvasContext.drawImage(canvasImage, 0, 0);
+        let img = new Image();
+        img.src = canvasImage;
+
+        this.canvasContext.drawImage(img, 0, 0);
     }
 
     clearCanvas() {
