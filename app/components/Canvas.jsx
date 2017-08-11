@@ -1,25 +1,10 @@
 import React from 'react';
 
-// TODO: Expose save/load functionality to a "store"
-
 class Canvas extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            pages: [{
-                canvasImg: new Image(),
-            }],
-            currentPage: 0,
-        };
-    }
-
     componentDidMount() {
-        var canvas = document.getElementById('drawpass-canvas'),
-            canvasContext = canvas.getContext('2d');
+        const canvasContext = this.canvas.getContext('2d');
 
         this.canvasContext = canvasContext;
-        this.canvas = canvas;
         this.isPenDown = false;
     }
 
@@ -50,30 +35,19 @@ class Canvas extends React.Component {
         this.isPenDown = false;
     }
 
-    saveCanvas() {
-        const pagesCopy = JSON.parse(JSON.stringify(this.state.pages));
+    saveDrawing() {
         const canvas = this.canvas.toDataURL();
-
-        this.cloneHTML(pagesCopy);
-
-        pagesCopy[this.state.currentPage].canvasImg = canvas;
-
-        const savePromise = new Promise((resolve) => {
-            this.setState({
-                pages: pagesCopy
-            }, () => {
-                resolve();
-            });
+        this.props.store.dispatch({
+            type: 'SAVE_DRAWING',
+            canvasImg: canvas
         });
-
-        return savePromise;
     }
 
-    loadCanvas(page) {
-        const canvasImage = this.state.pages[page].canvasImg;
+    loadDrawing() {
+        const canvasImgURL = this.props.store.getState().drawing.canvasImg;
         let img = new Image();
-        img.src = canvasImage;
 
+        img.src = canvasImgURL;
         this.canvasContext.drawImage(img, 0, 0);
     }
 
@@ -93,7 +67,7 @@ class Canvas extends React.Component {
                     onMouseUp={() => this.endPath()}
                     width="600"
                     height="600"
-                    id="drawpass-canvas"
+                    ref={(canvas) => this.canvas = canvas }
                 ></canvas>
 
                 <button
@@ -103,6 +77,10 @@ class Canvas extends React.Component {
                 <button
                     onClick={() => this.clearCanvas()}
                 >clear</button>
+
+                <button
+                    onClick={() => this.loadCanvas()}
+                >load</button>
             </div>
         );
     }
