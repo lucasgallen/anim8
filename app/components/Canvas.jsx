@@ -51,8 +51,8 @@ class Canvas extends React.Component {
         img.onload = () => this.canvasContext.drawImage(img, 0, 0);
     }
 
-    clearCanvas() {
-        this.canvasContext.clearRect(0, 0, this.canvas.height, this.canvas.width);
+    clearDrawing() {
+        this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     render() {
