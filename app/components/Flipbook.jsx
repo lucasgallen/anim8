@@ -1,69 +1,76 @@
 import React from 'react';
 import Canvas from './Canvas';
 
-// TODO: Expose save/load functionality to a "store"
-
 class Flipbook extends React.Component {
-    setPageNumber(page) {
-        let pageNumPromise = new Promise((resolve) => {
-            this.setState({
-                currentPage: page
-            }, () => resolve());
-        });
+    constructor(props) {
+        super(props);
 
-        return pageNumPromise;
+        this.state = {
+            page: 1
+        };
+    }
+
+    componentDidMount() {
+        this.canvasImg = '';
     }
 
     prevPage() {
-        if (this.state.currentPage === 0) {
-            return;
-        }
+        if (this.state.page > 1) {
+            this.clearPage();
 
-        this.clearCanvas();
-        this.setPageNumber(this.state.currentPage - 1).then(() => {
-            this.loadCanvas(this.state.currentPage);
-        });
+            this.setState({
+                page: this.state.page - 1
+            });
+        }
     }
 
-    appendEmptyPage() {
-        const pagesCopy = JSON.parse(JSON.stringify(this.state.pages));
-
-        let canvas;
-        let img = new Image();
-
-        this.cloneHTML(pagesCopy);
-
-        this.clearCanvas();
-
-        canvas = this.canvas.toDataURL();
-        img.src = canvas;
-
-        pagesCopy.push({ canvasImg: img });
-
-        this.setState({
-            pages: pagesCopy
+    addPage() {
+        this.props.store.dispatch({
+            type: 'ADD_PAGE',
+            canvasImg: this.canvasImg,
+            id: this.state.page,
         });
     }
 
     nextPage() {
-        if (this.state.currentPage + 1 === this.state.pages.length) {
-            this.saveCanvas().then(() => {
-                this.appendEmptyPage();
-            });
-        } else {
-            this.clearCanvas();
+        this.canvasImg = this.canvasComponent.canvas.toDataURL();
+
+        if (this.state.page - 1 === this.props.pages.length) {
+            this.addPage();
         }
 
-        this.setPageNumber(this.state.currentPage + 1).then(() => {
-            this.loadCanvas(this.state.currentPage);
+        this.clearPage();
+        this.setState({
+            page: this.state.page + 1,
         });
     }
 
+    savePage() {
+        this.props.store.dispatch({
+            type: 'SAVE_PAGE',
+            canvasImg: this.canvasImg,
+            id: this.state.page - 1,
+        });
+    }
+
+    clearPage() {
+        let canvas = this.canvasComponent.canvas;
+        let ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     render() {
+        let canvasImg = '';
+
+        if (this.props.pages.length && this.state.page - 1 < this.props.pages.length) {
+            canvasImg = this.props.pages[this.state.page - 1].canvasImg;
+        }
+
         return (
             <div>
-                <Canvas />
+                <h2>Page: {this.state.page}</h2>
+                <Canvas store={this.props.store} canvasImg={canvasImg} ref={(canvas) => this.canvasComponent = canvas} />
 
                 <button
                     onClick={() => this.prevPage()}
