@@ -8,6 +8,14 @@ class Canvas extends React.Component {
         this.isPenDown = false;
     }
 
+    componentDidUpdate() {
+        if (this.props.canvasImg === '') {
+            this.clearDrawing();
+        } else {
+            this.loadDrawing(true);
+        }
+    }
+
     startPath() {
         this.canvasContext.beginPath();
         this.isPenDown = true;
@@ -43,8 +51,8 @@ class Canvas extends React.Component {
         });
     }
 
-    loadDrawing() {
-        const canvasImgURL = this.props.store.getState().drawing.canvasImg;
+    loadDrawing(hasDrawing) {
+        const canvasImgURL = hasDrawing ? this.props.canvasImg : this.props.store.getState().drawing.canvasImg;
         let img = new Image();
 
         img.src = canvasImgURL;
