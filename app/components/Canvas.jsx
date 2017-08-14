@@ -83,6 +83,8 @@ class Canvas extends React.Component {
     }
 
     render() {
+        const UI = <button onClick={() => this.clearDrawing()} >clear</button>;
+
         return (
             <div>
                 <canvas
@@ -93,10 +95,7 @@ class Canvas extends React.Component {
                     height="600"
                     ref={(canvas) => this.canvas = canvas}
                 ></canvas>
-
-                <button
-                    onClick={() => this.clearDrawing()}
-                >clear</button>
+                {this.props.renderUI && UI}
             </div>
         );
     }
