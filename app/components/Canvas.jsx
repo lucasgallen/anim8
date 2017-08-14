@@ -43,14 +43,6 @@ class Canvas extends React.Component {
         this.isPenDown = false;
     }
 
-    saveDrawing() {
-        const canvas = this.canvas.toDataURL();
-        this.props.store.dispatch({
-            type: 'SAVE_DRAWING',
-            canvasImg: canvas
-        });
-    }
-
     loadDrawing(hasDrawing) {
         const canvasImgURL = hasDrawing ? this.props.canvasImg : this.props.store.getState().drawing.canvasImg;
         let img = new Image();
@@ -76,16 +68,8 @@ class Canvas extends React.Component {
                 ></canvas>
 
                 <button
-                    onClick={() => this.saveDrawing()}
-                >save</button>
-
-                <button
                     onClick={() => this.clearDrawing()}
                 >clear</button>
-
-                <button
-                    onClick={() => this.loadDrawing()}
-                >load</button>
             </div>
         );
     }
