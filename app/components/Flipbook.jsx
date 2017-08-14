@@ -40,6 +40,7 @@ class Flipbook extends React.Component {
             this.addPage();
         }
 
+        this.savePage();
         this.clearPage();
         this.setState({
             page: this.state.page + 1,
