@@ -13,7 +13,10 @@ class DrawPass extends React.Component {
     render() {
         return (
             <div>
-                <Canvas store={this.props.store} ref={(canvas) => this.canvasComponent = canvas} />
+                <Canvas
+                    store={this.props.store}
+                    ref={(canvas) => this.canvasComponent = canvas}
+                />
 
                 <button
                     onClick={() => this.saveDrawing()}
