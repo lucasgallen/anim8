@@ -94,6 +94,7 @@ class Canvas extends React.Component {
                     width="600"
                     height="600"
                     ref={(canvas) => this.canvas = canvas}
+                    style={this.props.style}
                 ></canvas>
                 {this.props.renderUI && UI}
             </div>
