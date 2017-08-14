@@ -43,12 +43,39 @@ class Canvas extends React.Component {
         this.isPenDown = false;
     }
 
+    drawShadow(img) {
+        const canWidth = this.canvas.width;
+        const canHeight = this.canvas.height;
+        const context = this.canvasContext;
+        const colorDampening = 100;
+
+        let pixels;
+
+        context.drawImage(img, 0, 0);
+
+        pixels = context.getImageData(0, 0, canWidth, canHeight);
+
+        for (let i = 0; i < pixels.data.length; i+=4) {
+            pixels.data[i] = pixels.data[i] + colorDampening;
+            pixels.data[i+1] = pixels.data[i+1] + colorDampening;
+            pixels.data[i+2] = pixels.data[i+2] + colorDampening;
+        }
+
+        context.putImageData(pixels, 0, 0);
+    }
+
     loadDrawing(hasDrawing) {
         const canvasImgURL = hasDrawing ? this.props.canvasImg : this.props.store.getState().drawing.canvasImg;
         let img = new Image();
 
         img.src = canvasImgURL;
-        img.onload = () => this.canvasContext.drawImage(img, 0, 0);
+        img.onload = () => {
+            if (this.props.isShadow) {
+                this.drawShadow(img);
+            } else {
+                this.canvasContext.drawImage(img, 0, 0);
+            }
+        };
     }
 
     clearDrawing() {
