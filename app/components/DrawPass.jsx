@@ -15,6 +15,7 @@ class DrawPass extends React.Component {
             <div>
                 <Canvas
                     store={this.props.store}
+                    renderUI={true}
                     ref={(canvas) => this.canvasComponent = canvas}
                 />
 
