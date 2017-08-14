@@ -76,15 +76,15 @@ class Canvas extends React.Component {
                 ></canvas>
 
                 <button
-                    onClick={() => this.saveCanvas()}
+                    onClick={() => this.saveDrawing()}
                 >save</button>
 
                 <button
-                    onClick={() => this.clearCanvas()}
+                    onClick={() => this.clearDrawing()}
                 >clear</button>
 
                 <button
-                    onClick={() => this.loadCanvas()}
+                    onClick={() => this.loadDrawing()}
                 >load</button>
             </div>
         );
