@@ -5,89 +5,89 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const PATHS = {
-    app: path.join(__dirname, 'app/'),
-    'node_modules': path.join(__dirname, 'node_modules'),
-    build: path.join(__dirname, './'),
+  app: path.join(__dirname, 'app/'),
+  'node_modules': path.join(__dirname, 'node_modules'),
+  build: path.join(__dirname, './'),
 };
 
 const commonConfig = merge([
-    {
-        resolve: {
-            extensions: ['.js', '.jsx'],
-        },
-        entry: {
-            app: PATHS.app,
-        },
-        output: {
-            path: PATHS.build,
-            filename: '[name].js',
-        },
-        plugins: [
-            new HtmlWebpackPlugin({
-                title: 'Draw Pass',
-                template: path.join(__dirname, 'public/index.html'),
-            }),
-        ],
+  {
+    resolve: {
+      extensions: ['.js', '.jsx'],
     },
-    {
-        module: {
-            rules: [
-                {
-                    test: /\.jsx?$/,
-                    include: PATHS.app,
-                    exclude(path) {
-                        return path.match(/node_modules/);
-                    },
+    entry: {
+      app: PATHS.app,
+    },
+    output: {
+      path: PATHS.build,
+      filename: '[name].js',
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        title: 'Draw Pass',
+        template: path.join(__dirname, 'public/index.html'),
+      }),
+    ],
+  },
+  {
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          include: PATHS.app,
+          exclude(path) {
+            return path.match(/node_modules/);
+          },
 
-                    use: ['babel-loader', 'eslint-loader'],
-                },
-            ],
+          use: ['babel-loader', 'eslint-loader'],
         },
-    }
+      ],
+    },
+  }
 ]);
 
 const productionConfig = merge([
-    {
-        optimization: {
-            minimizer: [
-                new UglifyJsPlugin({
-                    uglifyOptions: {
-                        mangle: true,
-                        ie8: false,
-                        keep_fnames: true,
-                    },
-                    extractComments: false,
-                }),
+  {
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            mangle: true,
+            ie8: false,
+            keep_fnames: true,
+          },
+          extractComments: false,
+        }),
 
-                new webpack.DefinePlugin({
-                    'process.env.NODE_ENV': JSON.stringify('production')
-                }),
-            ],
-        },
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('production')
+        }),
+      ],
     },
+  },
 ]);
 
 const developmentConfig = merge([
-    {
-        devServer: {
-            historyApiFallback: true,
-            stats: 'errors-only',
+  {
+    devServer: {
+      historyApiFallback: true,
+      stats: 'errors-only',
 
-            host: null,
-            port: null,
+      host: null,
+      port: null,
 
-            overlay: {
-                errors: true,
-                warnings: true,
-            },
-        },
+      overlay: {
+        errors: true,
+        warnings: true,
+      },
     },
+  },
 ]);
 
 module.exports = (env) => {
-    if (env === 'production') {
-        return merge(commonConfig, productionConfig);
-    }
+  if (env === 'production') {
+    return merge(commonConfig, productionConfig);
+  }
 
-    return merge(commonConfig, developmentConfig);
+  return merge(commonConfig, developmentConfig);
 };
