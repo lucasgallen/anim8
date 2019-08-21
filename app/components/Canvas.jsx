@@ -19,6 +19,8 @@ class Canvas extends React.Component {
     const canvasContext = this.canvas.getContext('2d');
 
     this.canvasContext = canvasContext;
+    this.canvasContext.fillStyle = 'white';
+    this.canvasContext.fill();
     this.isPenDown = false;
   }
 
@@ -108,8 +110,8 @@ class Canvas extends React.Component {
           onMouseDown={() => this.startPath()}
           onMouseMove={(e) => this.drawPath(e)}
           onMouseUp={() => this.endPath()}
-          width="600"
-          height="600"
+          width={this.props.width || '600'}
+          height={this.props.height || '600'}
           ref={(canvas) => this.canvas = canvas}
           isShadow={this.props.isShadow}
         ></StyledCanvas>

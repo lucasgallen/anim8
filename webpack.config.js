@@ -36,7 +36,7 @@ const commonConfig = merge([
           test: /\.jsx?$/,
           include: PATHS.app,
           exclude(path) {
-            return path.match(/node_modules/);
+            return path.match(/node_modules|vendor/);
           },
 
           use: ['babel-loader', 'eslint-loader'],

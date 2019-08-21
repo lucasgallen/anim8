@@ -2,12 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, Global } from './atoms';
 import Canvas from './Canvas';
-import 'gif.js.optimized';
+import GifWindow from './GifWindow';
 
 const NavBox = styled.div`
   margin: 0;
   padding: 0;
   width: 60rem;
+`;
+
+const Title = styled.h2`
+  display: inline-block;
+  left: 1rem;
+  position: absolute;
+  text-transform: uppercase;
+  top: 0;
+  z-index: 1;
 `;
 
 class Flipbook extends React.Component {
@@ -87,22 +96,24 @@ class Flipbook extends React.Component {
     }
 
     return (
-      <div style={{ position: 'relative' }}>
-        <Global backgroundColor='cadetblue' />
-        <h2>Page: {this.state.page}</h2>
-        <Canvas
-          store={this.props.store}
-          renderUI
-          canvasImg={canvasImg}
-          ref={(canvas) => this.canvasComponent = canvas}
-        />
+      <div>
+        <div style={{ position: 'relative' }}>
+          <Global backgroundColor='cadetblue' />
+          <Title>Page: {this.state.page}</Title>
+          <Canvas
+            store={this.props.store}
+            renderUI
+            canvasImg={canvasImg}
+            ref={(canvas) => this.canvasComponent = canvas}
+          />
 
-        <Canvas
-          store={this.props.store}
-          isShadow
-          canvasImg={shadowImg}
-          ref={(canvas) => this.shadowCanvas = canvas}
-        />
+          <Canvas
+            store={this.props.store}
+            isShadow
+            canvasImg={shadowImg}
+            ref={(canvas) => this.shadowCanvas = canvas}
+          />
+        </div>
 
         <NavBox>
           <Button
@@ -115,6 +126,11 @@ class Flipbook extends React.Component {
             side='right'
           >next</Button>
         </NavBox>
+
+        <GifWindow
+          store={this.props.store}
+          pages={this.props.pages}
+        />
       </div>
     );
   }
