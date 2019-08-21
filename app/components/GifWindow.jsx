@@ -6,13 +6,16 @@ import GIF from '../vendor/gif.js';
 const Window = styled.div`
   position: absolute;
   right: 0.8rem;
-  top: 0.8rem;
+  top: ${props => props.active ? '5.3rem' : '0.8rem'};
 `;
 
 const CreateButton = styled(Button)`
   background-color: deeppink;
   display: block;
-  margin: 0 auto 1rem;
+  margin: 0;
+  position: absolute;
+  right: 6.5rem;
+  top: ${props => props.active ? '-4.5rem' : 0};
 `;
 
 const CustomGif = styled.img`
@@ -83,8 +86,9 @@ class GifWindow extends React.Component {
 
   render() {
     return (
-      <Window>
+      <Window active={this.state.active}>
         <CreateButton
+          active={this.state.active}
           onClick={() => this.createGif()}
         >Create GIF</CreateButton>
 
