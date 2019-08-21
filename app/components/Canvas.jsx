@@ -1,4 +1,18 @@
 import React from 'react';
+import styled from 'styled-components';
+import {Button} from './atoms';
+
+const ClearButton = styled(Button)`
+  background: black;
+  color: white;
+`;
+
+const StyledCanvas = styled.canvas`
+  background: ${props => props.isShadow ? 'white' : 'transparent'};
+  bottom: ${props => props.isShadow && '2px'};
+  position: ${props => props.isShadow ? 'absolute' : 'relative'};
+  z-index: ${props => !props.isShadow && 2};
+`;
 
 class Canvas extends React.Component {
   componentDidMount() {
@@ -83,19 +97,23 @@ class Canvas extends React.Component {
   }
 
   render() {
-    const UI = <button onClick={() => this.clearDrawing()} >clear</button>;
+    const UI = <ClearButton
+      onClick={() => this.clearDrawing()}
+      side='right'
+    >clear</ClearButton>;
 
     return (
       <div>
-        <canvas
+        <StyledCanvas
           onMouseDown={() => this.startPath()}
           onMouseMove={(e) => this.drawPath(e)}
           onMouseUp={() => this.endPath()}
           width="600"
           height="600"
           ref={(canvas) => this.canvas = canvas}
-          style={this.props.style}
-        ></canvas>
+          isShadow={this.props.isShadow}
+        ></StyledCanvas>
+
         {this.props.renderUI && UI}
       </div>
     );
