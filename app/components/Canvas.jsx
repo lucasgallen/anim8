@@ -1,3 +1,5 @@
+// TODO: consider leveraging higher-order components here
+
 import React from 'react';
 import styled from 'styled-components';
 import {Button} from './atoms';
