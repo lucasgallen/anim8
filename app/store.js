@@ -8,8 +8,8 @@ const initialState = {
 const savePage = (state, action) => {
   let pages = JSON.parse(JSON.stringify(state.pages));
 
-  pages[action.id] = {
-    canvasImg: action.canvasImg
+  pages[action.payload.pageIndex] = {
+    canvasImg: action.payload.canvasImg,
   };
 
   return pages;

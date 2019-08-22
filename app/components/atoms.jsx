@@ -20,7 +20,16 @@ const Button = styled.button`
   text-transform: uppercase;
 `;
 
+const StyledCanvas = styled.canvas`
+  background: ${props => props.isShadow ? 'white' : 'transparent'};
+  bottom: ${props => props.isShadow && '2px'};
+  left: 0;
+  position: ${props => props.isShadow ? 'absolute' : 'relative'};
+  z-index: ${props => !props.isShadow && 2};
+`;
+
 export {
   Global,
   Button,
+  StyledCanvas,
 };

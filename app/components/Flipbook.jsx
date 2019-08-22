@@ -6,11 +6,14 @@ import styled from 'styled-components';
 import { addPage, savePage } from '../actions/actions.js';
 import { Button, Global } from './atoms';
 import Canvas from './Canvas';
+import ClearCanvasButton from './ClearCanvasButton';
+import ShadowCanvas from './ShadowCanvas';
 import GifWindow from './GifWindow';
 
 const NavBox = styled.div`
   margin: 0;
   padding: 0;
+  text-align: center;
   width: 60rem;
 `;
 
@@ -28,6 +31,7 @@ class Flipbook extends React.Component {
     super(props);
 
     this.state = { page: 1 };
+    this.canvasRef = React.createRef();
   }
 
   componentDidMount() {
@@ -53,7 +57,7 @@ class Flipbook extends React.Component {
   }
 
   nextPage() {
-    this.canvasImg = this.canvasComponent.canvas.toDataURL();
+    this.canvasImg = this.canvasRef.current.canvas.toDataURL();
 
     if (this.state.page - 1 === this.props.pages.length) {
       this.addPage();
@@ -69,12 +73,12 @@ class Flipbook extends React.Component {
   savePage() {
     this.props.savePage({
       canvasImg: this.canvasImg,
-      id: this.state.page - 1,
+      pageIndex: this.state.page - 1,
     });
   }
 
   clearPage() {
-    let canvas = this.canvasComponent.canvas;
+    let canvas = this.canvasRef.current.canvas;
     let shadowCanvas = this.shadowCanvas.canvas;
     let ctx = canvas.getContext('2d');
     let shadowCtx = shadowCanvas.getContext('2d');
@@ -83,19 +87,23 @@ class Flipbook extends React.Component {
     shadowCtx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  getCanvasImage() {
+    if (!this.props.pages.length) return;
+    if (this.state.page - 1 >= this.props.pages.length) return;
+
+    return this.props.pages[this.state.page - 1].canvasImg;
+  }
+
+  getShadowCanvasImage() {
+    if (!this.props.pages.length) return;
+    if (this.state.page - 2 < 0) return;
+
+    return this.props.pages[this.state.page - 2].canvasImg;
+  }
+
   render() {
-    let canvasImg = '';
-    let shadowImg = '';
-
-    if (this.props.pages.length && this.state.page - 1 < this.props.pages.length) {
-      canvasImg = this.props.pages[this.state.page - 1].canvasImg;
-    }
-
-    if (this.props.pages.length && this.state.page - 2 >= 0) {
-      shadowImg = this.props.pages[this.state.page - 2].canvasImg;
-    } else {
-      shadowImg = '';
-    }
+    const canvasImg = this.getCanvasImage() || this.cavasImg;
+    const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
       <div>
@@ -103,15 +111,13 @@ class Flipbook extends React.Component {
           <Global backgroundColor='cadetblue' />
           <Title>Page: {this.state.page}</Title>
           <Canvas
-            store={this.props.store}
             renderUI
             canvasImg={canvasImg}
-            ref={(canvas) => this.canvasComponent = canvas}
+            ref={this.canvasRef}
           />
 
-          <Canvas
+          <ShadowCanvas
             store={this.props.store}
-            isShadow
             canvasImg={shadowImg}
             ref={(canvas) => this.shadowCanvas = canvas}
           />
@@ -122,6 +128,10 @@ class Flipbook extends React.Component {
             onClick={() => this.prevPage()}
             side='left'
           >prev</Button>
+
+          <ClearCanvasButton
+            targetCanvas={this.canvasRef}
+          />
 
           <Button
             onClick={() => this.nextPage()}
