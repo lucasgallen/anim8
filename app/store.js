@@ -21,7 +21,7 @@ const canvas = (state = initialState, action) => {
     return (Object.assign({}, state,
       {
         pages: [...state.pages,
-          { canvasImg: action.canvasImg, pageID: action.id }
+          action.payload
         ]
       }
     ));
@@ -42,6 +42,9 @@ const canvas = (state = initialState, action) => {
   }
 };
 
-let store = createStore(canvas);
+const store = createStore(
+  canvas,
+  window.__REDUX_DEVTOOLS_EXTENTION__ && window.__REDUX_DEVTOOLS_EXTENTION__()
+);
 
 export default store;

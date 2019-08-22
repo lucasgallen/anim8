@@ -1,5 +1,9 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { addPage, savePage } from '../actions/actions.js';
 import { Button, Global } from './atoms';
 import Canvas from './Canvas';
 import GifWindow from './GifWindow';
@@ -42,8 +46,7 @@ class Flipbook extends React.Component {
   }
 
   addPage() {
-    this.props.store.dispatch({
-      type: 'ADD_PAGE',
+    this.props.addPage({
       canvasImg: this.canvasImg,
       id: this.state.page,
     });
@@ -64,8 +67,7 @@ class Flipbook extends React.Component {
   }
 
   savePage() {
-    this.props.store.dispatch({
-      type: 'SAVE_PAGE',
+    this.props.savePage({
       canvasImg: this.canvasImg,
       id: this.state.page - 1,
     });
@@ -136,4 +138,14 @@ class Flipbook extends React.Component {
   }
 }
 
-export default Flipbook;
+const mapStateToProps = (state) => {
+  return {
+    pages: state.pages,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ addPage, savePage }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);

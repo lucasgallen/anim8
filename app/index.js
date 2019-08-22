@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Flipbook from './components/Flipbook';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import store from './store';
 
-const render = () => {
-  ReactDOM.render(
-    <Flipbook store={store} pages={store.getState().pages} />,
-    document.getElementById('root')
-  );
-};
+import Flipbook from './components/Flipbook';
 
-store.subscribe(render);
-render();
+render (
+  <Provider store={store}>
+    <Flipbook />
+  </Provider>,
+  document.getElementById('root')
+);
