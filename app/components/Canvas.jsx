@@ -52,8 +52,11 @@ class Canvas extends React.Component {
     return (
       <StyledCanvas
         onMouseDown={() => this.startPath()}
+        onTouchStart={() => this.startPath()}
         onMouseMove={(e) => this.drawPath(e)}
+        onTouchMove={(e) => this.drawPath(e)}
         onMouseUp={() => this.endPath()}
+        onTouchEnd={() => this.endPath()}
         width={this.props.width || '600'}
         height={this.props.height || '600'}
         ref={(canvas) => this.canvas = canvas}

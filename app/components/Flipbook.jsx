@@ -12,9 +12,10 @@ import GifWindow from './GifWindow';
 
 const NavBox = styled.div`
   margin: 0;
+  max-width: 60rem;
   padding: 0;
   text-align: center;
-  width: 60rem;
+  width: 100%;
 `;
 
 const Title = styled.h2`
@@ -26,17 +27,37 @@ const Title = styled.h2`
   z-index: 1;
 `;
 
+const CanvasContainer = styled.div`
+  max-width: 60rem;
+  position: relative;
+  width: 100%;
+`;
+
+const FlipbookContainer = styled.div`
+  height: calc(100vh - 2rem);
+`;
+
 class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1 };
+    this.state = { page: 1, canvasDims: {} };
     this.canvasRef = React.createRef();
   }
 
   componentDidMount() {
     this.canvasImg = '';
     this.shadowImg = '';
+
+    this.setState({
+      canvasDims: {
+        height: this.canvasContainerRef.getBoundingClientRect().height,
+        width: this.canvasContainerRef.getBoundingClientRect().width,
+      }
+    });
+
+    this.throttle = false;
+    window.addEventListener('resize', e => this.updateScreen(e));
   }
 
   updateScreen(e) {
@@ -124,22 +145,28 @@ class Flipbook extends React.Component {
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
-      <div>
-        <div style={{ position: 'relative' }}>
+      <FlipbookContainer>
+        <CanvasContainer
+          ref={ref => this.canvasContainerRef = ref}
+        >
           <Global backgroundColor='cadetblue' />
           <Title>Page: {this.state.page}</Title>
           <Canvas
             renderUI
             canvasImg={canvasImg}
+            height={this.state.canvasDims.height}
+            width={this.state.canvasDims.width}
             ref={this.canvasRef}
           />
 
           <ShadowCanvas
             store={this.props.store}
             canvasImg={shadowImg}
+            height={this.state.canvasDims.height}
+            width={this.state.canvasDims.width}
             ref={(canvas) => this.shadowCanvas = canvas}
           />
-        </div>
+        </CanvasContainer>
 
         <NavBox>
           <Button
@@ -161,7 +188,7 @@ class Flipbook extends React.Component {
           store={this.props.store}
           pages={this.props.pages}
         />
-      </div>
+      </FlipbookContainer>
     );
   }
 }

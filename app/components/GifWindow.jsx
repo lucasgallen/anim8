@@ -4,16 +4,27 @@ import { Button } from './atoms';
 import GIF from '../vendor/gif.js';
 
 const Window = styled.div`
-  position: absolute;
-  left: 61.8rem;
-  top: ${props => props.active ? '0.8rem' : props.topPos};
-  transition: top 0.3s;
+  @media (min-width: 900px) {
+    position: absolute;
+    left: 61.8rem;
+    top: ${props => props.active ? '0.8rem' : props.topPos};
+    transition: top 0.3s;
+  }
 `;
 
 const CreateButton = styled(Button)`
   background-color: deeppink;
+  bottom: 0.5rem;
   display: block;
-  margin: 0 auto 0.5rem;
+  position: absolute;
+  right: 0.5rem;
+
+  @media (min-width: 900px) {
+    bottom: initial;
+    margin: 0 auto 0.5rem;
+    position: relative;
+    right: initial;
+  }
 `;
 
 const CustomGif = styled.img`
