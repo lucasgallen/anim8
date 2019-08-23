@@ -35,6 +35,18 @@ class Canvas extends React.Component {
     }
   }
 
+  drawTouchPath(e) {
+    let touchPos;
+
+    e.preventDefault();
+    if (e.touches.length > 1) return;
+    if (!this.isPenDown) return;
+
+    touchPos = this.relativeMousePos(e.touches[0]);
+    this.canvasContext.lineTo(touchPos.x, touchPos.y);
+    this.canvasContext.stroke();
+  }
+
   endPath() {
     this.isPenDown = false;
   }
@@ -54,7 +66,7 @@ class Canvas extends React.Component {
         onMouseDown={() => this.startPath()}
         onTouchStart={() => this.startPath()}
         onMouseMove={(e) => this.drawPath(e)}
-        onTouchMove={(e) => this.drawPath(e)}
+        onTouchMove={(e) => this.drawTouchPath(e)}
         onMouseUp={() => this.endPath()}
         onTouchEnd={() => this.endPath()}
         width={this.props.width || '600'}

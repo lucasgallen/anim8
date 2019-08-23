@@ -28,13 +28,27 @@ const Title = styled.h2`
 `;
 
 const CanvasContainer = styled.div`
-  max-width: 60rem;
+  height: 0;
+  margin-bottom: 0.5rem;
+  padding-bottom: 42.85%;
   position: relative;
-  width: 100%;
+  width: calc(20rem * 233.33%);
+
+  @media (min-width: 700px) {
+    width: calc(100% - 20rem);
+  }
+
+  @media (min-width: 900px) {
+    width: calc(100% - 40rem);
+  }
 `;
 
 const FlipbookContainer = styled.div`
-  height: calc(100vh - 2rem);
+  height: calc(100% - 30rem);
+
+  @media (min-width: 700px) {
+    height: calc(100% - 2rem);
+  }
 `;
 
 class Flipbook extends React.Component {
@@ -185,6 +199,8 @@ class Flipbook extends React.Component {
         </NavBox>
 
         <GifWindow
+          height={this.state.canvasDims.height}
+          width={this.state.canvasDims.width}
           store={this.props.store}
           pages={this.props.pages}
         />

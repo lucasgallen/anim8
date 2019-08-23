@@ -4,9 +4,12 @@ import { Button } from './atoms';
 import GIF from '../vendor/gif.js';
 
 const Window = styled.div`
+  margin-top: 1rem;
+
   @media (min-width: 900px) {
-    position: absolute;
     left: 61.8rem;
+    margin: 0;
+    position: absolute;
     top: ${props => props.active ? '0.8rem' : props.topPos};
     transition: top 0.3s;
   }
@@ -29,33 +32,18 @@ const CreateButton = styled(Button)`
 
 const CustomGif = styled.img`
   display: block;
-  height: ${props => props.active ? '30rem' : 0};
-  width: 30rem;
+  height: ${props => props.active ? props.height : 0};
+  width: ${props => props.width};
 `;
 
 class GifWindow extends React.Component {
   constructor(props) {
     super(props);
 
-    this.gif = new GIF({
-      background: '#fff',
-      quality: 1,
-      workers: 4,
-      workerScript: './gif.worker.js',
-      width: 600,
-      height: 600,
-    });
-
     this.state = { active: false, windowTopPos: '-1.9rem' };
   }
 
   componentDidMount() {
-    this.gif.on('finished', blob => {
-      this.customGif.src = URL.createObjectURL(blob);
-      this.customGif.onload = () => {
-        this.activate();
-      };
-    });
   }
 
   activate() {
@@ -67,8 +55,21 @@ class GifWindow extends React.Component {
   }
 
   resetGif() {
-    this.gif.frames = [];
-    this.gif.running = false;
+    this.gif = new GIF({
+      background: '#fff',
+      quality: 1,
+      workers: 4,
+      workerScript: './gif.worker.js',
+      width: this.props.width,
+      height: this.props.height,
+    });
+
+    this.gif.on('finished', blob => {
+      this.customGif.src = URL.createObjectURL(blob);
+      this.customGif.onload = () => {
+        this.activate();
+      };
+    });
   }
 
   createGif() {
