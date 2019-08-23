@@ -29,7 +29,7 @@
     "webpack-merge": "^4.2.1"
   },
   "scripts": {
-    "start": "nodemon --watch webpack.config.js --exec \"webpack-dev-server --env development\"",
+    "start": "nodemon --watch webpack.config.js --exec \"webpack-dev-server --env development --host 0.0.0.0 --port 8080\"",
     "build": "webpack --env production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
