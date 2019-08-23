@@ -4,10 +4,10 @@ import { Button } from './atoms';
 import GIF from '../vendor/gif.js';
 
 const Window = styled.div`
-  margin-top: 1rem;
+  margin-top: 4rem;
 
   @media (min-width: 900px) {
-    left: 61.8rem;
+    right: 0.5rem;
     margin: 0;
     position: absolute;
     top: ${props => props.active ? '0.8rem' : props.topPos};
@@ -32,8 +32,7 @@ const CreateButton = styled(Button)`
 
 const CustomGif = styled.img`
   display: block;
-  height: ${props => props.active ? props.height : 0};
-  width: ${props => props.width};
+  margin: 0 auto;
 `;
 
 class GifWindow extends React.Component {
@@ -41,9 +40,6 @@ class GifWindow extends React.Component {
     super(props);
 
     this.state = { active: false, windowTopPos: '-1.9rem' };
-  }
-
-  componentDidMount() {
   }
 
   activate() {
@@ -122,6 +118,8 @@ class GifWindow extends React.Component {
         <CustomGif
           active={this.state.active}
           ref={(image) => this.customGif = image}
+          width={this.props.width}
+          height={() => this.props.active ? this.props.height : 0}
         />
       </Window>
     );

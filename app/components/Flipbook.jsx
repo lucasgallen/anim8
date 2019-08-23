@@ -10,9 +10,10 @@ import ClearCanvasButton from './ClearCanvasButton';
 import ShadowCanvas from './ShadowCanvas';
 import GifWindow from './GifWindow';
 
+const GIF_RATIO = 1;
+
 const NavBox = styled.div`
   margin: 0;
-  max-width: 60rem;
   padding: 0;
   text-align: center;
   width: 100%;
@@ -32,22 +33,19 @@ const CanvasContainer = styled.div`
   margin-bottom: 0.5rem;
   padding-bottom: 42.85%;
   position: relative;
-  width: calc(20rem * 233.33%);
-
-  @media (min-width: 700px) {
-    width: calc(100% - 20rem);
-  }
-
-  @media (min-width: 900px) {
-    width: calc(100% - 40rem);
-  }
 `;
 
 const FlipbookContainer = styled.div`
   height: calc(100% - 30rem);
+  width: calc(20rem * 233.33%);
 
   @media (min-width: 700px) {
     height: calc(100% - 2rem);
+    width: calc(100% - 20rem);
+  }
+
+  @media (min-width: 900px) {
+    width: 70rem;
   }
 `;
 
@@ -199,8 +197,8 @@ class Flipbook extends React.Component {
         </NavBox>
 
         <GifWindow
-          height={this.state.canvasDims.height}
-          width={this.state.canvasDims.width}
+          height={this.state.canvasDims.height * GIF_RATIO}
+          width={this.state.canvasDims.width * GIF_RATIO}
           store={this.props.store}
           pages={this.props.pages}
         />
