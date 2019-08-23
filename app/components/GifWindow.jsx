@@ -5,17 +5,15 @@ import GIF from '../vendor/gif.js';
 
 const Window = styled.div`
   position: absolute;
-  right: 0.8rem;
-  top: ${props => props.active ? '5.3rem' : '0.8rem'};
+  left: 61.8rem;
+  top: ${props => props.active ? '0.8rem' : props.topPos};
+  transition: top 0.3s;
 `;
 
 const CreateButton = styled(Button)`
   background-color: deeppink;
   display: block;
-  margin: 0;
-  position: absolute;
-  right: 6.5rem;
-  top: ${props => props.active ? '-4.5rem' : 0};
+  margin: 0 auto 0.5rem;
 `;
 
 const CustomGif = styled.img`
@@ -37,7 +35,7 @@ class GifWindow extends React.Component {
       height: 600,
     });
 
-    this.state = { active: false };
+    this.state = { active: false, windowTopPos: '-1.9rem' };
   }
 
   componentDidMount() {
@@ -84,9 +82,26 @@ class GifWindow extends React.Component {
     Promise.all(imagePromises).then(() => this.gif.render());
   }
 
+  peak() {
+    if (this.state.active) return;
+
+    this.setState({ windowTopPos: '0.8rem' });
+  }
+
+  unPeak() {
+    if (this.state.active) return;
+
+    this.setState({ windowTopPos: '-1.9rem' });
+  }
+
   render() {
     return (
-      <Window active={this.state.active}>
+      <Window
+        active={this.state.active}
+        topPos={this.state.windowTopPos}
+        onMouseEnter={() => this.peak()}
+        onMouseLeave={() => this.unPeak()}
+      >
         <CreateButton
           active={this.state.active}
           onClick={() => this.createGif()}
