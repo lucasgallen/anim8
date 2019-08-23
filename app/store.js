@@ -2,7 +2,11 @@ import { createStore } from 'redux';
 
 const initialState = {
   pages: [],
-  drawing: {}
+  drawing: {},
+  screen: {
+    height: window.screen.availHeight,
+    width: window.screen.availWidth,
+  }
 };
 
 const savePage = (state, action) => {
@@ -35,6 +39,12 @@ const canvas = (state = initialState, action) => {
     return (Object.assign({}, state,
       {
         drawing: { canvasImg: action.canvasImg }
+      }
+    ));
+  case 'UPDATE_SCREEN':
+    return (Object.assign({}, state,
+      {
+        screen: action.payload
       }
     ));
   default:

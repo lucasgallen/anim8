@@ -11,3 +11,10 @@ export const savePage = pageData => (
     payload: pageData,
   }
 );
+
+export const updateScreen = screenData => (
+  {
+    type: 'UPDATE_SCREEN',
+    payload: screenData,
+  }
+);

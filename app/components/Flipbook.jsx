@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { addPage, savePage } from '../actions/actions.js';
+import { addPage, savePage, updateScreen } from '../actions/actions.js';
 import { Button, Global } from './atoms';
 import Canvas from './Canvas';
 import ClearCanvasButton from './ClearCanvasButton';
@@ -37,6 +37,24 @@ class Flipbook extends React.Component {
   componentDidMount() {
     this.canvasImg = '';
     this.shadowImg = '';
+  }
+
+  updateScreen(e) {
+    if (this.throttle) return;
+
+    this.throttle = true;
+    setTimeout(() => { this.throttle = false; }, 500);
+    this.props.updateScreen({
+      height: e.currentTarget.screen.availHeight,
+      width: e.currentTarget.availWidth,
+    });
+
+    this.setState({
+      canvasDims: {
+        height: this.canvasContainerRef.getBoundingClientRect().height,
+        width: this.canvasContainerRef.getBoundingClientRect().width,
+      }
+    });
   }
 
   prevPage() {
@@ -151,11 +169,12 @@ class Flipbook extends React.Component {
 const mapStateToProps = (state) => {
   return {
     pages: state.pages,
+    screen: state.screen,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ addPage, savePage }, dispatch);
+  return bindActionCreators({ addPage, savePage, updateScreen }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);
