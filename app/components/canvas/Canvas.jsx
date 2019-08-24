@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StyledCanvas} from './atoms';
+import {StyledCanvas} from '../atoms';
 
 class Canvas extends React.Component {
   componentDidMount() {

@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 
-import Flipbook from './components/Flipbook';
+import Flipbook from './components/flipbook/Flipbook';
 
 render (
   <Provider store={store}>
