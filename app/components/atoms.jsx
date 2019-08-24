@@ -30,8 +30,56 @@ const StyledCanvas = styled.canvas`
   z-index: ${props => !props.isShadow && 2};
 `;
 
+const Label = styled.label`
+  border-bottom: 2px solid fuchsia;
+  border-right: 2px solid fuchsia;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 300;
+  margin: 0.5rem 1rem 0;
+  padding: 0 0.4rem 0.2rem 0;
+  position: relative;
+  text-transform: uppercase;
+  vertical-align: top;
+
+  &::before {
+    background-color: black;
+    border-radius: 1rem;
+    content: '';
+    display: block;
+    height: 0.3rem;
+    position: absolute;
+    top: 0.25rem;
+    right: -1rem;
+    width: 0.3rem;
+  }
+
+  &::after {
+    background-color: black;
+    border-radius: 1rem;
+    content: '';
+    display: block;
+    height: 0.3rem;
+    position: absolute;
+    right: -1rem;
+    top: 1rem;
+    width: 0.3rem;
+  }
+`;
+
+const Input = styled.input`
+  border: 2px solid cadetblue;
+  display: inline-block;
+  font-size: 1.5rem;
+  padding: 0.25rem;
+  margin: 0 0.5rem;
+  width: 7rem;
+`;
+
 export {
   Global,
   Button,
   StyledCanvas,
+  Label,
+  Input,
 };

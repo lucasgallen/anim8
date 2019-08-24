@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button } from '../atoms';
+import { Button, Label, Input } from '../atoms';
 import GIF from '../../vendor/gif.js';
 
 const Window = styled.div`
@@ -32,15 +32,32 @@ const CustomGif = styled.img`
   margin-bottom: ${props => props.active ? '0.5rem' : '0'};
 `;
 
+const UI = styled.div`
+  background: cornsilk;
+  border: 2px solid black;
+  display: block;
+  margin-top: 0.5rem;
+  max-width: calc(100% - 4px);
+  padding: 1rem 0;
+`;
+
 class GifWindow extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { active: false, windowTopPos: '-1.9rem' };
+    this.state = {
+      active: false,
+      windowTopPos: '-1.9rem',
+      delay: 300,
+      needsRefresh: false,
+    };
   }
 
   activate() {
-    this.setState({ active: true });
+    this.setState({
+      active: true,
+      needsRefresh: false,
+    });
   }
 
   deactivate() {
@@ -75,7 +92,7 @@ class GifWindow extends React.Component {
       let image = new Image();
       const imagePromise = new Promise(res => {
         image.onload = () => {
-          this.gif.addFrame(image, {delay: 1000});
+          this.gif.addFrame(image, { delay: this.state.delay });
           res();
         };
       });
@@ -85,6 +102,11 @@ class GifWindow extends React.Component {
     });
 
     Promise.all(imagePromises).then(() => this.gif.render());
+  }
+
+  handleUIChange(e) {
+    const uiValue = e.currentTarget.value;
+    this.setState({ delay: uiValue, needsRefresh: this.state.active });
   }
 
   peak() {
@@ -125,7 +147,19 @@ class GifWindow extends React.Component {
         <CreateButton
           active={this.state.active}
           onClick={() => this.createGif()}
-        >Create GIF</CreateButton>
+        >
+          { this.state.needsRefresh ? 'recreate gif' : 'create gif' }
+        </CreateButton>
+
+        <UI>
+          <Label>delay</Label>
+          <Input
+            type='number' min='20' step='100'
+            onChange={e => this.handleUIChange(e)}
+            value={ this.state.delay }
+          />
+          <span style={{ fontSize: '1.5rem' }}>{ `${this.state.delay / 1000}s` }</span>
+        </UI>
       </Window>
     );
   }
