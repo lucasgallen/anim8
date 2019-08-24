@@ -7,32 +7,29 @@ const Window = styled.div`
   margin-top: 4rem;
 
   @media (min-width: 900px) {
-    right: 0.5rem;
+    float: right;
     margin: 0;
-    position: absolute;
-    top: ${props => props.active ? '0.8rem' : props.topPos};
-    transition: top 0.3s;
+    margin-top: ${props => props.active ? '0' : props.topPos};
+    max-width: calc(50% - 0.5rem);
+    transition: margin-top 0.3s, height 0.3s;
+    width: 70rem;
   }
 `;
 
 const CreateButton = styled(Button)`
   background-color: deeppink;
-  bottom: 0.5rem;
+  margin: 0 auto;
   display: block;
-  position: absolute;
-  right: 0.5rem;
 
   @media (min-width: 900px) {
-    bottom: initial;
-    margin: 0 auto 0.5rem;
-    position: relative;
-    right: initial;
   }
 `;
 
 const CustomGif = styled.img`
+  border: none;
   display: block;
   margin: 0 auto;
+  margin-bottom: ${props => props.active ? '0.5rem' : '0'};
 `;
 
 class GifWindow extends React.Component {
@@ -102,7 +99,15 @@ class GifWindow extends React.Component {
     this.setState({ windowTopPos: '-1.9rem' });
   }
 
+  dynamicHeight() {
+    if (!this.state.active) return 0;
+
+    return Math.floor(this.props.height);
+  }
+
   render() {
+    const width = Math.floor(this.props.width) || 0;
+
     return (
       <Window
         active={this.state.active}
@@ -110,17 +115,17 @@ class GifWindow extends React.Component {
         onMouseEnter={() => this.peak()}
         onMouseLeave={() => this.unPeak()}
       >
+        <CustomGif
+          active={this.state.active}
+          ref={(image) => this.customGif = image}
+          width={width}
+          height={this.dynamicHeight()}
+        />
+
         <CreateButton
           active={this.state.active}
           onClick={() => this.createGif()}
         >Create GIF</CreateButton>
-
-        <CustomGif
-          active={this.state.active}
-          ref={(image) => this.customGif = image}
-          width={this.props.width}
-          height={() => this.props.active ? this.props.height : 0}
-        />
       </Window>
     );
   }

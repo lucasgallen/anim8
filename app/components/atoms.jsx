@@ -25,6 +25,7 @@ const StyledCanvas = styled.canvas`
   bottom: ${props => props.isShadow && '2px'};
   left: 0;
   position: ${props => props.isShadow ? 'absolute' : 'relative'};
+  top: 0;
   touch-action: none;
   z-index: ${props => !props.isShadow && 2};
 `;

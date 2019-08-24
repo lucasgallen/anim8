@@ -28,6 +28,11 @@ const Title = styled.h2`
   z-index: 1;
 `;
 
+const Container = styled.div`
+  overflow: hidden;
+  padding-bottom: 1rem;
+`;
+
 const CanvasContainer = styled.div`
   height: 0;
   margin-bottom: 0.5rem;
@@ -45,6 +50,8 @@ const FlipbookContainer = styled.div`
   }
 
   @media (min-width: 900px) {
+    float: left;
+    max-width: calc(50% - 0.5rem);
     width: 70rem;
   }
 `;
@@ -157,44 +164,46 @@ class Flipbook extends React.Component {
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
-      <FlipbookContainer>
-        <CanvasContainer
-          ref={ref => this.canvasContainerRef = ref}
-        >
-          <Global backgroundColor='cadetblue' />
-          <Title>Page: {this.state.page}</Title>
-          <Canvas
-            renderUI
-            canvasImg={canvasImg}
-            height={this.state.canvasDims.height}
-            width={this.state.canvasDims.width}
-            ref={this.canvasRef}
-          />
+      <Container>
+        <FlipbookContainer>
+          <CanvasContainer
+            ref={ref => this.canvasContainerRef = ref}
+          >
+            <Global backgroundColor='cadetblue' />
+            <Title>Page: {this.state.page}</Title>
+            <Canvas
+              renderUI
+              canvasImg={canvasImg}
+              height={this.state.canvasDims.height}
+              width={this.state.canvasDims.width}
+              ref={this.canvasRef}
+            />
 
-          <ShadowCanvas
-            store={this.props.store}
-            canvasImg={shadowImg}
-            height={this.state.canvasDims.height}
-            width={this.state.canvasDims.width}
-            ref={(canvas) => this.shadowCanvas = canvas}
-          />
-        </CanvasContainer>
+            <ShadowCanvas
+              store={this.props.store}
+              canvasImg={shadowImg}
+              height={this.state.canvasDims.height}
+              width={this.state.canvasDims.width}
+              ref={(canvas) => this.shadowCanvas = canvas}
+            />
+          </CanvasContainer>
 
-        <NavBox>
-          <Button
-            onClick={() => this.prevPage()}
-            side='left'
-          >prev</Button>
+          <NavBox>
+            <Button
+              onClick={() => this.prevPage()}
+              side='left'
+            >prev</Button>
 
-          <ClearCanvasButton
-            targetCanvas={this.canvasRef}
-          />
+            <ClearCanvasButton
+              targetCanvas={this.canvasRef}
+            />
 
-          <Button
-            onClick={() => this.nextPage()}
-            side='right'
-          >next</Button>
-        </NavBox>
+            <Button
+              onClick={() => this.nextPage()}
+              side='right'
+            >next</Button>
+          </NavBox>
+        </FlipbookContainer>
 
         <GifWindow
           height={this.state.canvasDims.height * GIF_RATIO}
@@ -202,7 +211,7 @@ class Flipbook extends React.Component {
           store={this.props.store}
           pages={this.props.pages}
         />
-      </FlipbookContainer>
+      </Container>
     );
   }
 }

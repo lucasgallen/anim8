@@ -22,7 +22,7 @@ class ClearCanvasButton extends React.Component {
       <ClearButton
         onClick={() => this.clearPage()}
         side='inherit'
-      >clear</ClearButton>
+      >clear page</ClearButton>
     );
   }
 }
