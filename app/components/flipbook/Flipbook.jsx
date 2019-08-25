@@ -5,9 +5,8 @@ import styled from 'styled-components';
 
 import { addPage, savePage, updateScreen } from '../../actions/actions.js';
 import { Button, Global } from '../atoms';
-import Canvas from '../canvas/Canvas';
+import CanvasContainer from './CanvasContainer';
 import ClearCanvasButton from '../canvas/ClearCanvasButton';
-import ShadowCanvas from '../canvas/ShadowCanvas';
 import GifWindow from './GifWindow';
 
 const GIF_RATIO = 1;
@@ -19,25 +18,9 @@ const NavBox = styled.div`
   width: 100%;
 `;
 
-const Title = styled.h2`
-  display: inline-block;
-  left: 1rem;
-  position: absolute;
-  text-transform: uppercase;
-  top: 0;
-  z-index: 1;
-`;
-
 const Container = styled.div`
   overflow: hidden;
   padding-bottom: 1rem;
-`;
-
-const CanvasContainer = styled.div`
-  height: 0;
-  margin-bottom: 0.5rem;
-  padding-bottom: 42.85%;
-  position: relative;
 `;
 
 const FlipbookContainer = styled.div`
@@ -60,26 +43,33 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, canvasDims: {} };
-    this.canvasRef = React.createRef();
+    this.state = { page: 1, canvasDims: {}};
+    this.throttle = false;
   }
 
   componentDidMount() {
+    let canvasContainer;
+
     this.canvasImg = '';
     this.shadowImg = '';
+    this.canvasContainerRef = this.canvasContainer.wrappedInstance;
+    canvasContainer = this.canvasContainerRef.canvasContainerRef;
+
+    this.canvasRef = this.canvasContainerRef.canvasRef;
+    this.shadowCanvas = this.canvasContainerRef.shadowCanvas;
 
     this.setState({
       canvasDims: {
-        height: this.canvasContainerRef.getBoundingClientRect().height,
-        width: this.canvasContainerRef.getBoundingClientRect().width,
+        height: canvasContainer.getBoundingClientRect().height,
+        width: canvasContainer.getBoundingClientRect().width,
       }
     });
 
-    this.throttle = false;
     window.addEventListener('resize', e => this.updateScreen(e));
   }
 
   updateScreen(e) {
+    const canvasContainer = this.canvasContainerRef.canvasContainerRef;
     if (this.throttle) return;
 
     this.throttle = true;
@@ -91,8 +81,8 @@ class Flipbook extends React.Component {
 
     this.setState({
       canvasDims: {
-        height: this.canvasContainerRef.getBoundingClientRect().height,
-        width: this.canvasContainerRef.getBoundingClientRect().width,
+        height: canvasContainer.getBoundingClientRect().height,
+        width: canvasContainer.getBoundingClientRect().width,
       }
     });
   }
@@ -165,28 +155,16 @@ class Flipbook extends React.Component {
 
     return (
       <Container>
+        <Global backgroundColor='cadetblue' />
         <FlipbookContainer>
           <CanvasContainer
-            ref={ref => this.canvasContainerRef = ref}
-          >
-            <Global backgroundColor='cadetblue' />
-            <Title>Page: {this.state.page}</Title>
-            <Canvas
-              renderUI
-              canvasImg={canvasImg}
-              height={this.state.canvasDims.height}
-              width={this.state.canvasDims.width}
-              ref={this.canvasRef}
-            />
-
-            <ShadowCanvas
-              store={this.props.store}
-              canvasImg={shadowImg}
-              height={this.state.canvasDims.height}
-              width={this.state.canvasDims.width}
-              ref={(canvas) => this.shadowCanvas = canvas}
-            />
-          </CanvasContainer>
+            ref={ref => this.canvasContainer = ref}
+            page={this.state.page}
+            height={this.state.canvasDims.height * GIF_RATIO}
+            width={this.state.canvasDims.width * GIF_RATIO}
+            canvasImg={canvasImg}
+            shadowImg={shadowImg}
+          />
 
           <NavBox>
             <Button
