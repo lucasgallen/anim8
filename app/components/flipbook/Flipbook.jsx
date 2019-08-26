@@ -164,23 +164,23 @@ class Flipbook extends React.Component {
             width={this.state.canvasDims.width * GIF_RATIO}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
-          />
+          >
+            <NavBox>
+              <Button
+                onClick={() => this.prevPage()}
+                side='left'
+              >prev</Button>
 
-          <NavBox>
-            <Button
-              onClick={() => this.prevPage()}
-              side='left'
-            >prev</Button>
+              <ClearCanvasButton
+                targetCanvas={this.canvasRef}
+              />
 
-            <ClearCanvasButton
-              targetCanvas={this.canvasRef}
-            />
-
-            <Button
-              onClick={() => this.nextPage()}
-              side='right'
-            >next</Button>
-          </NavBox>
+              <Button
+                onClick={() => this.nextPage()}
+                side='right'
+              >next</Button>
+            </NavBox>
+          </CanvasContainer>
         </FlipbookContainer>
 
         <GifWindow

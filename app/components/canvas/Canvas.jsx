@@ -13,6 +13,8 @@ class Canvas extends React.Component {
   }
 
   startPath() {
+    const color = this.props.pen.color || '#000';
+    this.canvasContext.strokeStyle = color;
     this.canvasContext.beginPath();
     this.isPenDown = true;
   }

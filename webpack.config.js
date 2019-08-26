@@ -41,6 +41,10 @@ const commonConfig = merge([
 
           use: ['babel-loader', 'eslint-loader'],
         },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
       ],
     },
   }

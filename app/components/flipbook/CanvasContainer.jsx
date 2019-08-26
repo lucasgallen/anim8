@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import 'rc-color-picker/assets/index.css';
+import ColorPicker from 'rc-color-picker';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Canvas from '../canvas/Canvas';
 import ShadowCanvas from '../canvas/ShadowCanvas';
 
@@ -21,6 +25,25 @@ const Container = styled.div`
   position: relative;
 `;
 
+const PenButtonWrapper = styled.div`
+  background-color: white !important;
+  border: 2px solid black;
+  margin-top: 1rem;
+  padding: 1rem;
+  position: relative;
+
+  &::before {
+    content: '';
+    background-color: ${props => props.color};
+    right: 0.5rem;
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    bottom: 0.5rem;
+    border-radius: 0.5rem;
+  }
+`;
+
 class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -38,30 +61,52 @@ class CanvasContainer extends React.Component {
     });
   }
 
+  changeColor(e) {
+    this.setState({
+      pen: { color: e.color },
+    });
+  }
+
   render() {
     return (
-      <Container
-        ref={ref => this.canvasContainerRef = ref}
-      >
-        <Title>Page: {this.props.page}</Title>
-        <Canvas
-          renderUI
-          pen={this.state.pen}
-          canvasImg={this.props.canvasImg}
-          height={this.props.height}
-          width={this.props.width}
-          ref={this.canvasRef}
-        />
+      <div>
+        <Container
+          ref={ref => this.canvasContainerRef = ref}
+        >
+          <Title>Page: {this.props.page}</Title>
+          <Canvas
+            renderUI
+            pen={this.state.pen}
+            canvasImg={this.props.canvasImg}
+            height={this.props.height}
+            width={this.props.width}
+            ref={this.canvasRef}
+          />
 
-        <ShadowCanvas
-          canvasImg={this.props.shadowImg}
-          height={this.props.height}
-          width={this.props.width}
-          data-test='foobar'
-          ref={(canvas) => this.shadowCanvas = canvas}
-        />
-      </Container>
+          <ShadowCanvas
+            canvasImg={this.props.shadowImg}
+            height={this.props.height}
+            width={this.props.width}
+            data-test='foobar'
+            ref={(canvas) => this.shadowCanvas = canvas}
+          />
+        </Container>
 
+        { this.props.children }
+
+        <ColorPicker
+          onChange={e => this.changeColor(e)}
+          placement='bottomRight'
+        >
+          <div>
+            <PenButtonWrapper
+              color={this.state.pen.color || 'black'}
+            >
+              <FontAwesomeIcon icon='pen-nib' size='3x' />
+            </PenButtonWrapper>
+          </div>
+        </ColorPicker>
+      </div>
     );
   }
 }
