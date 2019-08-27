@@ -6,6 +6,7 @@ import 'rc-color-picker/assets/index.css';
 import ColorPicker from 'rc-color-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { Button } from '../atoms';
 import Canvas from '../canvas/Canvas';
 import ShadowCanvas from '../canvas/ShadowCanvas';
 
@@ -44,11 +45,34 @@ const PenButtonWrapper = styled.div`
   }
 `;
 
+const ColorCardContainer = styled.div`
+  height: 4rem;
+  left: calc(100% + 1rem);
+  margin: 0;
+  position: absolute;
+  padding-left: ${props => `${4 + (props.colorCount - 1)}rem`};
+  top: 0;
+`;
+
+const ColorCard = styled.div`
+  background-color: ${props => props.color};
+  bottom: 0;
+  display: inline-block;
+  left: ${props => `${props.colorIndex}rem`};
+  position: absolute;
+  top: 0;
+  width: 3rem;
+`;
+
+const SaveColorButton = styled(Button)`
+  width: 100%;
+`;
+
 class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { canvasDims: {}, pen: {} };
+    this.state = { canvasDims: {}, pen: {}, colors: [] };
     this.canvasRef = React.createRef();
   }
 
@@ -61,10 +85,36 @@ class CanvasContainer extends React.Component {
     });
   }
 
+  saveColor(e) {
+    const currentColor = this.state.pen.color;
+    let colors = [];
+
+    e.stopPropagation();
+    if (this.state.colors.indexOf(currentColor) > -1) {
+      colors = this.state.colors;
+    } else {
+      colors = [...this.state.colors, currentColor];
+    }
+
+    this.setState({
+      colors: colors,
+    });
+  }
+
   changeColor(e) {
     this.setState({
       pen: { color: e.color },
     });
+  }
+
+  colorCards() {
+    let cards = [];
+    this.state.colors.forEach((val, index) => {
+      cards.push(
+        <ColorCard colorIndex={index} color={val} key={index} />
+      );
+    });
+    return cards;
   }
 
   render() {
@@ -103,7 +153,13 @@ class CanvasContainer extends React.Component {
               color={this.state.pen.color || 'black'}
             >
               <FontAwesomeIcon icon='pen-nib' size='3x' />
+
+              <ColorCardContainer colorCount={this.state.colors.length}>
+                { this.colorCards() }
+              </ColorCardContainer>
             </PenButtonWrapper>
+
+            <SaveColorButton onClick={e => this.saveColor(e)}>save</SaveColorButton>
           </div>
         </ColorPicker>
       </div>
