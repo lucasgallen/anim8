@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
 import ColorPicker from 'rc-color-picker';
@@ -9,6 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '../atoms';
 import Canvas from '../canvas/Canvas';
 import ShadowCanvas from '../canvas/ShadowCanvas';
+
+// TODO: Move pen color picker into separate component!!!
+const MAX_COLOR_CARD_WIDTH = 26;
 
 const Title = styled.h2`
   display: inline-block;
@@ -50,24 +53,52 @@ const ColorCardContainer = styled.div`
   height: 4rem;
   left: calc(100% + 1rem);
   margin: 0;
+  overflow: auto;
   position: absolute;
-  overflow-x: ${props => props.active ? 'scroll' : 'none'};
   padding-left: ${props => {
-    if (props.active) return '1rem';
+    if (props.active) return '0rem';
     return `${4 + (props.colorCount - 1)}rem`;
   }};
+  transition: width 0.25s;
   top: 0;
-  width: ${props => props.active ? `${props.colorCount * 4}rem` : 'auto'};
+  white-space: nowrap;
+  width: ${props => props.active ? `${props.dynamicWidth}rem` : '0'};
 `;
 
 const ColorCard = styled.div`
   background-color: ${props => props.color};
   display: inline-block;
   height: 4rem;
-  left: ${props => `${props.colorIndex}rem`};
+  left: ${props => props.active ? 0 : `${props.colorIndex}rem`};
+  margin-left: ${props => props.active ? '1rem' : 0};
   position: ${props => props.active ? 'relative' : 'absolute'};
   top: 0;
   width: 4rem;
+`;
+
+const slide = (start, end) => keyframes`
+  from {
+    transform: translate(${end}, 0);
+  }
+
+  to {
+    transform: translate(${start}, 0);
+  }
+`;
+
+const ColorCardCloseButton = styled(Button)`
+  animation-name: ${props => slide(props.start, props.end)};
+  animation-duration: 0.2s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  background-color: transparent;
+  border: none;
+  display: block;
+  font-size: 2rem;
+  opacity: ${props => props.active ? 1 : 0};
+  position: absolute;
+  transition: opacity 0.2s;
+  top: -0.2rem;
 `;
 
 const SaveColorButton = styled(Button)`
@@ -141,12 +172,28 @@ class CanvasContainer extends React.Component {
     if (!this.state.colorCardsActive) return;
 
     e.stopPropagation();
-    e.persist();
 
     penObj.color = this.state.colors[index];
     this.setState({
       pen: penObj,
     });
+  }
+
+  closeColorCards(e) {
+    e.stopPropagation();
+
+    this.setState({
+      colorCardsActive: false,
+    });
+  }
+
+  dynamicLeft() {
+    return this.dynamicWidth() + 3;
+  }
+
+  dynamicWidth() {
+    const width = (this.state.colors.length * 5) + 1;
+    return width < MAX_COLOR_CARD_WIDTH ? width : MAX_COLOR_CARD_WIDTH;
   }
 
   render() {
@@ -190,9 +237,19 @@ class CanvasContainer extends React.Component {
                 onClick={e => this.expandSavedColors(e)}
                 colorCount={this.state.colors.length}
                 active={this.state.colorCardsActive}
+                dynamicWidth={this.dynamicWidth()}
               >
                 { this.colorCards() }
               </ColorCardContainer>
+
+              <ColorCardCloseButton
+                onClick={e => this.closeColorCards(e)}
+                active={this.state.colorCardsActive}
+                start={this.state.colorCardsActive ? `calc(100% + ${this.dynamicLeft()}rem)` : '-10rem'}
+                end={this.state.colorCardsActive ? '-10rem' : `calc(100% + ${this.dynamicLeft()}rem)` }
+              >
+                <FontAwesomeIcon icon='times' size='1x' />
+              </ColorCardCloseButton>
             </PenButtonWrapper>
 
             <SaveColorButton onClick={e => this.saveColor(e)}>save</SaveColorButton>
