@@ -46,22 +46,28 @@ const PenButtonWrapper = styled.div`
 `;
 
 const ColorCardContainer = styled.div`
+  cursor: pointer;
   height: 4rem;
   left: calc(100% + 1rem);
   margin: 0;
   position: absolute;
-  padding-left: ${props => `${4 + (props.colorCount - 1)}rem`};
+  overflow-x: ${props => props.active ? 'scroll' : 'none'};
+  padding-left: ${props => {
+    if (props.active) return '1rem';
+    return `${4 + (props.colorCount - 1)}rem`;
+  }};
   top: 0;
+  width: ${props => props.active ? `${props.colorCount * 4}rem` : 'auto'};
 `;
 
 const ColorCard = styled.div`
   background-color: ${props => props.color};
-  bottom: 0;
   display: inline-block;
+  height: 4rem;
   left: ${props => `${props.colorIndex}rem`};
-  position: absolute;
+  position: ${props => props.active ? 'relative' : 'absolute'};
   top: 0;
-  width: 3rem;
+  width: 4rem;
 `;
 
 const SaveColorButton = styled(Button)`
@@ -72,7 +78,7 @@ class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { canvasDims: {}, pen: {}, colors: [] };
+    this.state = { canvasDims: {}, pen: {}, colors: [], colorCardsActive: false };
     this.canvasRef = React.createRef();
   }
 
@@ -111,10 +117,36 @@ class CanvasContainer extends React.Component {
     let cards = [];
     this.state.colors.forEach((val, index) => {
       cards.push(
-        <ColorCard colorIndex={index} color={val} key={index} />
+        <ColorCard
+          data-index={index}
+          colorIndex={index} color={val} key={index}
+          onClick={e => this.pickColor(e)}
+          active={this.state.colorCardsActive}
+        />
       );
     });
     return cards;
+  }
+
+  expandSavedColors(e) {
+    e.stopPropagation();
+    this.setState({
+      colorCardsActive: true,
+    });
+  }
+
+  pickColor(e) {
+    const penObj = this.state.pen;
+    const index = e.target.dataset['index'];
+    if (!this.state.colorCardsActive) return;
+
+    e.stopPropagation();
+    e.persist();
+
+    penObj.color = this.state.colors[index];
+    this.setState({
+      pen: penObj,
+    });
   }
 
   render() {
@@ -154,7 +186,11 @@ class CanvasContainer extends React.Component {
             >
               <FontAwesomeIcon icon='pen-nib' size='3x' />
 
-              <ColorCardContainer colorCount={this.state.colors.length}>
+              <ColorCardContainer
+                onClick={e => this.expandSavedColors(e)}
+                colorCount={this.state.colors.length}
+                active={this.state.colorCardsActive}
+              >
                 { this.colorCards() }
               </ColorCardContainer>
             </PenButtonWrapper>
