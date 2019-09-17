@@ -37,7 +37,7 @@ const configurator = {
     return {
       rules: [
         { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
-        { test: /\.jsx?$/,loader: 'babel-loader',exclude: /node_modules/ },
+        { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
         { test: /\.go$/, use: 'gopherjs-loader'}
       ]
     }
@@ -51,11 +51,17 @@ const configurator = {
     var config = {
       mode: env,
       entry: configurator.entries(),
-      output: { filename: '[name].[hash].js', path: `${__dirname}/public/assets` },
+      output: {
+        filename: '[name].[hash].js',
+        path: `${__dirname}/public/assets`
+      },
       plugins: configurator.plugins(),
       module: configurator.moduleOptions(),
       resolve: {
         extensions: ['.jsx', '.js'],
+        alias: {
+          gif$: `${__dirname}/assets/js/gif/gif.js`,
+        },
       },
     }
 

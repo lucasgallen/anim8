@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Label, Input } from '../atoms';
-import GIF from '../../vendor/gif.js';
+import GIF from 'gif';
 
 const Window = styled.div`
   margin-top: 4rem;
