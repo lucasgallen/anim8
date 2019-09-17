@@ -150,7 +150,7 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const canvasImg = this.getCanvasImage() || this.cavasImg;
+    const canvasImg = this.getCanvasImage() || this.cavasImg || '';
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
