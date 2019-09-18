@@ -216,7 +216,6 @@ class CanvasContainer extends React.Component {
             canvasImg={this.props.shadowImg}
             height={this.props.height}
             width={this.props.width}
-            data-test='foobar'
             ref={(canvas) => this.shadowCanvas = canvas}
           />
         </Container>
