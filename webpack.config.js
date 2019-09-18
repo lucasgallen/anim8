@@ -9,8 +9,13 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 const configurator = {
   entries: function(){
     var entries = {
+      drawpass: [
+        './assets/js/drawpass.js',
+      ],
+      flipbook: [
+        './assets/js/flipbook.js',
+      ],
       app: [
-        './assets/js/app.js',
         './assets/css/app.scss'
       ],
     }
