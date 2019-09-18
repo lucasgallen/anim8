@@ -71,6 +71,7 @@ class Canvas extends React.Component {
         onTouchMove={(e) => this.drawTouchPath(e)}
         onMouseUp={() => this.endPath()}
         onTouchEnd={() => this.endPath()}
+        background={this.props.background}
         width={this.props.width || '600'}
         height={this.props.height || '600'}
         ref={(canvas) => this.canvas = canvas}

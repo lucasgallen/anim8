@@ -21,7 +21,7 @@ const Button = styled.button`
 `;
 
 const StyledCanvas = styled.canvas`
-  background: ${props => props.isShadow ? 'white' : 'transparent'};
+  background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
   bottom: ${props => props.isShadow && '2px'};
   left: 0;
   position: ${props => props.isShadow ? 'absolute' : 'relative'};

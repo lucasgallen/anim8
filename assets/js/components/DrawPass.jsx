@@ -1,32 +1,60 @@
 import React from 'react';
-import Canvas from './Canvas';
+import CanvasContainer from './drawpass/CanvasContainer';
 
 class DrawPass extends React.Component {
-  saveDrawing() {
-    const canvas = this.canvasComponent.canvas.toDataURL();
-    this.props.store.dispatch({
-      type: 'SAVE_DRAWING',
-      canvasImg: canvas
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      canvasDims: {},
+      pen: {},
+      colors: [],
+      colorCardsActive: false
+    };
+  }
+
+  componentDidMount() {
+    let canvasContainer;
+
+    this.canvasImg = '';
+    // TODO: request image from session
+
+    this.canvasContainerRef = this.canvasContainer.canvasContainerRef;
+    canvasContainer = this.canvasContainerRef;
+
+    this.setState({
+      canvasDims: {
+        height: canvasContainer.getBoundingClientRect().height,
+        width: canvasContainer.getBoundingClientRect().width,
+      }
+    }, () => {
+      window.addEventListener('resize', e => this.updateScreen(e));
+    });
+  }
+
+  updateScreen(e) {
+    const canvasContainer = this.canvasContainerRef;
+    if (this.throttle) return;
+
+    this.throttle = true;
+    setTimeout(() => { this.throttle = false; }, 500);
+
+    this.setState({
+      canvasDims: {
+        height: canvasContainer.getBoundingClientRect().height,
+        width: canvasContainer.getBoundingClientRect().width,
+      }
     });
   }
 
   render() {
     return (
-      <div>
-        <Canvas
-          store={this.props.store}
-          renderUI={true}
-          ref={(canvas) => this.canvasComponent = canvas}
-        />
-
-        <button
-          onClick={() => this.saveDrawing()}
-        >save</button>
-
-        <button
-          onClick={() => this.canvasComponent.loadDrawing()}
-        >load</button>
-      </div>
+      <CanvasContainer
+        ref={ref => this.canvasContainer = ref}
+        canvasImg={this.canvasImg}
+        height={this.state.canvasDims.height}
+        width={this.state.canvasDims.width}
+      />
     );
   }
 }
