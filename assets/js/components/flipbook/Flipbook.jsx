@@ -20,7 +20,7 @@ const NavBox = styled.div`
 
 const Container = styled.div`
   overflow: hidden;
-  padding-bottom: 1rem;
+  padding: 1rem;
 `;
 
 const FlipbookContainer = styled.div`

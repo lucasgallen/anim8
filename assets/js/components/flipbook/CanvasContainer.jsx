@@ -18,7 +18,7 @@ const Title = styled.h2`
   left: 1rem;
   position: absolute;
   text-transform: uppercase;
-  top: 0;
+  top: 1rem;
   z-index: 1;
 `;
 
@@ -50,7 +50,7 @@ const PenButtonWrapper = styled.div`
 
 const ColorCardContainer = styled.div`
   cursor: pointer;
-  height: 4rem;
+  height: 4.2rem;
   left: calc(100% + 1rem);
   margin: 0;
   overflow: auto;
