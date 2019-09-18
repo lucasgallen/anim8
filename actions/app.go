@@ -61,6 +61,7 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 		app.GET("/flipbook", FlipbookHandler)
+		app.GET("/drawpass", DrawpassHandler)
 
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
