@@ -69,7 +69,7 @@ class GifWindow extends React.Component {
       background: '#fff',
       quality: 1,
       workers: 4,
-      workerScript: './assets/gif.worker.js',
+      workerScript: '/assets/gif.worker.js',
       width: this.props.width,
       height: this.props.height,
     });
