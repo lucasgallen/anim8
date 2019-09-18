@@ -1,5 +1,6 @@
 const Webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -8,7 +9,10 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 const configurator = {
   entries: function(){
     var entries = {
-      app: ['./assets/js/app.js'],
+      app: [
+        './assets/js/app.js',
+        './assets/css/app.scss'
+      ],
     }
     return entries
   },
@@ -16,6 +20,7 @@ const configurator = {
   plugins() {
     var plugins = [
       new CleanObsoleteChunks(),
+      new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" }),
       new CopyWebpackPlugin(
         [
           { from: './assets', to: '' }
@@ -36,6 +41,14 @@ const configurator = {
   moduleOptions: function() {
     return {
       rules: [
+        {
+          test: /\.s[ac]ss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            { loader: 'css-loader', options: {sourceMap: true} },
+            { loader: 'sass-loader', options: {sourceMap: true} }
+          ]
+        },
         { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
         { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
         { test: /\.go$/, use: 'gopherjs-loader'}

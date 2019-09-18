@@ -1,2 +1,12 @@
-<div id="root"></div>
-<%= javascriptTag("app.js") %>
+<div class='home'>
+  <div class='home__title-container'>
+    <h1 class='home__title'>Anim8</h1>
+  </div>
+
+  <div class='home__link-container'>
+    <a class='home__link home__link--flipbook' href=<%= flipbookPath() %>>flipbook</a>
+    <% if (drawpassPath()) { %>
+      <a class='home__link home__link--drawpass' href=<%= drawpassPath() %>>drawpass</a>
+    <% } %>
+  </div>
+</div>
