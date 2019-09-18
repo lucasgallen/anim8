@@ -73,7 +73,7 @@ const Input = styled.input`
   font-size: 1.5rem;
   padding: 0.25rem;
   margin: 0 0.5rem;
-  width: 7rem;
+  width: ${props => props.width || '7rem'};
 `;
 
 export {
