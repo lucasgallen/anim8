@@ -1,7 +1,7 @@
 {
-  "name": "drawpass",
+  "name": "anim8",
   "version": "0.1.0",
-  "description": "canvas drawing app",
+  "description": "community drawing app",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-regular-svg-icons": "^5.10.2",

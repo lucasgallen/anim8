@@ -1,5 +1,5 @@
-name = "drawpass"
-bin = "bin/drawpass"
+name = "anim8"
+bin = "bin/anim8"
 vcs = "git"
 with_pop = true
 with_sqlite = false

@@ -1,4 +1,4 @@
-module drawpass
+module anim8
 
 go 1.13
 

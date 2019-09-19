@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"drawpass/actions"
+	"anim8/actions"
 )
 
 // main is the starting point for your Buffalo application.

@@ -2,8 +2,8 @@
 # https://docs.docker.com/engine/userguide/eng-image/multistage-build/
 FROM gobuffalo/buffalo:v0.14.10 as builder
 
-RUN mkdir -p $GOPATH/src/drawpass
-WORKDIR $GOPATH/src/drawpass
+RUN mkdir -p $GOPATH/src/anim8
+WORKDIR $GOPATH/src/anim8
 
 # this will cache the npm install step, unless package.json changes
 ADD package.json .

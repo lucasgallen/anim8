@@ -1,7 +1,7 @@
 package grifts
 
 import (
-	"drawpass/actions"
+	"anim8/actions"
 
 	"github.com/gobuffalo/buffalo"
 )
