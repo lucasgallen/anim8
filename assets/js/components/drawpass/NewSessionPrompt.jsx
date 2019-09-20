@@ -1,14 +1,29 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { changeStage, TUTORIAL_STAGE } from '../../actions/drawpass.js';
+import Tutorial from './Tutorial';
 
 function NewSessionPrompt(props) {
   return (
     <div>
-      <p>New to DrawPass? Click "start" to create a new session and create something with your  friends!</p>
+      <div>
+        <p>Familiar with DrawPass?</p>
+        <button
+          onClick={() => props.createNewSession()}
+        >get drawing</button>
+      </div>
+
       <button
-        onClick={() => props.createNewSession()}
-      >start</button>
+        onClick={() => props.changeStage(TUTORIAL_STAGE)}
+      >What is this?</button>
     </div>
   );
 }
 
-export default NewSessionPrompt;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ changeStage }, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(NewSessionPrompt);

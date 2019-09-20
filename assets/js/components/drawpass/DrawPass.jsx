@@ -1,14 +1,18 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
+import { changeStage, NEW_STAGE, DRAW_STAGE, TUTORIAL_STAGE } from '../../actions/drawpass.js';
 import Illustrator from './Illustrator';
 import NewSessionPrompt from './NewSessionPrompt';
+import Tutorial from './Tutorial';
+import Loading from '../Loading';
 
 class DrawPass extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        newSession: false,
         canvasImg: '',
         slug: '',
       };
@@ -33,48 +37,63 @@ class DrawPass extends React.Component {
 
   handleCreateSessionSuccess(data) {
     this.setState({
-      newSession: false,
+      canvasImg: data.shared_image.blob || '',
       slug: data.slug,
-      canvasImg: data.shared_image.blob || ''
     });
+
+    this.props.changeStage(DRAW_STAGE);
   }
 
   maybeStartNewSession() {
     if (this.props.sessionId !== 'new') return;
 
-    this.setState({
-      newSession: true
-    });
+    this.props.changeStage(NEW_STAGE);
   }
 
   maybeOpenSession() {
     if (this.props.sessionId === 'new') return;
     // TODO: request session by slug
+    this.props.changeStage(DRAW_STAGE);
   }
 
-  // TODO: select UI based on drawpass "stage"
-  // TODO: use select..case
-  render() {
-    return (
-      <div>
-        {
-          !this.state.newSession &&
-          <Illustrator
-            canvasImg={this.state.canvasImg}
-          />
-        }
-        {
-          this.state.newSession &&
+  drawPassStage() {
+    switch (this.props.stage) {
+      case NEW_STAGE:
+        return (
           <NewSessionPrompt
             createNewSession={() => this.createNewSession()}
           />
-        }
-        {/*
-        TODO: make connect to session component
-        */}
-      </div>
-    );
+        );
+      case DRAW_STAGE:
+        return (
+          <Illustrator
+            canvasImg={this.state.canvasImg}
+          />
+        );
+      case TUTORIAL_STAGE:
+        return (
+          <Tutorial
+            createNewSession={() => this.createNewSession()}
+          />
+        );
+      default:
+        return <Loading />;
+    }
+  }
+
+  render() {
+    return this.drawPassStage();
   }
 }
 
-export default DrawPass;
+const mapStateToProps = (state) => {
+  return {
+    stage: state.stage,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ changeStage }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawPass);
