@@ -60,9 +60,12 @@ func App() *buffalo.App {
 		app.Use(translations())
 
 		app.GET("/", HomeHandler)
-		app.GET("/flipbook", FlipbookHandler)
-		app.GET("/drawpass", DrawpassHandler)
 
+		app.GET("/flipbook", FlipbookHandler)
+
+		app.GET("/drawpass/{sgroup_slug:[A-Fa-f0-9]{0,10}|new}", DrawpassHandler)
+
+		app.Resource("/session_groups", SessionGroupsResource{})
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 
