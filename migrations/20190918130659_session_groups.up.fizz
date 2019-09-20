@@ -1,0 +1,6 @@
+create_table("session_groups") {
+  t.Column("id", "integer", {primary: true})
+  t.Column("image_ready", "bool", {"default": false})
+  t.Column("slug", "string", {"size": 10})
+  t.Index("slug", {"unique": true})
+}

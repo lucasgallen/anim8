@@ -1,0 +1,5 @@
+create_table("shared_images") {
+  t.Column("id", "integer", {primary: true})
+  t.Column("session_group_id", "integer", {"null": false})
+  t.Column("blob", "bytea", {"null": true})
+}
