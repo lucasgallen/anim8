@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { addPage, savePage, updateScreen } from '../../actions/actions.js';
+import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
 import { Button, Global } from '../atoms';
 import CanvasContainer from './CanvasContainer';
 import ClearCanvasButton from '../canvas/ClearCanvasButton';
