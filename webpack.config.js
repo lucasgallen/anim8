@@ -26,6 +26,7 @@ const configurator = {
     var plugins = [
       new CleanObsoleteChunks(),
       new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" }),
+      new Webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
       new CopyWebpackPlugin(
         [
           { from: './assets', to: '' }
@@ -55,6 +56,7 @@ const configurator = {
           ]
         },
         { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
+        { test: require.resolve('jquery'), use: 'expose-loader?jQuery!expose-loader?$'},
         { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
         { test: /\.go$/, use: 'gopherjs-loader'}
       ]

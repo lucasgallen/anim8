@@ -1,7 +1,7 @@
 import React from 'react';
-import CanvasContainer from './drawpass/CanvasContainer';
+import CanvasContainer from './CanvasContainer';
 
-class DrawPass extends React.Component {
+class Illustrator extends React.Component {
   constructor(props) {
     super(props);
 
@@ -15,9 +15,6 @@ class DrawPass extends React.Component {
 
   componentDidMount() {
     let canvasContainer;
-
-    this.canvasImg = '';
-    // TODO: request image from session
 
     this.canvasContainerRef = this.canvasContainer.canvasContainerRef;
     canvasContainer = this.canvasContainerRef;
@@ -51,7 +48,7 @@ class DrawPass extends React.Component {
     return (
       <CanvasContainer
         ref={ref => this.canvasContainer = ref}
-        canvasImg={this.canvasImg}
+        canvasImg={this.props.canvasImg}
         height={this.state.canvasDims.height}
         width={this.state.canvasDims.width}
       />
@@ -59,4 +56,4 @@ class DrawPass extends React.Component {
   }
 }
 
-export default DrawPass;
+export default Illustrator;
