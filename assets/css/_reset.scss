@@ -41,3 +41,26 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+button {
+    border: none;
+    margin: 0;
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+button:hover,
+button:focus {
+    background: white;
+}
+
+button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+
+button:active {
+    transform: scale(0.99);
+}

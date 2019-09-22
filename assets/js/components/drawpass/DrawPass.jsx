@@ -1,12 +1,44 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import { changeStage, NEW_STAGE, DRAW_STAGE, TUTORIAL_STAGE } from '../../actions/drawpass.js';
 import Illustrator from './Illustrator';
 import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 import Loading from '../Loading';
+
+const Container = styled.div`
+  margin: -10rem auto 0;
+  max-width: 55rem;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 75%;
+
+  @media (min-width: 700px)  {
+    margin: 0 auto;
+  }
+`;
+
+const Title = styled.div`
+  display: inline-block;
+  box-shadow: 1rem 0 0 0 aquamarine, 3rem 0 0 -1rem cadetblue, 5rem 0 0 -2rem black;
+  font-family: sans-serif;
+  font-size: 45px;
+  font-weight: bold;
+  margin: 0 3rem 2rem 0;
+  padding: 3rem 1rem;
+  text-align: center;
+  width: auto;
+
+  @media (min-width: 700px) {
+    box-shadow: 1.5rem 0 0 0 aquamarine, 4.5rem 0 0 -1.5rem cadetblue, 7.5rem 0 0 -3rem black;
+    margin: 0 auto;
+    padding: 7rem 3rem;
+  }
+`;
 
 class DrawPass extends React.Component {
   constructor(props) {
@@ -82,7 +114,12 @@ class DrawPass extends React.Component {
   }
 
   render() {
-    return this.drawPassStage();
+    return (
+      <Container>
+        <Title><h1>drawpass</h1></Title>
+        {this.drawPassStage()}
+      </Container>
+    );
   }
 }
 

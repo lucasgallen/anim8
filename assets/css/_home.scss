@@ -23,13 +23,14 @@
     color: black;
     display: block;
     font-family: sans-serif;
+    font-size: 1.5rem;
     font-weight: bold;
     margin: 0 auto 5rem;
-    padding: 1rem;
+    padding: 2rem;
     position: relative;
     text-decoration: none;
     text-transform: uppercase;
-    width: 6rem;
+    width: 10rem;
 
     &::after {
       border-left: 10px solid black;
