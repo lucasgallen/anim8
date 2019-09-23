@@ -12,11 +12,11 @@ const slideX = (start, end) => keyframes`
 
 const slideY = (start, end) => keyframes`
   0% {
-    top: ${start};
+    transform: translate(0, ${start});
   }
 
   100% {
-    top: ${end};
+    transform: translate(0, ${end});
   }
 `;
 

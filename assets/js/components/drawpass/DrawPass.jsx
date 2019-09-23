@@ -19,8 +19,6 @@ const Container = styled.div`
   margin: -10rem auto 0;
   max-width: 55rem;
   position: relative;
-  transform: ${props => props.transform};
-  transition: transform 0.25s cubic;
   width: 75%;
 
   @media (min-width: 700px)  {
@@ -120,30 +118,24 @@ class DrawPass extends React.Component {
   }
 
   containerSlide() {
-    let slide = { start: '0', end: '50%' };
+    let slide = { start: '0', end: 'calc(50vh - 50%)' };
 
     switch (this.props.stage) {
       case TUTORIAL_STAGE:
         slide.end = '5rem';
-        slide.start = '50%';
+        slide.start = 'calc(50vh - 50%)';
     }
 
     return slide;
   }
 
   render() {
-    let transform = '';
     const slide = this.containerSlide();
-
-    if (this.props.stage !== TUTORIAL_STAGE) {
-      transform = 'translateY(-50%)';
-    }
 
     return (
       <Container
         start={slide.start}
         end={slide.end}
-        transform={transform}
       >
         <Title><h1>drawpass</h1></Title>
         {this.drawPassStage()}
