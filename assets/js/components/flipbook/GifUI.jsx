@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import GifWindow from './GifWindow';
 
-//import { Button } from '../atoms';
+//import { Button } from '../styles/atoms';
 
 const UIContainer = styled.div`
   margin-top: 4rem;

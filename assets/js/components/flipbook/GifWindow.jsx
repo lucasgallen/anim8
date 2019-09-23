@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Label, Input } from '../atoms';
+import { Button, Label, Input } from '../styles/atoms';
 import GIF from 'gif';
 
 // Gif delay in ms

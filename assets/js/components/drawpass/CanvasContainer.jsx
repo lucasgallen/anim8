@@ -5,7 +5,7 @@ import 'rc-color-picker/assets/index.css';
 import ColorPicker from 'rc-color-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Button } from '../atoms';
+import { Button } from '../styles/atoms';
 import Canvas from '../canvas/Canvas';
 
 // TODO: Move pen color picker into separate component!!!

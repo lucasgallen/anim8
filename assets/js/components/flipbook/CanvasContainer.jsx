@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
 import ColorPicker from 'rc-color-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Button } from '../atoms';
+import { Button } from '../styles/atoms';
+import { slideX } from '../styles/keyframes';
 import Canvas from '../canvas/Canvas';
 import ShadowCanvas from '../canvas/ShadowCanvas';
 
@@ -76,18 +77,8 @@ const ColorCard = styled.div`
   width: 4rem;
 `;
 
-const slide = (start, end) => keyframes`
-  from {
-    transform: translate(${end}, 0);
-  }
-
-  to {
-    transform: translate(${start}, 0);
-  }
-`;
-
 const ColorCardCloseButton = styled(Button)`
-  animation-name: ${props => slide(props.start, props.end)};
+  animation-name: ${props => slideX(props.start, props.end)};
   animation-duration: 0.2s;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
