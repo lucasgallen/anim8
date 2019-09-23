@@ -9,12 +9,18 @@ import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 import Loading from '../Loading';
 
+import { slideY } from '../styles/keyframes';
+
 const Container = styled.div`
+  animation-name: ${props => slideY(props.start, props.end)};
+  animation-duration: 0.5s;
+  animation-timing-function: sine;
+  animation-fill-mode: forwards;
   margin: -10rem auto 0;
   max-width: 55rem;
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  transform: ${props => props.transform};
+  transition: transform 0.25s cubic;
   width: 75%;
 
   @media (min-width: 700px)  {
@@ -35,7 +41,7 @@ const Title = styled.div`
 
   @media (min-width: 700px) {
     box-shadow: 1.5rem 0 0 0 aquamarine, 4.5rem 0 0 -1.5rem cadetblue, 7.5rem 0 0 -3rem black;
-    margin: 0 auto;
+    margin: 0 auto 2rem;
     padding: 7rem 3rem;
   }
 `;
@@ -113,9 +119,32 @@ class DrawPass extends React.Component {
     }
   }
 
+  containerSlide() {
+    let slide = { start: '0', end: '50%' };
+
+    switch (this.props.stage) {
+      case TUTORIAL_STAGE:
+        slide.end = '5rem';
+        slide.start = '50%';
+    }
+
+    return slide;
+  }
+
   render() {
+    let transform = '';
+    const slide = this.containerSlide();
+
+    if (this.props.stage !== TUTORIAL_STAGE) {
+      transform = 'translateY(-50%)';
+    }
+
     return (
-      <Container>
+      <Container
+        start={slide.start}
+        end={slide.end}
+        transform={transform}
+      >
         <Title><h1>drawpass</h1></Title>
         {this.drawPassStage()}
       </Container>

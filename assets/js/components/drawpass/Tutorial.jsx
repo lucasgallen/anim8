@@ -3,11 +3,25 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { changeStage } from '../../actions/drawpass.js';
+import TutorialSlide from './TutorialSlide';
 
 class Tutorial extends React.Component {
   constructor(props) {
     super(props);
     this.state = { step: 0 };
+
+    this.slides = [
+      {
+        copy: 'DrawPass allows you to start a drawing and pass it along to a friend to collaborate on with a simple URL.',
+        imagePath: ''
+      },{
+        copy: 'First draw on the canvas with your mouse and the provided UI.',
+        imagePath: ''
+      },{
+        copy: 'Then when you\'re ready for a friend to add to the drawing, simply click "save" and share the provided URL!',
+        imagePath: ''
+      },
+    ];
   }
 
   prevStage() {
@@ -20,43 +34,17 @@ class Tutorial extends React.Component {
     this.setState({ step: currentStep + 1 });
   }
 
-  // TODO: put copy here with correct markup and the annotated images
-  tutorialStep() {
-    switch (this.state.step) {
-      case 0:
-        return this.stepOne();
-      case 1:
-        return this.stepTwo();
-    }
-  }
-
-  stepOne() {
-    return (
-      <div>
-        <p>tutorial step one</p>
-        <button
-          onClick={() => this.nextStage()}
-        >next</button>
-      </div>
-    );
-  }
-
-  stepTwo() {
-    return (
-      <div>
-        <p>tutorial step two</p>
-        <button
-          onClick={() => this.prevStage()}
-        >prev</button>
-        <button
-          onClick={() => this.props.createNewSession()}
-        >get drawing</button>
-      </div>
-    );
-  }
-
   render() {
-    return this.tutorialStep();
+    return (
+      <TutorialSlide
+        slide={ this.slides[this.state.step] }
+        prevStage={() => this.prevStage()}
+        nextStage={() => this.nextStage()}
+        createNewSession={() => this.props.createNewSession()}
+        first={ this.state.step === 0 }
+        last={ this.state.step === this.slides.length - 1 }
+      />
+    );
   }
 }
 
