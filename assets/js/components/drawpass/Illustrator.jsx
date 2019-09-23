@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { Button } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 
 class Illustrator extends React.Component {
@@ -44,14 +46,24 @@ class Illustrator extends React.Component {
     });
   }
 
+  saveImage() {
+    const canvasEl = this.canvasContainer.canvasRef.current.canvas;
+    // TODO: get image and save to database
+  }
+
   render() {
     return (
-      <CanvasContainer
-        ref={ref => this.canvasContainer = ref}
-        canvasImg={this.props.canvasImg}
-        height={this.state.canvasDims.height}
-        width={this.state.canvasDims.width}
-      />
+      <div>
+        <CanvasContainer
+          ref={ref => this.canvasContainer = ref}
+          canvasImg={this.props.canvasImg}
+          height={this.state.canvasDims.height}
+          width={this.state.canvasDims.width}
+        />
+        <Button
+          onClick={() => this.saveImage()}
+        >save image</Button>
+      </div>
     );
   }
 }
