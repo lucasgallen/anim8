@@ -124,6 +124,9 @@ class DrawPass extends React.Component {
       case TUTORIAL_STAGE:
         slide.end = '5rem';
         slide.start = 'calc(50vh - 50%)';
+      case DRAW_STAGE:
+        slide.end = '5rem';
+        slide.start = 'calc(50vh - 50%)';
     }
 
     return slide;

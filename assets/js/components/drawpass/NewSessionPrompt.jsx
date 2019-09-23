@@ -9,13 +9,14 @@ import Tutorial from './Tutorial';
 const Container = styled.div`
   align-items: center;
   display: grid;
-  padding: 2.2rem 0 0;
   margin: 0 auto;
   max-width: 25rem;
+  padding: 2.2rem 0 0;
+  height: 12.5rem;
 
   @media (min-width: 700px) {
     float: right;
-    padding: 3.5rem 0 0;
+    padding: 3rem 0 0;
   }
 `;
 
@@ -48,7 +49,7 @@ const Button = styled.button`
 const Divider = styled.span`
   grid-column-start: 1;
   grid-column-end: 3;
-  margin: 1rem;
+  margin: 0 16rem 0 1rem;
 
   @media (min-width: 700px) {
     border-bottom: 1px solid black;
@@ -65,7 +66,7 @@ function NewSessionPrompt(props) {
 
       <Divider/>
 
-      <Copy>nope.</Copy>
+      <Copy>nope . . .</Copy>
       <Button
         onClick={() => props.changeStage(TUTORIAL_STAGE)}
       >What is this?</Button>

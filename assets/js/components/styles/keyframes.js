@@ -20,7 +20,18 @@ const slideY = (start, end) => keyframes`
   }
 `;
 
+const reveal = keyframes`
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+`;
+
 export {
   slideX,
   slideY,
+  reveal,
 };

@@ -24,6 +24,7 @@ const Title = styled.h2`
 `;
 
 const Container = styled.div`
+  box-shadow: 1px 1px 2px 1px #00000017
   height: 0;
   margin-bottom: 0.5rem;
   padding-bottom: 42.85%;

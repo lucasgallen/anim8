@@ -18,6 +18,11 @@ const Button = styled.button`
   padding: 1rem;
   text-decoration: none;
   text-transform: uppercase;
+
+  &:hover {
+    color: ${props => props.hoverColor || 'black'};
+    background: ${props => props.hoverBackground || 'white'};
+  }
 `;
 
 const StyledCanvas = styled.canvas`

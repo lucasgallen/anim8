@@ -155,7 +155,7 @@ class Flipbook extends React.Component {
 
     return (
       <Container>
-        <Global backgroundColor='cadetblue' />
+        <Global backgroundColor='' />
         <FlipbookContainer>
           <CanvasContainer
             ref={ref => this.canvasContainer = ref}
@@ -169,6 +169,8 @@ class Flipbook extends React.Component {
               <Button
                 onClick={() => this.prevPage()}
                 side='left'
+                hoverColor={'white'}
+                hoverBackground={'black'}
               >prev</Button>
 
               <ClearCanvasButton
@@ -178,6 +180,8 @@ class Flipbook extends React.Component {
               <Button
                 onClick={() => this.nextPage()}
                 side='right'
+                hoverColor={'white'}
+                hoverBackground={'black'}
               >next</Button>
             </NavBox>
           </CanvasContainer>

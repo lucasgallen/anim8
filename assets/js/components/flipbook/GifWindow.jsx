@@ -31,6 +31,7 @@ const CreateButton = styled(Button)`
 
 const CustomGif = styled.img`
   border: none;
+  box-shadow: ${props => props.active ? '1px 1px 2px 1px #00000017' : ''};
   display: block;
   margin: 0 auto;
   margin-bottom: ${props => props.active ? '0.5rem' : '0'};
