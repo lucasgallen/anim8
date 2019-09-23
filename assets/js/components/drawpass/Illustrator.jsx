@@ -1,5 +1,5 @@
 import React from 'react';
-import CanvasContainer from './CanvasContainer';
+import CanvasContainer from '../canvas/CanvasContainer';
 
 class Illustrator extends React.Component {
   constructor(props) {

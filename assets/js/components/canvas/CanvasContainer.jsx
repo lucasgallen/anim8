@@ -6,7 +6,9 @@ import ColorPicker from 'rc-color-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Button } from '../styles/atoms';
-import Canvas from '../canvas/Canvas';
+import { slideX } from '../styles/keyframes';
+import Canvas from './Canvas';
+import ShadowCanvas from './ShadowCanvas';
 
 // TODO: Move pen color picker into separate component!!!
 const MAX_COLOR_CARD_WIDTH = 26;
@@ -21,6 +23,7 @@ const Title = styled.h2`
 `;
 
 const Container = styled.div`
+  box-shadow: 1px 1px 2px 1px #00000017;
   height: 0;
   margin-bottom: 0.5rem;
   padding-bottom: 42.85%;
@@ -74,18 +77,8 @@ const ColorCard = styled.div`
   width: 4rem;
 `;
 
-const slide = (start, end) => keyframes`
-  from {
-    transform: translate(${end}, 0);
-  }
-
-  to {
-    transform: translate(${start}, 0);
-  }
-`;
-
 const ColorCardCloseButton = styled(Button)`
-  animation-name: ${props => slide(props.start, props.end)};
+  animation-name: ${props => slideX(props.start, props.end)};
   animation-duration: 0.2s;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
@@ -202,14 +195,26 @@ class CanvasContainer extends React.Component {
         >
           <Canvas
             renderUI
-            background={'white'}
+            background={this.props.shadowCanvas ? 'transparent' : 'white'}
             pen={this.state.pen}
             canvasImg={this.props.canvasImg}
             height={this.props.height}
             width={this.props.width}
             ref={this.canvasRef}
           />
+
+          {
+            this.props.shadowCanvas &&
+            <ShadowCanvas
+              canvasImg={this.props.shadowImg}
+              height={this.props.height}
+              width={this.props.width}
+              ref={(canvas) => this.shadowCanvas = canvas}
+            />
+          }
         </Container>
+
+        { this.props.children }
 
         <ColorPicker
           onChange={e => this.changeColor(e)}

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
 import { Button, Global } from '../styles/atoms';
-import CanvasContainer from './CanvasContainer';
+import CanvasContainer from '../canvas/CanvasContainer';
 import ClearCanvasButton from '../canvas/ClearCanvasButton';
 import GifWindow from './GifWindow';
 
@@ -52,7 +52,7 @@ class Flipbook extends React.Component {
 
     this.canvasImg = '';
     this.shadowImg = '';
-    this.canvasContainerRef = this.canvasContainer.wrappedInstance;
+    this.canvasContainerRef = this.canvasContainer;
     canvasContainer = this.canvasContainerRef.canvasContainerRef;
 
     this.canvasRef = this.canvasContainerRef.canvasRef;
@@ -160,10 +160,11 @@ class Flipbook extends React.Component {
           <CanvasContainer
             ref={ref => this.canvasContainer = ref}
             page={this.state.page}
-            height={this.state.canvasDims.height * GIF_RATIO}
-            width={this.state.canvasDims.width * GIF_RATIO}
+            height={this.state.canvasDims.height}
+            width={this.state.canvasDims.width}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
+            shadowCanvas
           >
             <NavBox>
               <Button
