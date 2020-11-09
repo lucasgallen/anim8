@@ -6,11 +6,13 @@ module.exports = {
     node: true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended'],
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaFeatures: {
       'jsx': true,
     },
     sourceType: 'module',
+    allowImportExportEverywhere: true,
   },
   rules: {
     indent: ['error', 2],

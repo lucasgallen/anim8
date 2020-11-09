@@ -12,8 +12,8 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPenNib, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import Home from './components/Home';
-import Flipbook from './components/flipbook/Flipbook';
-import DrawPass from './components/drawpass/DrawPass';
+import LazyFlipbook from './components/LazyFlipbook';
+import LazyDrawPass from './components/LazyDrawPass';
 
 library.add(faPenNib, faTimes);
 
@@ -27,13 +27,13 @@ render (
         <Route
           basename='/'
           path="/drawpass/:slug"
-          render={props => <DrawPass {...props} authToken={'123sdf'} />}
+          render={props => <LazyDrawPass {...props} authToken={'123sdf'} />}
         />
         <Route
           path="/drawpass"
-          render={props => <DrawPass {...props} sessionId={'new'} authToken={'123sdf'} />}
+          render={props => <LazyDrawPass {...props} sessionId={'new'} authToken={'123sdf'} />}
         />
-        <Route path="/flipbook" render={props => <Flipbook {...props} />} />
+        <Route path="/flipbook" render={props => <LazyFlipbook {...props} />} />
       </Switch>
     </Router>
   </Provider>,
