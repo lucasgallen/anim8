@@ -1,20 +1,20 @@
 const path = require('path');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const webpack = require('webpack');
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
-  'node_modules': path.join(__dirname, 'node_modules'),
+  node_modules: path.join(__dirname, 'node_modules'),
   build: path.join(__dirname, '/'),
 };
 
 const commonConfig = merge([
   {
     resolve: {
+      modules: ['node_modules'],
       extensions: ['.js', '.jsx'],
       alias: {
         gif$: `${__dirname}/app/gif/gif.js`,
@@ -24,7 +24,7 @@ const commonConfig = merge([
       app: PATHS.app,
     },
     output: {
-      path: PATHS.build,
+      publicPath: '/',
       filename: '[name].js',
     },
     plugins: [
@@ -41,9 +41,10 @@ const commonConfig = merge([
         {
           test: /\.jsx?$/,
           include: PATHS.app,
-          exclude(path) {
-            return path.match(/node_modules|gif/);
-          },
+          exclude: [
+            /gif/,
+            /node_modules/,
+          ],
 
           use: ['babel-loader', 'eslint-loader'],
         },
@@ -58,6 +59,7 @@ const commonConfig = merge([
 
 const productionConfig = merge([
   {
+    mode: 'production',
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -79,15 +81,18 @@ const productionConfig = merge([
 
 const developmentConfig = merge([
   {
+    mode: 'development',
     devServer: {
+      clientLogLevel: 'debug',
       historyApiFallback: true,
-      stats: 'errors-only',
+      stats: {
+        errors: true,
+      },
 
-      host: null,
-      port: null,
+      host: '0.0.0.0',
+      port: '8080',
 
       publicPath: '/',
-      //conentBase: path.join(__dirname, '/public/assets'),
 
       overlay: {
         errors: true,
