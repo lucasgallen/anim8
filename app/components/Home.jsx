@@ -80,7 +80,7 @@ function Home() {
 
         <LinkContainer>
           <FlipbookLink to='/flipbook'>flipbook</FlipbookLink>
-          <DrawpassLink to='/drawpass/asdfsad'>drawpass</DrawpassLink>
+          <DrawpassLink to='/drawpass'>drawpass</DrawpassLink>
         </LinkContainer>
       </HomeContainer>
     </div>

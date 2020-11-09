@@ -49,12 +49,9 @@ class DrawPass extends React.Component {
     super(props);
     const { slug } = props.match.params;
 
-    console.log(slug);
-    console.log(props);
-
     this.state = {
       canvasImg: '',
-      slug: '',
+      slug: slug,
     };
   }
 
@@ -95,7 +92,6 @@ class DrawPass extends React.Component {
 
   maybeOpenSession() {
     if (this.props.sessionId === 'new') return;
-    console.log(this.state.slug);
     // TODO: request session by slug
     this.props.changeStage(DRAW_STAGE);
   }

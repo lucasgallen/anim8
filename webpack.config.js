@@ -33,7 +33,6 @@ const commonConfig = merge([
         inject: false,
         template: path.join(__dirname, 'public/index.html'),
       }),
-      new ManifestPlugin({ fileName: 'manifest.json' }),
     ],
   },
   {
