@@ -18,10 +18,15 @@ const Button = styled.button`
   padding: 1rem;
   text-decoration: none;
   text-transform: uppercase;
+
+  &:hover {
+    color: ${props => props.hoverColor || 'black'};
+    background: ${props => props.hoverBackground || 'white'};
+  }
 `;
 
 const StyledCanvas = styled.canvas`
-  background: ${props => props.isShadow ? 'white' : 'transparent'};
+  background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
   bottom: ${props => props.isShadow && '2px'};
   left: 0;
   position: ${props => props.isShadow ? 'absolute' : 'relative'};
@@ -73,7 +78,7 @@ const Input = styled.input`
   font-size: 1.5rem;
   padding: 0.25rem;
   margin: 0 0.5rem;
-  width: 7rem;
+  width: ${props => props.width || '7rem'};
 `;
 
 export {

@@ -3,8 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { savePage } from '../../actions/actions.js';
-import {Button} from '../atoms';
+import { savePage } from '../../actions/flipbook.js';
+import { Button } from '../styles/atoms';
 
 const ClearButton = styled(Button)`
   background: black;

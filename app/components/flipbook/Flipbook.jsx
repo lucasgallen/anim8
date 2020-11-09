@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { addPage, savePage, updateScreen } from '../../actions/actions.js';
-import { Button, Global } from '../atoms';
-import CanvasContainer from './CanvasContainer';
+import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
+import { Button, Global } from '../styles/atoms';
+import CanvasContainer from '../canvas/CanvasContainer';
 import ClearCanvasButton from '../canvas/ClearCanvasButton';
 import GifWindow from './GifWindow';
 
@@ -20,7 +20,7 @@ const NavBox = styled.div`
 
 const Container = styled.div`
   overflow: hidden;
-  padding-bottom: 1rem;
+  padding: 1rem;
 `;
 
 const FlipbookContainer = styled.div`
@@ -52,7 +52,7 @@ class Flipbook extends React.Component {
 
     this.canvasImg = '';
     this.shadowImg = '';
-    this.canvasContainerRef = this.canvasContainer.wrappedInstance;
+    this.canvasContainerRef = this.canvasContainer;
     canvasContainer = this.canvasContainerRef.canvasContainerRef;
 
     this.canvasRef = this.canvasContainerRef.canvasRef;
@@ -150,25 +150,28 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const canvasImg = this.getCanvasImage() || this.cavasImg;
+    const canvasImg = this.getCanvasImage() || this.cavasImg || '';
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
       <Container>
-        <Global backgroundColor='cadetblue' />
+        <Global backgroundColor='' />
         <FlipbookContainer>
           <CanvasContainer
             ref={ref => this.canvasContainer = ref}
             page={this.state.page}
-            height={this.state.canvasDims.height * GIF_RATIO}
-            width={this.state.canvasDims.width * GIF_RATIO}
+            height={this.state.canvasDims.height}
+            width={this.state.canvasDims.width}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
+            shadowCanvas
           >
             <NavBox>
               <Button
                 onClick={() => this.prevPage()}
                 side='left'
+                hoverColor={'white'}
+                hoverBackground={'black'}
               >prev</Button>
 
               <ClearCanvasButton
@@ -178,6 +181,8 @@ class Flipbook extends React.Component {
               <Button
                 onClick={() => this.nextPage()}
                 side='right'
+                hoverColor={'white'}
+                hoverBackground={'black'}
               >next</Button>
             </NavBox>
           </CanvasContainer>

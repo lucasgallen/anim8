@@ -1,6 +1,7 @@
 import { createStore } from 'redux';
 
 const initialState = {
+  drawpassStage: '',
   pages: [],
   drawing: {},
   screen: {
@@ -19,7 +20,7 @@ const savePage = (state, action) => {
   return pages;
 };
 
-const canvas = (state = initialState, action) => {
+const anim8 = (state = initialState, action) => {
   switch (action.type) {
   case 'ADD_PAGE':
     return (Object.assign({}, state,
@@ -27,6 +28,12 @@ const canvas = (state = initialState, action) => {
         pages: [...state.pages,
           action.payload
         ]
+      }
+    ));
+  case 'CHANGE_DRAWPASS_STAGE':
+    return (Object.assign({}, state,
+      {
+        drawpassStage: action.payload
       }
     ));
   case 'SAVE_PAGE':
@@ -53,7 +60,7 @@ const canvas = (state = initialState, action) => {
 };
 
 const store = createStore(
-  canvas,
+  anim8,
   window.__REDUX_DEVTOOLS_EXTENTION__ && window.__REDUX_DEVTOOLS_EXTENTION__()
 );
 

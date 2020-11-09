@@ -2,18 +2,23 @@ const path = require('path');
 const merge = require('webpack-merge');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const webpack = require('webpack');
 
 const PATHS = {
-  app: path.join(__dirname, 'app/'),
+  app: path.join(__dirname, 'app'),
   'node_modules': path.join(__dirname, 'node_modules'),
-  build: path.join(__dirname, './'),
+  build: path.join(__dirname, '/'),
 };
 
 const commonConfig = merge([
   {
     resolve: {
       extensions: ['.js', '.jsx'],
+      alias: {
+        gif$: `${__dirname}/app/gif/gif.js`,
+      },
     },
     entry: {
       app: PATHS.app,
@@ -23,10 +28,12 @@ const commonConfig = merge([
       filename: '[name].js',
     },
     plugins: [
+      new CleanObsoleteChunks(),
       new HtmlWebpackPlugin({
-        title: 'Draw Pass',
+        inject: false,
         template: path.join(__dirname, 'public/index.html'),
       }),
+      new ManifestPlugin({ fileName: 'manifest.json' }),
     ],
   },
   {
@@ -36,7 +43,7 @@ const commonConfig = merge([
           test: /\.jsx?$/,
           include: PATHS.app,
           exclude(path) {
-            return path.match(/node_modules|vendor/);
+            return path.match(/node_modules|gif/);
           },
 
           use: ['babel-loader', 'eslint-loader'],
@@ -79,6 +86,9 @@ const developmentConfig = merge([
 
       host: null,
       port: null,
+
+      publicPath: '/',
+      //conentBase: path.join(__dirname, '/public/assets'),
 
       overlay: {
         errors: true,

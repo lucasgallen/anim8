@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Label, Input } from '../atoms';
-import GIF from '../../vendor/gif.js';
+import { Button, Label, Input } from '../styles/atoms';
+import GIF from 'gif';
+
+// Gif delay in ms
+const MIN_DELAY = 20;
+const MAX_DELAY = 5000;
 
 const Window = styled.div`
   margin-top: 4rem;
@@ -27,6 +31,7 @@ const CreateButton = styled(Button)`
 
 const CustomGif = styled.img`
   border: none;
+  box-shadow: ${props => props.active ? '1px 1px 2px 1px #00000017' : ''};
   display: block;
   margin: 0 auto;
   margin-bottom: ${props => props.active ? '0.5rem' : '0'};
@@ -69,7 +74,7 @@ class GifWindow extends React.Component {
       background: '#fff',
       quality: 1,
       workers: 4,
-      workerScript: './gif.worker.js',
+      workerScript: '/gif.worker.js',
       width: this.props.width,
       height: this.props.height,
     });
@@ -154,9 +159,10 @@ class GifWindow extends React.Component {
         <UI>
           <Label>delay</Label>
           <Input
-            type='number' min='20' step='100'
+            type='range' min={MIN_DELAY} max={MAX_DELAY} step='100'
             onChange={e => this.handleUIChange(e)}
             value={ this.state.delay }
+            width={'20rem'}
           />
           <span style={{ fontSize: '1.5rem' }}>{ `${this.state.delay / 1000}s` }</span>
         </UI>

@@ -1,28 +1,31 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
 import ColorPicker from 'rc-color-picker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Button } from '../atoms';
-import Canvas from '../canvas/Canvas';
-import ShadowCanvas from '../canvas/ShadowCanvas';
+import { Button } from '../styles/atoms';
+import { slideX } from '../styles/keyframes';
+import Canvas from './Canvas';
+import ShadowCanvas from './ShadowCanvas';
 
 // TODO: Move pen color picker into separate component!!!
 const MAX_COLOR_CARD_WIDTH = 26;
 
+/*
 const Title = styled.h2`
   display: inline-block;
   left: 1rem;
   position: absolute;
   text-transform: uppercase;
-  top: 0;
+  top: 1rem;
   z-index: 1;
 `;
+*/
 
 const Container = styled.div`
+  box-shadow: 1px 1px 2px 1px #00000017;
   height: 0;
   margin-bottom: 0.5rem;
   padding-bottom: 42.85%;
@@ -50,7 +53,7 @@ const PenButtonWrapper = styled.div`
 
 const ColorCardContainer = styled.div`
   cursor: pointer;
-  height: 4rem;
+  height: 4.2rem;
   left: calc(100% + 1rem);
   margin: 0;
   overflow: auto;
@@ -76,18 +79,8 @@ const ColorCard = styled.div`
   width: 4rem;
 `;
 
-const slide = (start, end) => keyframes`
-  from {
-    transform: translate(${end}, 0);
-  }
-
-  to {
-    transform: translate(${start}, 0);
-  }
-`;
-
 const ColorCardCloseButton = styled(Button)`
-  animation-name: ${props => slide(props.start, props.end)};
+  animation-name: ${props => slideX(props.start, props.end)};
   animation-duration: 0.2s;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
@@ -202,9 +195,9 @@ class CanvasContainer extends React.Component {
         <Container
           ref={ref => this.canvasContainerRef = ref}
         >
-          <Title>Page: {this.props.page}</Title>
           <Canvas
             renderUI
+            background={this.props.shadowCanvas ? 'transparent' : 'white'}
             pen={this.state.pen}
             canvasImg={this.props.canvasImg}
             height={this.props.height}
@@ -212,13 +205,15 @@ class CanvasContainer extends React.Component {
             ref={this.canvasRef}
           />
 
-          <ShadowCanvas
-            canvasImg={this.props.shadowImg}
-            height={this.props.height}
-            width={this.props.width}
-            data-test='foobar'
-            ref={(canvas) => this.shadowCanvas = canvas}
-          />
+          {
+            this.props.shadowCanvas &&
+            <ShadowCanvas
+              canvasImg={this.props.shadowImg}
+              height={this.props.height}
+              width={this.props.width}
+              ref={(canvas) => this.shadowCanvas = canvas}
+            />
+          }
         </Container>
 
         { this.props.children }
@@ -260,10 +255,4 @@ class CanvasContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    screen: state.screen,
-  };
-};
-
-export default connect(mapStateToProps, null, null, { withRef: true })(CanvasContainer);
+export default CanvasContainer;
