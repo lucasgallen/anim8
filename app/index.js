@@ -4,7 +4,6 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -17,11 +16,9 @@ import LazyDrawPass from './components/LazyDrawPass';
 
 library.add(faPenNib, faTimes);
 
-const history = createBrowserHistory();
-
 render (
   <Provider store={store}>
-    <Router history={history} basename='/'>
+    <Router basename='/'>
       <Switch>
         <Route exact path="/" render={props => <Home {...props} />} />
         <Route
