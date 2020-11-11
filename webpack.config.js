@@ -53,6 +53,11 @@ const commonConfig = envKeys => {
       module: {
         rules: [
           {
+            test: /\.js$/,
+            enforce: 'pre',
+            use: ['source-map-loader'],
+          },
+          {
             test: /\.jsx?$/,
             include: PATHS.app,
             exclude: [
