@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { changeStage, NEW_STAGE, DRAW_STAGE, TUTORIAL_STAGE } from '../../actions/drawpass.js';
@@ -47,17 +48,22 @@ const Title = styled.div`
 class DrawPass extends React.Component {
   constructor(props) {
     super(props);
-    const { slug } = props.match.params;
 
     this.state = {
       canvasImg: '',
-      slug: slug,
     };
   }
 
   componentDidMount() {
     this.maybeOpenSession();
     this.maybeStartNewSession();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.slug !== prevProps.match.params.slug) {
+      this.maybeOpenSession();
+      this.maybeStartNewSession();
+    }
   }
 
   createNewSession() {
@@ -76,9 +82,8 @@ class DrawPass extends React.Component {
 
     this.setState({
       canvasImg: imageData.meta.data_url || '',
-      slug: response.data.id,
     }, () => {
-      this.props.history.push(`${this.props.location.pathname}/${this.state.slug}`);
+      this.props.history.push(`${this.props.location.pathname}/${response.data.id}`);
     });
 
     this.props.changeStage(DRAW_STAGE);
@@ -94,7 +99,7 @@ class DrawPass extends React.Component {
     if (this.props.sessionId === 'new') return;
 
     // TODO: check if image is ready to edit
-    fetch(`/api/session_group/${this.state.slug}`, {
+    fetch(`/api/session_group/${this.props.match.params.slug}`, {
       method: 'get',
       headers: new Headers({
         'Authorization': `Token token=${process.env.API_TOKEN}`,
@@ -123,7 +128,7 @@ class DrawPass extends React.Component {
     case DRAW_STAGE:
       return (
         <Illustrator
-          slug={this.state.slug}
+          slug={this.props.match.params.slug}
           canvasImg={this.state.canvasImg}
         />
       );
@@ -180,4 +185,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ changeStage }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawPass);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DrawPass));
