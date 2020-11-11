@@ -28,7 +28,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   display: inline-block;
-  box-shadow: 1rem 0 0 0 aquamarine, 3rem 0 0 -1rem cadetblue, 5rem 0 0 -2rem black;
+  box-shadow: 1rem 0 0 -1px aquamarine, 3rem 0 0 -1rem cadetblue, 5rem 0 0 -2rem black;
   font-family: sans-serif;
   font-size: 45px;
   font-weight: bold;
@@ -38,7 +38,7 @@ const Title = styled.div`
   width: auto;
 
   @media (min-width: 700px) {
-    box-shadow: 1.5rem 0 0 0 aquamarine, 4.5rem 0 0 -1.5rem cadetblue, 7.5rem 0 0 -3rem black;
+    box-shadow: 1.5rem 0 0 -1px aquamarine, 4.5rem 0 0 -1.5rem cadetblue, 7.5rem 0 0 -3rem black;
     margin: 0 auto 2rem;
     padding: 7rem 3rem;
   }
