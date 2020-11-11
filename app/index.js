@@ -27,11 +27,11 @@ render (
         <Route
           basename='/'
           path="/drawpass/:slug"
-          render={props => <LazyDrawPass {...props} authToken={'123sdf'} />}
+          render={props => <LazyDrawPass {...props} />}
         />
         <Route
           path="/drawpass"
-          render={props => <LazyDrawPass {...props} sessionId={'new'} authToken={'123sdf'} />}
+          render={props => <LazyDrawPass {...props} sessionId={'new'} />}
         />
         <Route path="/flipbook" render={props => <LazyFlipbook {...props} />} />
       </Switch>

@@ -56,10 +56,11 @@ class Canvas extends React.Component {
   loadDrawing() {
     let img = new Image();
 
-    img.src = this.props.canvasImg;
     img.onload = () => {
       this.canvasContext.drawImage(img, 0, 0);
     };
+
+    img.setAttribute('src', this.props.canvasImg.replace(/\n|\r/g, ''));
   }
 
   render() {

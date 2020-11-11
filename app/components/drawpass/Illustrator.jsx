@@ -46,10 +46,19 @@ class Illustrator extends React.Component {
     });
   }
 
+  // TODO: show user image has saved
   saveImage() {
-    //const canvasEl = this.canvasContainer.canvasRef.current.canvas;
-    // TODO: get image and save to database
-    console.log('get image and save to database');
+    const canvas = this.canvasContainer.canvasRef.current.canvas;
+    const dataURL = canvas.toDataURL('image/png', 0.9);
+
+    fetch(`/api/shared_image/${this.props.slug}`, {
+      method: 'PATCH',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({ data_url: dataURL }),
+    }).then(response => response.json());
   }
 
   render() {

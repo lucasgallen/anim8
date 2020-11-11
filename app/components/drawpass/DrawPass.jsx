@@ -61,24 +61,24 @@ class DrawPass extends React.Component {
   }
 
   createNewSession() {
-    this.handleCreateSessionSuccess({ slug: 'a23c1b', shared_image: { blob: '' }});
-    /* TODO: setup API backend to create sessions
-    $.ajax({
-      url: '/session_groups',
-      contentType: 'application/json',
-      type: 'post',
-      beforeSend: xhr => {
-        xhr.setRequestHeader('X-Csrf-Token', this.props.authToken);
-      },
-      success: data => this.handleCreateSessionSuccess(data)
-    });
-    */
+    fetch('/api/session_groups/new_session', {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+    }).then(response => response.json())
+      .then(data => this.handleCreateSessionSuccess(data));
   }
 
-  handleCreateSessionSuccess(data) {
+  handleCreateSessionSuccess(response) {
+    const imageData = response.data.relationships.shared_image;
+
     this.setState({
-      canvasImg: data.shared_image.blob || '',
-      slug: data.slug,
+      canvasImg: imageData.meta.data_url || '',
+      slug: response.data.id,
+    }, () => {
+      this.props.history.push(`${this.props.location.pathname}/${this.state.slug}`);
     });
 
     this.props.changeStage(DRAW_STAGE);
@@ -92,8 +92,24 @@ class DrawPass extends React.Component {
 
   maybeOpenSession() {
     if (this.props.sessionId === 'new') return;
-    // TODO: request session by slug
-    this.props.changeStage(DRAW_STAGE);
+
+    // TODO: check if image is ready to edit
+    fetch(`/api/session_group/${this.state.slug}`, {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+    }).then(response => response.json())
+      .then(data => this.handleOpenSession(data));
+  }
+
+  handleOpenSession(response) {
+    this.setState({
+      canvasImg: response.data.relationships.shared_image.meta.data_url || ''
+    }, () => {
+      this.props.changeStage(DRAW_STAGE);
+    });
   }
 
   drawPassStage() {
@@ -107,6 +123,7 @@ class DrawPass extends React.Component {
     case DRAW_STAGE:
       return (
         <Illustrator
+          slug={this.state.slug}
           canvasImg={this.state.canvasImg}
         />
       );
