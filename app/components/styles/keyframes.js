@@ -30,8 +30,30 @@ const reveal = keyframes`
   }
 `;
 
+const fadeAway = keyframes`
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+`;
+
+const movingStripes = max => keyframes`
+  0% {
+    background-position: 0px;
+  }
+
+  100% {
+    background-position: ${max};
+  }
+`;
+
 export {
   slideX,
   slideY,
   reveal,
+  fadeAway,
+  movingStripes,
 };
