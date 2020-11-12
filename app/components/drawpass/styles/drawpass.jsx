@@ -16,6 +16,12 @@ const Container = styled.div`
   }
 `;
 
+const LoadingContainer = styled.div`
+  height: 10rem;
+  position: relative;
+  width: 100%;
+`;
+
 const Title = styled.div`
   display: inline-block;
   box-shadow: 1rem 0 0 -1px aquamarine, 3rem 0 0 -1rem cadetblue, 5rem 0 0 -2rem black;
@@ -36,5 +42,6 @@ const Title = styled.div`
 
 export {
   Container,
+  LoadingContainer,
   Title,
 };

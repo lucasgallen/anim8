@@ -9,7 +9,7 @@ import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 import Loading from '../Loading';
 
-import { Container, Title } from './styles/drawpass';
+import { Container, LoadingContainer, Title } from './styles/drawpass';
 
 class DrawPass extends React.Component {
   constructor(props) {
@@ -105,7 +105,11 @@ class DrawPass extends React.Component {
         />
       );
     default:
-      return <Loading />;
+      return (
+        <LoadingContainer>
+          <Loading />
+        </LoadingContainer>
+      );
     }
   }
 
