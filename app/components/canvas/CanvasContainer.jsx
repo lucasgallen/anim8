@@ -27,9 +27,12 @@ const Title = styled.h2`
 const Container = styled.div`
   box-shadow: 1px 1px 2px 1px #00000017;
   height: 0;
+  ${props => props.isSaving ? 'pointer-events: none;' : ''}
+  ${props => props.isSaving ? 'filter: blur(3px);' : ''}
   margin-bottom: 0.5rem;
   padding-bottom: 42.85%;
   position: relative;
+  transition: filter 0.5s ease-in-out;
 `;
 
 const PenButtonWrapper = styled.div`
@@ -194,6 +197,7 @@ class CanvasContainer extends React.Component {
       <div>
         <Container
           ref={ref => this.canvasContainerRef = ref}
+          isSaving={this.props.isSaving}
         >
           <Canvas
             renderUI
