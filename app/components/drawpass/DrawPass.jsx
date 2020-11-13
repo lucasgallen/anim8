@@ -4,13 +4,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { changeStage, NEW_STAGE, DRAW_STAGE, TUTORIAL_STAGE } from '../../actions/drawpass.js';
-import Illustrator from './Illustrator';
-import NewSessionPrompt from './NewSessionPrompt';
-import Tutorial from './Tutorial';
-import Loading from '../Loading';
 import NewSessionResponse from './NewSessionResponse';
+import StageRouter from './StageRouter';
 
-import { Container, LoadingContainer, Title } from './styles/drawpass';
+import { Container, Title } from './styles/drawpass';
 
 class DrawPass extends React.Component {
   constructor(props) {
@@ -37,6 +34,7 @@ class DrawPass extends React.Component {
 
   createNewSession() {
     this.setState({ loadingNewSession: true });
+
     fetch('/api/session_groups/new_session', {
       method: 'get',
       headers: new Headers({
@@ -94,36 +92,6 @@ class DrawPass extends React.Component {
     });
   }
 
-  drawPassStage() {
-    switch (this.props.drawpassStage) {
-    case NEW_STAGE:
-      return (
-        <NewSessionPrompt
-          loading={this.state.loadingNewSession}
-          createNewSession={() => this.createNewSession()}
-        />
-      );
-    case DRAW_STAGE:
-      return (
-        <Illustrator
-          slug={this.props.match.params.slug}
-          canvasImg={this.state.canvasImg}
-        />
-      );
-    case TUTORIAL_STAGE:
-      return (
-        <Tutorial
-          createNewSession={() => this.createNewSession()}
-        />
-      );
-    default:
-      return (
-        <LoadingContainer>
-          <Loading />
-        </LoadingContainer>
-      );
-    }
-  }
 
   containerSlide() {
     let slide = { start: '0', end: 'calc(50vh - 50%)' };
@@ -151,7 +119,13 @@ class DrawPass extends React.Component {
         end={slide.end}
       >
         <Title><h1>drawpass</h1></Title>
-        {this.drawPassStage()}
+        <StageRouter
+          canvasImg={this.state.canvasImg}
+          createNewSession={() => this.createNewSession()}
+          loadingNewSession={this.state.loadingNewSession}
+          match={this.props.match}
+          stage={this.props.drawpassStage}
+        />
         <NewSessionResponse
           loading={this.state.loadingNewSession}
           response={this.state.response}
