@@ -8,6 +8,7 @@ import Illustrator from './Illustrator';
 import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 import Loading from '../Loading';
+import NewSessionResponse from './NewSessionResponse';
 
 import { Container, LoadingContainer, Title } from './styles/drawpass';
 
@@ -17,6 +18,8 @@ class DrawPass extends React.Component {
 
     this.state = {
       canvasImg: '',
+      loadingNewSession: false,
+      response: {},
     };
   }
 
@@ -33,17 +36,25 @@ class DrawPass extends React.Component {
   }
 
   createNewSession() {
+    this.setState({ loadingNewSession: true });
     fetch('/api/session_groups/new_session', {
       method: 'get',
       headers: new Headers({
         'Authorization': `Token token=${process.env.API_TOKEN}`,
         'Content-Type': 'application/json',
       }),
-    }).then(response => response.json())
+    }).then(res => this.handleNewSessionResponse(res))
       .then(data => this.handleCreateSessionSuccess(data));
   }
 
+  handleNewSessionResponse(res) {
+    this.setState({ loadingNewSession: false, response: res });
+    return res.ok ? res.json() : {};
+  }
+
   handleCreateSessionSuccess(response) {
+    if (!Object.keys(response).length) return;
+
     const imageData = response.data.relationships.shared_image;
 
     this.setState({
@@ -140,6 +151,10 @@ class DrawPass extends React.Component {
       >
         <Title><h1>drawpass</h1></Title>
         {this.drawPassStage()}
+        <NewSessionResponse
+          loading={this.state.loadingNewSession}
+          response={this.state.response}
+        />
       </Container>
     );
   }
