@@ -99,6 +99,7 @@ class DrawPass extends React.Component {
     case NEW_STAGE:
       return (
         <NewSessionPrompt
+          loading={this.state.loadingNewSession}
           createNewSession={() => this.createNewSession()}
         />
       );

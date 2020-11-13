@@ -12,6 +12,7 @@ function NewSessionPrompt(props) {
     <Container>
       <Copy>Familiar?</Copy>
       <Button
+        loading={props.loading}
         onClick={() => props.createNewSession()}
       >get drawing</Button>
 
@@ -19,6 +20,7 @@ function NewSessionPrompt(props) {
 
       <Copy>nope . . .</Copy>
       <Button
+        loading={props.loading}
         onClick={() => props.changeStage(TUTORIAL_STAGE)}
       >What is this?</Button>
     </Container>

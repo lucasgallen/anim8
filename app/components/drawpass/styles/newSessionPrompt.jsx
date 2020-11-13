@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { movingStripes } from '/app/components/styles/keyframes';
 
 const Container = styled.div`
   align-items: center;
@@ -23,15 +24,36 @@ const Copy = styled.p`
 `;
 
 const Button = styled.button`
+  animation-name: ${props => props.loading ? movingStripes('-11.2rem') : ''};
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
   background: black;
+  ${props => {
+    if (!props.loading) return;
+    return `
+      background: repeating-linear-gradient(
+        45deg,
+        black,
+        black 1rem,
+        cadetblue 1rem,
+        cadetblue 2rem
+      );
+      pointer-events: none;
+    `;
+  }}
+  background-size: 24rem;
   box-shadow: 0px -3px 0px 0px aquamarine inset;
   color: white;
+  cursor: pointer;
   font-family: sans-serif;
   font-size: 1.5rem;
   grid-column-start: 2;
   line-height: 2rem;
   margin-left: 1rem;
   padding: 1rem;
+  ${props => props.loading ? 'pointer-events: none;' : ''}
   text-transform: uppercase;
 
   &:hover {
