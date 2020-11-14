@@ -24,14 +24,14 @@ const Copy = styled.p`
 `;
 
 const Button = styled.button`
-  animation-name: ${props => props.loading ? movingStripes('-11.2rem') : ''};
+  animation-name: ${props => props.loadingSession ? movingStripes('-11.2rem') : ''};
   animation-duration: 3s;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
   background: black;
   ${props => {
-    if (!props.loading) return;
+    if (!props.loadingSession) return;
     return `
       background: repeating-linear-gradient(
         45deg,

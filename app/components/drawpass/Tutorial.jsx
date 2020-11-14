@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 
-import { changeStage } from '../../actions/drawpass.js';
+import NewSessionResponse from './NewSessionResponse';
 import TutorialSlide from './TutorialSlide';
 
+import useCreateSession from '/app/hooks/useCreateSession';
+
 const Tutorial = props => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(+props.step);
+  const [slide, setSlide] = useState({});
+  const [response, setResponse] = useState({ status: '' });
+
+  const handleCreate = useCreateSession(props.setLoading, ({ json, response }) => {
+    if (!json || !response) return;
+
+    if (json.data && json.data.id) {
+      props.toSession(json.data.id);
+    }
+
+    setResponse(response);
+  });
+
+  useEffect(() => {
+    setSlide(slides[step]);
+  }, []);
+
+  useEffect(() => {
+    setSlide(slides[step]);
+  }, [step]);
 
   const slides = [
     {
@@ -24,27 +44,31 @@ const Tutorial = props => {
   const prevStage = () => {
     const currentStep = step;
     setStep(currentStep - 1);
+    props.toTutorial(currentStep - 1);
   };
 
   const nextStage = () => {
     const currentStep = step;
     setStep(currentStep + 1);
+    props.toTutorial(currentStep + 1);
   };
 
   return (
-    <TutorialSlide
-      slide={slides[step]}
-      prevStage={() => prevStage()}
-      nextStage={() => nextStage()}
-      createNewSession={props.createNewSession()}
-      first={step === 0}
-      last={step === slides.length - 1 }
-    />
+    <>
+      <TutorialSlide
+        slide={slide}
+        prevStage={() => prevStage()}
+        nextStage={() => nextStage()}
+        createNewSession={handleCreate}
+        first={step === 0}
+        last={step === slides.length - 1}
+      />
+      <NewSessionResponse
+        loading={props.loading}
+        response={response}
+      />
+    </>
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ changeStage }, dispatch);
-};
-
-export default connect(null, mapDispatchToProps)(Tutorial);
+export default Tutorial;

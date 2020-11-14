@@ -6,6 +6,7 @@ const Container = styled.div`
   animation-duration: 1.5s;
   animation-timing-function: sine;
   overflow: hidden;
+  margin-bottom: 2rem;
 `;
 
 const Copy = styled.p`

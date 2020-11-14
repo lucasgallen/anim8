@@ -107,13 +107,14 @@ class CanvasContainer extends React.Component {
 
     this.state = { canvasDims: {}, pen: {}, colors: [], colorCardsActive: false };
     this.canvasRef = React.createRef();
+    this.canvasContainerRef = React.createRef();
   }
 
   componentDidMount() {
     this.setState({
       canvasDims: {
-        height: this.canvasContainerRef.getBoundingClientRect().height,
-        width: this.canvasContainerRef.getBoundingClientRect().width,
+        height: this.canvasContainerRef.current.getBoundingClientRect().height,
+        width: this.canvasContainerRef.current.getBoundingClientRect().width,
       }
     });
   }
@@ -196,7 +197,7 @@ class CanvasContainer extends React.Component {
     return (
       <div>
         <Container
-          ref={ref => this.canvasContainerRef = ref}
+          ref={this.canvasContainerRef}
           isSaving={this.props.isSaving}
         >
           <Canvas

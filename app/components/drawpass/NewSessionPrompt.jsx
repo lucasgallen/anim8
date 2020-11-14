@@ -1,34 +1,52 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+
+import NewSessionResponse from './NewSessionResponse';
+
 import { Container, Copy, Button, Divider } from './styles/newSessionPrompt';
-
-import { changeStage, TUTORIAL_STAGE } from '../../actions/drawpass.js';
-//import Tutorial from './Tutorial';
-
+import useCreateSession from '/app/hooks/useCreateSession';
 
 function NewSessionPrompt(props) {
+  const [response, setResponse] = useState({ status: '' });
+  const [id, setID] = useState();
+
+  const handleCreate = useCreateSession(props.setLoading, ({ json, response }) => {
+    if (!response || !json) return;
+
+    if (json.data && json.data.id) {
+      setID(json.data.id);
+    }
+
+    setResponse(response);
+  });
+
+  useEffect(() => {
+    if (!id) return;
+    props.toSession(id);
+  }, [id]);
+
   return (
-    <Container>
-      <Copy>Familiar?</Copy>
-      <Button
-        loading={props.loading}
-        onClick={() => props.createNewSession()}
-      >get drawing</Button>
+    <>
+      <Container>
+        <Copy>Familiar?</Copy>
+        <Button
+          loadingSession={props.loading}
+          onClick={() => handleCreate()}
+        >get drawing</Button>
 
-      <Divider/>
+        <Divider/>
 
-      <Copy>nope . . .</Copy>
-      <Button
+        <Copy>nope . . .</Copy>
+        <Button
+          loadingSession={props.loading}
+          onClick={props.toTutorial}
+        >What is this?</Button>
+      </Container>
+      <NewSessionResponse
         loading={props.loading}
-        onClick={() => props.changeStage(TUTORIAL_STAGE)}
-      >What is this?</Button>
-    </Container>
+        response={response}
+      />
+    </>
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ changeStage }, dispatch);
-};
-
-export default connect(null, mapDispatchToProps)(NewSessionPrompt);
+export default NewSessionPrompt;

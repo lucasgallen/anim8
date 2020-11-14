@@ -53,7 +53,7 @@ class Flipbook extends React.Component {
     this.canvasImg = '';
     this.shadowImg = '';
     this.canvasContainerRef = this.canvasContainer;
-    canvasContainer = this.canvasContainerRef.canvasContainerRef;
+    canvasContainer = this.canvasContainerRef.canvasContainerRef.current;
 
     this.canvasRef = this.canvasContainerRef.canvasRef;
     this.shadowCanvas = this.canvasContainerRef.shadowCanvas;

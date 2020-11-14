@@ -1,7 +1,6 @@
 import { createStore } from 'redux';
 
 const initialState = {
-  drawpassStage: '',
   pages: [],
   drawing: {},
   screen: {
@@ -28,12 +27,6 @@ const anim8 = (state = initialState, action) => {
         pages: [...state.pages,
           action.payload
         ]
-      }
-    ));
-  case 'CHANGE_DRAWPASS_STAGE':
-    return (Object.assign({}, state,
-      {
-        drawpassStage: action.payload
       }
     ));
   case 'SAVE_PAGE':

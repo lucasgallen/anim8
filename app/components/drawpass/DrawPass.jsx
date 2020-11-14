@@ -1,148 +1,84 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  useHistory,
+} from 'react-router-dom';
 
-import { changeStage, NEW_STAGE, DRAW_STAGE, TUTORIAL_STAGE } from '../../actions/drawpass.js';
-import NewSessionResponse from './NewSessionResponse';
-import StageRouter from './StageRouter';
+import IllustratorSetup from './IllustratorSetup';
+import NewSessionPrompt from './NewSessionPrompt';
+import Tutorial from './Tutorial';
+
+import useContainerSlide from '/app/hooks/useContainerSlide';
 
 import { Container, Title } from './styles/drawpass';
 
-class DrawPass extends React.Component {
-  constructor(props) {
-    super(props);
+function DrawPassApp() {
+  const [slide, setSlide] = useState({});
+  const [loading, setLoading] = useState(false);
 
-    this.state = {
-      canvasImg: '',
-      loadingNewSession: false,
-      response: {},
-    };
-  }
+  const { path } = useRouteMatch();
+  const history = useHistory();
 
-  componentDidMount() {
-    this.maybeOpenSession();
-    this.maybeStartNewSession();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.match.params.slug !== prevProps.match.params.slug) {
-      this.maybeOpenSession();
-      this.maybeStartNewSession();
+  const toTutorial = step => {
+    if (step > 0) {
+      history.push(`${path}/tutorial/${step}`);
+    } else {
+      history.push(`${path}/tutorial`);
     }
-  }
+  };
 
-  createNewSession() {
-    this.setState({ loadingNewSession: true });
+  const toSession = slug => {
+    history.push(`${path}/${slug}`);
+  };
 
-    fetch('/api/session_groups/new_session', {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': `Token token=${process.env.API_TOKEN}`,
-        'Content-Type': 'application/json',
-      }),
-    }).then(res => this.handleNewSessionResponse(res))
-      .then(data => this.handleCreateSessionSuccess(data));
-  }
+  const containerSlide = useContainerSlide(path);
 
-  handleNewSessionResponse(res) {
-    this.setState({ loadingNewSession: false, response: res });
-    return res.ok ? res.json() : {};
-  }
+  useEffect(() => {
+    setSlide(containerSlide());
+  }, [history]);
 
-  handleCreateSessionSuccess(response) {
-    if (!Object.keys(response).length) return;
+  useEffect(() => {
+    console.log('asdfasd');
+    console.log(loading);
+  }, [loading]);
 
-    const imageData = response.data.relationships.shared_image;
-
-    this.setState({
-      canvasImg: imageData.meta.data_url || '',
-    }, () => {
-      this.props.history.push(`${this.props.location.pathname}/${response.data.id}`);
-    });
-
-    this.props.changeStage(DRAW_STAGE);
-  }
-
-  maybeStartNewSession() {
-    if (this.props.sessionId !== 'new') return;
-
-    this.props.changeStage(NEW_STAGE);
-  }
-
-  maybeOpenSession() {
-    if (this.props.sessionId === 'new') return;
-
-    // TODO: check if image is ready to edit
-    fetch(`/api/session_group/${this.props.match.params.slug}`, {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': `Token token=${process.env.API_TOKEN}`,
-        'Content-Type': 'application/json',
-      }),
-    }).then(response => response.json())
-      .then(data => this.handleOpenSession(data));
-  }
-
-  handleOpenSession(response) {
-    this.setState({
-      canvasImg: response.data.relationships.shared_image.meta.data_url || ''
-    }, () => {
-      this.props.changeStage(DRAW_STAGE);
-    });
-  }
-
-
-  containerSlide() {
-    let slide = { start: '0', end: 'calc(50vh - 50%)' };
-
-    switch (this.props.drawpassStage) {
-    case TUTORIAL_STAGE:
-      slide.end = '5rem';
-      slide.start = 'calc(50vh - 50%)';
-      return slide;
-    case DRAW_STAGE:
-      slide.end = '5rem';
-      slide.start = 'calc(50vh - 50%)';
-      return slide;
-    }
-
-    return slide;
-  }
-
-  render() {
-    const slide = this.containerSlide();
-
-    return (
-      <Container
-        start={slide.start}
-        end={slide.end}
-      >
-        <Title><h1>drawpass</h1></Title>
-        <StageRouter
-          canvasImg={this.state.canvasImg}
-          createNewSession={() => this.createNewSession()}
-          loadingNewSession={this.state.loadingNewSession}
-          match={this.props.match}
-          stage={this.props.drawpassStage}
-        />
-        <NewSessionResponse
-          loading={this.state.loadingNewSession}
-          response={this.state.response}
-        />
-      </Container>
-    );
-  }
+  return (
+    <Container
+      start={slide.start}
+      end={slide.end}
+    >
+      <Title><h1>drawpass</h1></Title>
+      <Switch>
+        <Route path={`${path}/tutorial/:step?`} render={({ path, match }) => (
+          <Tutorial
+            key={match.params.step || 0}
+            step={match.params.step || 0}
+            path={path}
+            setLoading={setLoading}
+            toTutorial={toTutorial}
+            toSession={toSession}
+          />
+        )} />
+        <Route path={`${path}/:slug`} render={({ match }) => (
+          <IllustratorSetup
+            slug={match.params.slug}
+            loading={loading}
+            setLoading={setLoading}
+          />
+        )} />
+        <Route path={path}>
+          <NewSessionPrompt
+            loading={loading}
+            setLoading={setLoading}
+            toSession={toSession}
+            toTutorial={toTutorial}
+          />
+        </Route>
+      </Switch>
+    </Container>
+  );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    drawpassStage: state.drawpassStage,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ changeStage }, dispatch);
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DrawPass));
+export default DrawPassApp;

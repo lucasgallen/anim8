@@ -29,7 +29,7 @@ function TutorialSlide(props) {
         props.last &&
         <Button
           style={{ display: 'block', margin: '0 auto' }}
-          onClick={() => props.createNewSession()}
+          onClick={props.createNewSession}
         >try it out!</Button>
       }
     </Container>

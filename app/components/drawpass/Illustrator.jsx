@@ -1,61 +1,68 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
+import Loading from '/app/components/Loading';
+import { LoadingContainer } from './styles/drawpass';
 
-class Illustrator extends React.Component {
-  constructor(props) {
-    super(props);
+function Illustrator(props) {
+  const [saveLabel, setSaveLabel] = useState('save image');
+  const [isSaving, setIsSaving] = useState(false);
+  const [canvasDims, setCanvasDims] = useState({});
+  const [throttle, setThrottle] = useState(false);
+  const [response, setResponse] = useState({ status: '', isOk: false });
 
-    this.state = {
-      canvasDims: {},
-      pen: {},
-      colors: [],
-      colorCardsActive: false,
-      isSaving: false,
-      saveResponse: '',
-      isResponseOk: true,
-    };
-  }
+  const canvasContainer = useRef(null);
 
-  componentDidMount() {
-    let canvasContainer;
+  useEffect(() => {
+    const label = isSaving ? 'saving image' : 'save image';
+    setSaveLabel(label);
+  }, [isSaving]);
 
-    this.canvasContainerRef = this.canvasContainer.canvasContainerRef;
-    canvasContainer = this.canvasContainerRef;
+  useEffect(() => {
+    props.openSession();
+  }, []);
 
-    this.setState({
-      canvasDims: {
-        height: canvasContainer.getBoundingClientRect().height,
-        width: canvasContainer.getBoundingClientRect().width,
-      }
-    }, () => {
-      window.addEventListener('resize', e => this.updateScreen(e));
+  useEffect(() => {
+    if (!canvasContainer || !canvasContainer.current) return;
+
+    const container = canvasContainer.current.canvasContainerRef.current;
+    if (!container) return;
+    console.log(container);
+
+    setCanvasDims({
+      height: container.getBoundingClientRect().height,
+      width: container.getBoundingClientRect().width,
     });
-  }
 
-  updateScreen() {
-    const canvasContainer = this.canvasContainerRef;
-    if (this.throttle) return;
+    window.addEventListener('resize', e => updateScreen(e));
+  }, [props.loading]);
 
-    this.throttle = true;
-    setTimeout(() => { this.throttle = false; }, 500);
+  const updateScreen = () => {
+    if (throttle) return;
 
-    this.setState({
-      canvasDims: {
-        height: canvasContainer.getBoundingClientRect().height,
-        width: canvasContainer.getBoundingClientRect().width,
-      }
+    const container = canvasContainer.current.canvasContainerRef.current;
+
+    setThrottle(true);
+    setTimeout(() => setThrottle(false), 500);
+
+    setCanvasDims({
+      height: container.getBoundingClientRect().height,
+      width: container.getBoundingClientRect().width,
     });
-  }
+  };
 
-  handleSaveResponse(res) {
-    const message = this.responseMessage(res.status);
-    this.setState({ isSaving: false, saveResponse: message, isResponseOk: res.ok });
+  const handleSaveResponse = res => {
+    const message = responseMessage(res.status);
+
+    setIsSaving(false);
+    setResponse({ message: message, isOk: res.ok });
+
     return res.json();
-  }
+  };
 
-  responseMessage(status) {
+  const responseMessage = status => {
     switch (true) {
     case 200:
       return 'saved!';
@@ -64,46 +71,58 @@ class Illustrator extends React.Component {
     case +status >= 500:
       return 'error: something went wrong on the server. wait & try again';
     }
-  }
+  };
 
-  saveImage() {
-    const canvas = this.canvasContainer.canvasRef.current.canvas;
+  const saveImage = () => {
+    const isOk = response.isOk;
+    const canvas = canvasContainer.current.canvasRef.current.canvas;
     const dataURL = canvas.toDataURL('image/png', 0.9);
 
-    this.setState({ isSaving: true, saveResponse: '' });
+    setIsSaving(true);
+    setResponse({ message: '', isOk: isOk });
 
-    fetch(`/api/shared_image/${this.props.slug}`, {
+    fetch(`/api/shared_image/${props.slug}`, {
       method: 'PATCH',
       headers: new Headers({
         'Authorization': `Token token=${process.env.API_TOKEN}`,
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({ data_url: dataURL }),
-    }).then(response => this.handleSaveResponse(response));
-  }
+    }).then(response => handleSaveResponse(response));
+  };
 
-  render() {
-    const saveCopy = this.state.isSaving ? 'saving image' : 'save image';
-
+  const putCanvasContainer = () => {
     return (
-      <div>
-        <CanvasContainer
-          ref={ref => this.canvasContainer = ref}
-          isSaving={this.state.isSaving}
-          canvasImg={this.props.canvasImg}
-          height={this.state.canvasDims.height}
-          width={this.state.canvasDims.width}
-        />
-        <SaveContainer>
-          <SaveButton
-            isSaving={this.state.isSaving}
-            onClick={() => this.saveImage()}
-          >{saveCopy}</SaveButton>
-          <SaveResponse error={!this.state.isResponseOk} trigger={!this.state.isSaving}>{this.state.saveResponse}</SaveResponse>
-        </SaveContainer>
-      </div>
+      <CanvasContainer
+        ref={canvasContainer}
+        isSaving={isSaving}
+        canvasImg={props.canvasImg}
+        height={canvasDims.height}
+        width={canvasDims.width}
+      />
     );
-  }
+  };
+
+  const putLoader = () => {
+    return (
+      <LoadingContainer>
+        <Loading />
+      </LoadingContainer>
+    );
+  };
+
+  return (
+    <>
+      { props.loading ? putLoader() : putCanvasContainer() }
+      <SaveContainer>
+        <SaveButton
+          isSaving={isSaving}
+          onClick={() => saveImage()}
+        >{saveLabel}</SaveButton>
+        <SaveResponse error={!response.isOk} trigger={!isSaving}>{response.message}</SaveResponse>
+      </SaveContainer>
+    </>
+  );
 }
 
-export default Illustrator;
+export default withRouter(Illustrator);
