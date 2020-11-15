@@ -29,7 +29,6 @@ function Illustrator(props) {
 
     const container = canvasContainer.current.canvasContainerRef.current;
     if (!container) return;
-    console.log(container);
 
     setCanvasDims({
       height: container.getBoundingClientRect().height,

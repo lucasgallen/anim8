@@ -39,11 +39,6 @@ function DrawPassApp() {
     setSlide(containerSlide());
   }, [history]);
 
-  useEffect(() => {
-    console.log('asdfasd');
-    console.log(loading);
-  }, [loading]);
-
   return (
     <Container
       start={slide.start}
