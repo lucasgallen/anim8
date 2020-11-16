@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Switch,
   Route,
@@ -10,12 +10,9 @@ import IllustratorSetup from './IllustratorSetup';
 import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 
-import useContainerSlide from '/app/hooks/useContainerSlide';
-
 import { Container, Title } from './styles/drawpass';
 
 function DrawPassApp() {
-  const [slide, setSlide] = useState({});
   const [loading, setLoading] = useState(false);
 
   const { path } = useRouteMatch();
@@ -33,17 +30,8 @@ function DrawPassApp() {
     history.push(`${path}/${slug}`);
   };
 
-  const containerSlide = useContainerSlide(path);
-
-  useEffect(() => {
-    setSlide(containerSlide());
-  }, [history]);
-
   return (
-    <Container
-      start={slide.start}
-      end={slide.end}
-    >
+    <Container>
       <Title><h1>drawpass</h1></Title>
       <Switch>
         <Route path={`${path}/tutorial/:step?`} render={({ path, match }) => (
