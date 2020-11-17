@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
-import ColorPicker from 'rc-color-picker';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ColorPicker } from 'rc-color-picker';
 
 import { Button } from '../styles/atoms';
 import { slideX } from '../styles/keyframes';
@@ -231,7 +230,6 @@ class CanvasContainer extends React.Component {
             <PenButtonWrapper
               color={this.state.pen.color || 'black'}
             >
-              <FontAwesomeIcon icon='pen-nib' size='3x' />
 
               <ColorCardContainer
                 onClick={e => this.expandSavedColors(e)}
@@ -248,7 +246,6 @@ class CanvasContainer extends React.Component {
                 start={this.state.colorCardsActive ? `calc(100% + ${this.dynamicLeft()}rem)` : '-10rem'}
                 end={this.state.colorCardsActive ? '-10rem' : `calc(100% + ${this.dynamicLeft()}rem)` }
               >
-                <FontAwesomeIcon icon='times' size='1x' />
               </ColorCardCloseButton>
             </PenButtonWrapper>
 

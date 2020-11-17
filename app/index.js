@@ -5,10 +5,6 @@ import {
   Route
 } from 'react-router-dom';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import store from './store';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPenNib, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -16,35 +12,31 @@ import Footer from './components/Footer';
 import LazyDrawPass from './components/LazyDrawPass';
 import LazyFlipbook from './components/LazyFlipbook';
 
-library.add(faPenNib, faTimes);
-
 const HEADER_HEIGHT = '8rem';
 const FOOTER_HEIGHT = '5rem';
 
 render (
-  <Provider store={store}>
-    <Router basename='/'>
-      <Switch>
-        <Route path="/drawpass">
-          <Header height={HEADER_HEIGHT} />
-          <LazyDrawPass
-            headerHeight={HEADER_HEIGHT}
-            footerHeight={FOOTER_HEIGHT}
-          />
-        </Route>
-        <Route path="/flipbook">
-          <Header height={HEADER_HEIGHT} />
-          <LazyFlipbook
-            headerHeight={HEADER_HEIGHT}
-            footerHeight={FOOTER_HEIGHT}
-          />
-        </Route>
-        <Route path="/">
-          <Home footerHeight={FOOTER_HEIGHT} />
-        </Route>
-      </Switch>
-      <Footer height={FOOTER_HEIGHT} />
-    </Router>
-  </Provider>,
+  <Router basename='/'>
+    <Switch>
+      <Route path="/drawpass">
+        <Header height={HEADER_HEIGHT} />
+        <LazyDrawPass
+          headerHeight={HEADER_HEIGHT}
+          footerHeight={FOOTER_HEIGHT}
+        />
+      </Route>
+      <Route path="/flipbook">
+        <Header height={HEADER_HEIGHT} />
+        <LazyFlipbook
+          headerHeight={HEADER_HEIGHT}
+          footerHeight={FOOTER_HEIGHT}
+        />
+      </Route>
+      <Route path="/">
+        <Home footerHeight={FOOTER_HEIGHT} />
+      </Route>
+    </Switch>
+    <Footer height={FOOTER_HEIGHT} />
+  </Router>,
   document.getElementById('root')
 );

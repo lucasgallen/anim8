@@ -1,8 +1,9 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const { merge } = require('webpack-merge');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const webpack = require('webpack');
 
@@ -33,11 +34,26 @@ const commonConfig = merge([
       },
     },
     entry: {
-      app: PATHS.app,
+      app: `${PATHS.app}/index.js`,
     },
     output: {
       publicPath: '/',
       filename: '[name].js',
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              pure_getters: true,
+            },
+            mangle: {
+              reserved: [/\.min\.js$/gi],
+            },
+          },
+        })
+      ],
     },
     plugins: [
       new CleanObsoleteChunks(),
@@ -78,23 +94,15 @@ const productionConfig = envKeys => {
   return merge([
     {
       mode: 'production',
-      optimization: {
-        minimizer: [
-          new UglifyJsPlugin({
-            uglifyOptions: {
-              mangle: true,
-              ie8: false,
-              keep_fnames: true,
-            },
-            extractComments: false,
-          }),
-
-          new webpack.DefinePlugin(merge(
-            envKeys,
-            { 'process.env.NODE_ENV': JSON.stringify('production') }
-          )),
-        ],
-      },
+      plugins: [
+        new CompressionPlugin({
+          test: /\.jsx?$/i,
+        }),
+        new webpack.DefinePlugin(merge(
+          envKeys,
+          { 'process.env.NODE_ENV': JSON.stringify('production') }
+        )),
+      ],
     },
   ]);
 };
@@ -136,7 +144,7 @@ const developmentConfig = envKeys => {
 module.exports = (env) => {
   const envKeys = getEnvKeys(env);
 
-  if (env === 'production') {
+  if (env['ENVIRONMENT'] === 'production') {
     return merge(commonConfig, productionConfig(envKeys));
   }
 

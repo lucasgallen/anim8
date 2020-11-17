@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "community drawing app",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-regular-svg-icons": "^5.15.1",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.12",
     "babel-eslint": "^10.1.0",
     "history": "^5.0.0",
@@ -25,6 +22,8 @@
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.5",
     "babel-loader": "^8.1.0",
+    "babel-plugin-transform-imports": "^2.0.0",
+    "compression-webpack-plugin": "^6.1.1",
     "css-loader": "^5.0.1",
     "dotenv": "^8.2.0",
     "eslint": "^7.13.0",
