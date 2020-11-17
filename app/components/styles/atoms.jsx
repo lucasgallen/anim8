@@ -1,5 +1,11 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
+const AppContainer = styled.div`
+  display: flex;
+  align-items: center;
+  min-height: ${props => `calc(100vh - ${props.headerHeight} - ${props.footerHeight})`}
+`;
+
 const Global = createGlobalStyle`
   html, body {
     background-color: ${props => props.backgroundColor};
@@ -83,6 +89,7 @@ const Input = styled.input`
 
 export {
   Global,
+  AppContainer,
   Button,
   StyledCanvas,
   Label,

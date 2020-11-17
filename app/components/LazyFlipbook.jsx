@@ -1,10 +1,14 @@
 import React, { Suspense } from 'react';
 import Loading from './Loading';
 
+import useAppContainer from '/app/hooks/useAppContainer';
+
 const Flipbook = React.lazy(() => import('./flipbook/Flipbook'));
 
 function LazyFlipbook(props) {
-  return (
+  const appContainer = useAppContainer(props);
+
+  return appContainer(
     <div>
       <Suspense fallback={<Loading />}>
         <Flipbook {...props} />

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import useAppContainer from '/app/hooks/useAppContainer';
+
 import {
   DrawpassLink,
   HomeContainer,
@@ -10,20 +12,20 @@ import {
 } from './styles/home';
 
 
-function Home() {
-  return (
-    <div>
-      <HomeContainer>
-        <TitleContainer>
-          <Title>Anim8</Title>
-        </TitleContainer>
+function Home(props) {
+  const appContainer = useAppContainer(props);
 
-        <LinkContainer>
-          <FlipbookLink to='/flipbook'>flipbook</FlipbookLink>
-          <DrawpassLink to='/drawpass'>drawpass</DrawpassLink>
-        </LinkContainer>
-      </HomeContainer>
-    </div>
+  return appContainer(
+    <HomeContainer>
+      <TitleContainer>
+        <Title>Anim8</Title>
+      </TitleContainer>
+
+      <LinkContainer>
+        <FlipbookLink to='/flipbook'>flipbook</FlipbookLink>
+        <DrawpassLink to='/drawpass'>drawpass</DrawpassLink>
+      </LinkContainer>
+    </HomeContainer>
   );
 }
 
