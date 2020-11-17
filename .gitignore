@@ -3,3 +3,6 @@ node_modules
 # no environment dotfiles
 .env.development
 .env.production
+
+# no dist
+dist
