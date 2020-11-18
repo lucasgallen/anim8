@@ -4,5 +4,6 @@ node_modules
 .env.development
 .env.production
 
-# no dist
+# no dist/build
 dist
+build

@@ -4,7 +4,6 @@ const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const webpack = require('webpack');
 
 const PATHS = {
@@ -37,28 +36,13 @@ const commonConfig = merge([
       app: `${PATHS.app}/index.js`,
     },
     output: {
+      path: path.resolve(__dirname, 'build'),
       publicPath: '/',
       filename: '[name].js',
     },
-    optimization: {
-      minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            compress: {
-              pure_getters: true,
-            },
-            mangle: {
-              reserved: [/\.min\.js$/gi],
-            },
-          },
-        })
-      ],
-    },
+
     plugins: [
-      new CleanObsoleteChunks(),
       new HtmlWebpackPlugin({
-        inject: false,
         template: path.join(__dirname, 'public/index.html'),
       }),
     ],
@@ -94,6 +78,21 @@ const productionConfig = envKeys => {
   return merge([
     {
       mode: 'production',
+      optimization: {
+        minimize: true,
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                pure_getters: true,
+              },
+              mangle: {
+                reserved: [/\.min\.js$/gi],
+              },
+            },
+          })
+        ],
+      },
       plugins: [
         new CompressionPlugin({
           test: /\.jsx?$/i,
@@ -137,6 +136,8 @@ const developmentConfig = envKeys => {
     },
   ]);
 };
+
+process.traceDeprecation = true;
 
 module.exports = (env) => {
   const envKeys = getEnvKeys(env);
