@@ -80,7 +80,7 @@ function Illustrator(props) {
     setIsSaving(true);
     setResponse({ message: '', isOk: isOk });
 
-    fetch(`/api/shared_image/${props.slug}`, {
+    fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
       method: 'PATCH',
       headers: new Headers({
         'Authorization': `Token token=${process.env.API_TOKEN}`,

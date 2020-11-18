@@ -15,7 +15,7 @@ function useOpenSession(slug, setLoading, cb) {
     setJSON(json);
   };
 
-  const openSessionPromise = fetch(`/api/session_group/${slug}`, {
+  const openSessionPromise = fetch(`${process.env.API_SERVER}/api/session_group/${slug}`, {
     method: 'get',
     headers: new Headers({
       'Authorization': `Token token=${process.env.API_TOKEN}`,

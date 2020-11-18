@@ -23,7 +23,7 @@ function useCreateSession(setLoading, cb) {
   return (() => {
     setLoading(true);
 
-    fetch('/api/session_groups/new_session', {
+    fetch(`${process.env.API_SERVER}/api/session_groups/new_session`, {
       method: 'get',
       headers: new Headers({
         'Authorization': `Token token=${process.env.API_TOKEN}`,

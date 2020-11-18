@@ -126,9 +126,6 @@ const developmentConfig = envKeys => {
 
         host: '0.0.0.0',
         port: '8080',
-        proxy: {
-          '/api': process.env.API_DEV_SERVER
-        },
 
         publicPath: '/',
 
