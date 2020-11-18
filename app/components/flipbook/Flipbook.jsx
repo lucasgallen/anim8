@@ -20,7 +20,8 @@ const NavBox = styled.div`
 
 const Container = styled.div`
   overflow: hidden;
-  padding: 1rem;
+  padding: 2.5rem;
+  width: calc(100vw - 5rem);
 `;
 
 const FlipbookContainer = styled.div`
@@ -29,7 +30,7 @@ const FlipbookContainer = styled.div`
 
   @media (min-width: 700px) {
     height: calc(100% - 2rem);
-    width: calc(100% - 20rem);
+    width: 100%;
   }
 
   @media (min-width: 900px) {
@@ -69,11 +70,12 @@ class Flipbook extends React.Component {
   }
 
   updateScreen(e) {
-    const canvasContainer = this.canvasContainerRef.canvasContainerRef;
+    const canvasContainer = this.canvasContainerRef.canvasContainerRef.current;
+
     if (this.throttle) return;
 
     this.throttle = true;
-    setTimeout(() => { this.throttle = false; }, 500);
+    setTimeout(() => { this.throttle = false; }, 200);
     this.props.updateScreen({
       height: e.currentTarget.screen.availHeight,
       width: e.currentTarget.availWidth,
