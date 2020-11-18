@@ -33,10 +33,10 @@ const Tutorial = props => {
       copy: 'DrawPass allows you to start a drawing and pass it along to a friend to collaborate on with a simple URL.',
       imagePath: ''
     },{
-      copy: 'First draw on the canvas with your mouse and the provided UI.',
+      copy: 'First draw on the canvas with your mouse (or touchscreen) and the provided UI.',
       imagePath: ''
     },{
-      copy: 'Then when you\'re ready for a friend to add to the drawing, simply click "save" and share the provided URL!',
+      copy: 'Then when you\'re ready for a friend to add to the drawing, simply click "save image" and share the provided URL!',
       imagePath: ''
     },
   ];
