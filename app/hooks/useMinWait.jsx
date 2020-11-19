@@ -13,7 +13,7 @@ function useMinWait(promise, wait = MIN_WAIT_MS) {
 
   return (() => (
     Promise.all([
-      promise,
+      promise(),
       timedPromise(),
     ]).then(([data]) => data)
   ));

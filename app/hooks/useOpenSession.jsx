@@ -6,6 +6,18 @@ function useOpenSession(slug, setLoading, cb) {
   const callback = cb || function(){};
   const [ json, setJSON ] = useState();
 
+  const openSessionPromise = () => (
+    fetch(`${process.env.API_SERVER}/api/session_group/${slug}`, {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+    })
+  );
+
+  const minPromise = useMinWait(openSessionPromise);
+
   const handleResponse = res => {
     setLoading(false);
     return res.json();
@@ -15,24 +27,15 @@ function useOpenSession(slug, setLoading, cb) {
     setJSON(json);
   };
 
-  const openSessionPromise = fetch(`${process.env.API_SERVER}/api/session_group/${slug}`, {
-    method: 'get',
-    headers: new Headers({
-      'Authorization': `Token token=${process.env.API_TOKEN}`,
-      'Content-Type': 'application/json',
-    }),
-  });
-
-  const minPromiseFetcher = useMinWait(openSessionPromise);
-
   useEffect(() => {
+    if (!json) return;
+
     callback({ json });
   }, [json]);
 
   return (() => {
     setLoading(true);
-
-    minPromiseFetcher()
+    minPromise()
       .then(response => handleResponse(response))
       .then(data => handleOpenSession(data));
   });

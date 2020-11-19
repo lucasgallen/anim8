@@ -21,10 +21,6 @@ function Illustrator(props) {
   }, [isSaving]);
 
   useEffect(() => {
-    props.openSession();
-  }, []);
-
-  useEffect(() => {
     if (!canvasContainer || !canvasContainer.current) return;
 
     const container = canvasContainer.current.canvasContainerRef.current;
