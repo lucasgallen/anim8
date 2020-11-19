@@ -7,7 +7,6 @@ COPY public public
 COPY webpack.config.js .
 COPY package.json .
 COPY yarn.lock .
-COPY gif.worker.js .
 COPY .babelrc .
 COPY .eslintrc.js .
 COPY entrypoint.sh .

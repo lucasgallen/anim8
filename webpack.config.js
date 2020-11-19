@@ -2,6 +2,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const webpack = require('webpack');
@@ -9,7 +10,7 @@ const webpack = require('webpack');
 const PATHS = {
   app: path.join(__dirname, 'app'),
   node_modules: path.join(__dirname, 'node_modules'),
-  build: path.join(__dirname, '/'),
+  build: path.join(__dirname, 'build'),
   env: path.join(__dirname, '/.env'),
 };
 
@@ -36,7 +37,7 @@ const commonConfig = merge([
       app: `${PATHS.app}/index.js`,
     },
     output: {
-      path: path.resolve(__dirname, 'build'),
+      path: PATHS.build,
       publicPath: '/',
       filename: '[name].js',
     },
@@ -87,13 +88,21 @@ const productionConfig = envKeys => {
                 pure_getters: true,
               },
               mangle: {
-                reserved: [/\.min\.js$/gi],
+                reserved: [/gif.js/gi, /\.min\.js$/gi],
               },
             },
           })
         ],
       },
       plugins: [
+        new CopyPlugin({
+          patterns: [{
+              context: path.join(__dirname, 'public'),
+              from: 'gif.worker.js*',
+              to: PATHS.build
+            },
+          ],
+        }),
         new CompressionPlugin({
           test: /\.jsx?$/i,
         }),
@@ -126,7 +135,8 @@ const developmentConfig = envKeys => {
         host: '0.0.0.0',
         port: '8080',
 
-        publicPath: '/',
+        contentBase: path.join(__dirname, '/public'),
+        contentBasePublicPath: '/',
 
         overlay: {
           errors: true,
