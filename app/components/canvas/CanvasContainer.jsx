@@ -10,7 +10,7 @@ class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { canvasDims: {}, pen: {}, colors: [], colorCardsActive: false };
+    this.state = { canvasDims: {}, pen: {} };
     this.canvasRef = React.createRef();
     this.canvasContainerRef = React.createRef();
   }
