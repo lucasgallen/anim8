@@ -39,7 +39,7 @@ const commonConfig = merge([
     output: {
       path: PATHS.build,
       publicPath: '/',
-      filename: '[name].js',
+      filename: '[name].[chunkhash:8].js',
     },
 
     plugins: [
