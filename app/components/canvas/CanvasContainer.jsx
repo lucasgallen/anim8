@@ -1,23 +1,10 @@
 import React from 'react';
 
-import 'rc-color-picker/assets/index.css';
-import { ColorPicker } from 'rc-color-picker';
+import { Container } from './styles';
 
-import {
-  ColorCard,
-  ColorCardCloseButton,
-  ColorCardContainer,
-  Container,
-  PenButtonWrapper,
-  SaveColorButton,
-} from './styles';
-
+import CanvasColorPicker from './CanvasColorPicker';
 import Canvas from './Canvas';
 import ShadowCanvas from './ShadowCanvas';
-
-// TODO: Move pen color picker into separate component!!!
-const MAX_COLOR_CARD_WIDTH = 26;
-
 
 class CanvasContainer extends React.Component {
   constructor(props) {
@@ -37,83 +24,15 @@ class CanvasContainer extends React.Component {
     });
   }
 
-  saveColor(e) {
-    const currentColor = this.state.pen.color;
-    let colors = [];
-
-    e.stopPropagation();
-    if (this.state.colors.indexOf(currentColor) > -1) {
-      colors = this.state.colors;
-    } else {
-      colors = [...this.state.colors, currentColor];
-    }
-
+  updatePen(newPen) {
     this.setState({
-      colors: colors,
+      pen: newPen
     });
-  }
-
-  changeColor(e) {
-    this.setState({
-      pen: { color: e.color },
-    });
-  }
-
-  colorCards() {
-    let cards = [];
-    this.state.colors.forEach((val, index) => {
-      cards.push(
-        <ColorCard
-          data-index={index}
-          colorIndex={index} color={val} key={index}
-          onClick={e => this.pickColor(e)}
-          active={this.state.colorCardsActive}
-        />
-      );
-    });
-    return cards;
-  }
-
-  expandSavedColors(e) {
-    e.stopPropagation();
-    this.setState({
-      colorCardsActive: true,
-    });
-  }
-
-  pickColor(e) {
-    const penObj = this.state.pen;
-    const index = e.target.dataset['index'];
-    if (!this.state.colorCardsActive) return;
-
-    e.stopPropagation();
-
-    penObj.color = this.state.colors[index];
-    this.setState({
-      pen: penObj,
-    });
-  }
-
-  closeColorCards(e) {
-    e.stopPropagation();
-
-    this.setState({
-      colorCardsActive: false,
-    });
-  }
-
-  dynamicLeft() {
-    return this.dynamicWidth() + 3;
-  }
-
-  dynamicWidth() {
-    const width = (this.state.colors.length * 5) + 1;
-    return width < MAX_COLOR_CARD_WIDTH ? width : MAX_COLOR_CARD_WIDTH;
   }
 
   render() {
     return (
-      <div>
+      <>
         <Container
           ref={this.canvasContainerRef}
           isSaving={this.props.isSaving}
@@ -141,37 +60,12 @@ class CanvasContainer extends React.Component {
 
         { this.props.children }
 
-        <ColorPicker
-          onChange={e => this.changeColor(e)}
+        <CanvasColorPicker
           placement='bottomRight'
-        >
-          <div>
-            <PenButtonWrapper
-              color={this.state.pen.color || 'black'}
-            >
-
-              <ColorCardContainer
-                onClick={e => this.expandSavedColors(e)}
-                colorCount={this.state.colors.length}
-                active={this.state.colorCardsActive}
-                dynamicWidth={this.dynamicWidth()}
-              >
-                { this.colorCards() }
-              </ColorCardContainer>
-
-              <ColorCardCloseButton
-                onClick={e => this.closeColorCards(e)}
-                active={this.state.colorCardsActive}
-                start={this.state.colorCardsActive ? `calc(100% + ${this.dynamicLeft()}rem)` : '-10rem'}
-                end={this.state.colorCardsActive ? '-10rem' : `calc(100% + ${this.dynamicLeft()}rem)` }
-              >
-              </ColorCardCloseButton>
-            </PenButtonWrapper>
-
-            <SaveColorButton onClick={e => this.saveColor(e)}>save</SaveColorButton>
-          </div>
-        </ColorPicker>
-      </div>
+          updatePen={pen => this.updatePen(pen)}
+          onClick={e => console.log(e)}
+        />
+      </>
     );
   }
 }
