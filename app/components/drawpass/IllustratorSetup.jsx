@@ -22,6 +22,7 @@ function IllustratorSetup(props) {
       loading={props.loading}
       slug={props.slug}
       canvasImg={canvasImg}
+      toggleScroll={props.toggleScroll}
     />
   );
 }

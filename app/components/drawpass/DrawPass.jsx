@@ -10,9 +10,11 @@ import IllustratorSetup from './IllustratorSetup';
 import NewSessionPrompt from './NewSessionPrompt';
 import Tutorial from './Tutorial';
 
+import { Global } from '/app/components/styles/atoms';
 import { Container, Title } from './styles/drawpass';
 
 function DrawPassApp() {
+  const [noscroll, setNoScroll] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { path } = useRouteMatch();
@@ -30,8 +32,13 @@ function DrawPassApp() {
     history.push(`${path}/${slug}`);
   };
 
+  const toggleScroll = disable => {
+    setNoScroll(disable);
+  };
+
   return (
     <Container>
+      <Global backgroundColor='' noScroll={noscroll} />
       <Title><h1>drawpass</h1></Title>
       <Switch>
         <Route path={`${path}/tutorial/:step?`} render={({ path, match }) => (
@@ -49,6 +56,7 @@ function DrawPassApp() {
             slug={match.params.slug}
             loading={loading}
             setLoading={setLoading}
+            toggleScroll={({ disable }) => toggleScroll(disable)}
           />
         )} />
         <Route path={path}>
