@@ -1,84 +1,90 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import {StyledCanvas} from '../styles/atoms';
+import { StyledCanvas } from '../styles/atoms';
 
-class Canvas extends React.Component {
-  componentDidMount() {
-    this.canvasContext = this.canvas.getContext('2d');
-    this.isPenDown = false;
-  }
+const Canvas = React.forwardRef((props, ref) => {
+  const [canvasContext, setCanvasContext] = useState();
+  const [isPenDown, setIsPenDown] = useState();
+  const canvas = useRef(ref);
 
-  componentDidUpdate() {
-    this.loadDrawing();
-  }
+  useEffect(() => {
+    setCanvasContext(canvas.current.getContext('2d'));
+    setIsPenDown(false);
+  }, []);
 
-  startPath() {
-    const color = this.props.pen.color || '#000';
-    this.canvasContext.strokeStyle = color;
-    this.canvasContext.beginPath();
-    this.isPenDown = true;
-  }
+  useEffect(() => {
+    if (!canvasContext || !props.canvasImg) return;
 
-  relativeMousePos(e) {
-    let rect = this.canvas.getBoundingClientRect();
+    loadDrawing();
+  }, [canvasContext, props.canvasImg]);
+
+  const startPath = () => {
+    const color = props.pen.color || '#000';
+    canvasContext.strokeStyle = color;
+    canvasContext.beginPath();
+    setIsPenDown(true);
+  };
+
+  const relativeMousePos = e => {
+    let rect = canvas.current.getBoundingClientRect();
 
     return {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
     };
-  }
+  };
 
-  drawPath(e) {
-    if (this.isPenDown) {
-      let mousePos = this.relativeMousePos(e);
+  const drawPath = e => {
+    if (!isPenDown) return;
 
-      this.canvasContext.lineTo(mousePos.x, mousePos.y);
-      this.canvasContext.stroke();
-    }
-  }
+    let mousePos = relativeMousePos(e);
 
-  drawTouchPath(e) {
+    canvasContext.lineTo(mousePos.x, mousePos.y);
+    canvasContext.stroke();
+  };
+
+  const drawTouchPath = e => {
     let touchPos;
 
     e.preventDefault();
     if (e.touches.length > 1) return;
-    if (!this.isPenDown) return;
+    if (!isPenDown) return;
 
-    touchPos = this.relativeMousePos(e.touches[0]);
-    this.canvasContext.lineTo(touchPos.x, touchPos.y);
-    this.canvasContext.stroke();
-  }
+    touchPos = relativeMousePos(e.touches[0]);
+    canvasContext.lineTo(touchPos.x, touchPos.y);
+    canvasContext.stroke();
+  };
 
-  endPath() {
-    this.isPenDown = false;
-  }
+  const endPath = () => {
+    setIsPenDown(false);
+  };
 
-  loadDrawing() {
+  const loadDrawing = () => {
     let img = new Image();
 
     img.onload = () => {
-      this.canvasContext.drawImage(img, 0, 0);
+      canvasContext.drawImage(img, 0, 0);
     };
 
-    img.setAttribute('src', this.props.canvasImg.replace(/\n|\r/g, ''));
-  }
+    img.setAttribute('src', props.canvasImg.replace(/\n|\r/g, ''));
+  };
 
-  render() {
-    return (
-      <StyledCanvas
-        onMouseDown={() => this.startPath()}
-        onTouchStart={() => this.startPath()}
-        onMouseMove={(e) => this.drawPath(e)}
-        onTouchMove={(e) => this.drawTouchPath(e)}
-        onMouseUp={() => this.endPath()}
-        onTouchEnd={() => this.endPath()}
-        background={this.props.background}
-        width={this.props.width || '600'}
-        height={this.props.height || '600'}
-        ref={(canvas) => this.canvas = canvas}
-      ></StyledCanvas>
-    );
-  }
-}
+  return (
+    <StyledCanvas
+      onMouseDown={() => startPath()}
+      onTouchStart={() => startPath()}
+      onMouseMove={(e) => drawPath(e)}
+      onTouchMove={(e) => drawTouchPath(e)}
+      onMouseUp={() => endPath()}
+      onTouchEnd={() => endPath()}
+      background={props.background}
+      width={props.width || '600'}
+      height={props.height || '600'}
+      ref={canvas}
+    ></StyledCanvas>
+  );
+});
+
+Canvas.displayName = 'Canvas';
 
 export default Canvas;

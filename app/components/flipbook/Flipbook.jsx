@@ -46,6 +46,8 @@ class Flipbook extends React.Component {
 
     this.state = { page: 1, canvasDims: {}};
     this.throttle = false;
+
+    this.canvasContainerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -53,11 +55,11 @@ class Flipbook extends React.Component {
 
     this.canvasImg = '';
     this.shadowImg = '';
-    this.canvasContainerRef = this.canvasContainer;
-    canvasContainer = this.canvasContainerRef.canvasContainerRef.current;
+    this.canvasContainer = this.canvasContainerRef.current;
+    canvasContainer = this.canvasContainer.canvasContainerRef.current;
 
-    this.canvasRef = this.canvasContainerRef.canvasRef;
-    this.shadowCanvas = this.canvasContainerRef.shadowCanvas;
+    this.canvasEl = this.getCanvasEl();
+    this.shadowCanvas = this.canvasContainerRef.current.shadowCanvas;
 
     this.setState({
       canvasDims: {
@@ -67,6 +69,12 @@ class Flipbook extends React.Component {
     });
 
     window.addEventListener('resize', e => this.updateScreen(e));
+  }
+
+  getCanvasEl() {
+    return (
+      this.canvasContainer.canvasContainerRef.current.querySelector('canvas[data-shadow="false"]')
+    );
   }
 
   updateScreen(e) {
@@ -107,7 +115,7 @@ class Flipbook extends React.Component {
   }
 
   nextPage() {
-    this.canvasImg = this.canvasRef.current.canvas.toDataURL();
+    this.canvasImg = this.canvasEl.toDataURL();
 
     if (this.state.page - 1 === this.props.pages.length) {
       this.addPage();
@@ -128,13 +136,12 @@ class Flipbook extends React.Component {
   }
 
   clearPage() {
-    let canvas = this.canvasRef.current.canvas;
     let shadowCanvas = this.shadowCanvas.canvas;
-    let ctx = canvas.getContext('2d');
+    let ctx = this.canvasEl.getContext('2d');
     let shadowCtx = shadowCanvas.getContext('2d');
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    shadowCtx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    shadowCtx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
   }
 
   getCanvasImage() {
@@ -160,7 +167,7 @@ class Flipbook extends React.Component {
         <Global backgroundColor='' />
         <FlipbookContainer>
           <CanvasContainer
-            ref={ref => this.canvasContainer = ref}
+            ref={this.canvasContainerRef}
             page={this.state.page}
             height={this.state.canvasDims.height}
             width={this.state.canvasDims.width}

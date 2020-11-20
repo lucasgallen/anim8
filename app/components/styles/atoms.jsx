@@ -31,7 +31,9 @@ const Button = styled.button`
   }
 `;
 
-const StyledCanvas = styled.canvas`
+const StyledCanvas = styled.canvas.attrs(props => ({
+  'data-shadow': `${props.isShadow || false}`
+}))`
   background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
   bottom: ${props => props.isShadow && '2px'};
   left: 0;

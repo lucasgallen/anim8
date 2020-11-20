@@ -68,9 +68,13 @@ function Illustrator(props) {
     }
   };
 
+  const getCanvasEl = element => {
+    return element.getElementsByTagName('canvas')[0];
+  };
+
   const saveImage = () => {
     const isOk = response.isOk;
-    const canvas = canvasContainer.current.canvasRef.current.canvas;
+    const canvas = getCanvasEl(canvasContainer.current.canvasContainerRef.current);
     const dataURL = canvas.toDataURL('image/png', 0.9);
 
     setIsSaving(true);
