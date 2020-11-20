@@ -44,7 +44,7 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, canvasDims: {}};
+    this.state = { page: 1, canvasDims: {}, noscroll: false };
     this.throttle = false;
 
     this.canvasContainerRef = React.createRef();
@@ -75,6 +75,10 @@ class Flipbook extends React.Component {
     return (
       this.canvasContainer.canvasContainerRef.current.querySelector('canvas[data-shadow="false"]')
     );
+  }
+
+  toggleScroll(disable) {
+    this.setState({ noscroll: disable });
   }
 
   updateScreen(e) {
@@ -164,10 +168,11 @@ class Flipbook extends React.Component {
 
     return (
       <Container>
-        <Global backgroundColor='' />
+        <Global backgroundColor='' noScroll={this.state.noscroll} />
         <FlipbookContainer>
           <CanvasContainer
             ref={this.canvasContainerRef}
+            toggleScroll={({ disable }) => this.toggleScroll(disable)}
             page={this.state.page}
             height={this.state.canvasDims.height}
             width={this.state.canvasDims.width}
