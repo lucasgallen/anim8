@@ -46,6 +46,7 @@ class CanvasContainer extends React.Component {
             height={this.props.height}
             width={this.props.width}
             ref={this.canvasRef}
+            toggleScroll={this.props.toggleScroll}
           />
 
           {
