@@ -31,18 +31,6 @@ const Button = styled.button`
   }
 `;
 
-const StyledCanvas = styled.canvas.attrs(props => ({
-  'data-shadow': `${props.isShadow || false}`
-}))`
-  background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
-  bottom: ${props => props.isShadow && '2px'};
-  left: 0;
-  position: ${props => props.isShadow ? 'absolute' : 'relative'};
-  top: 0;
-  touch-action: none;
-  z-index: ${props => !props.isShadow && 2};
-`;
-
 const Label = styled.label`
   border-bottom: 2px solid fuchsia;
   border-right: 2px solid fuchsia;
@@ -93,7 +81,6 @@ export {
   Global,
   AppContainer,
   Button,
-  StyledCanvas,
   Label,
   Input,
 };

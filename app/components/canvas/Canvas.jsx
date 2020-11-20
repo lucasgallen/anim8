@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { StyledCanvas } from '../styles/atoms';
+import { StyledCanvas } from './styles';
 
 const Canvas = React.forwardRef((props, ref) => {
   const [canvasContext, setCanvasContext] = useState();

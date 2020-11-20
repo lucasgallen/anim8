@@ -1,19 +1,13 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
 import { savePage } from '../../actions/flipbook.js';
-import { Button } from '../styles/atoms';
-
-const ClearButton = styled(Button)`
-  background: black;
-  color: white;
-`;
+import { ClearButton } from './styles';
 
 class ClearCanvasButton extends React.Component {
   clearPage() {
-    const canvas = this.props.targetCanvas.current.canvas;
+    const canvas = this.props.targetCanvas;
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
   }
 

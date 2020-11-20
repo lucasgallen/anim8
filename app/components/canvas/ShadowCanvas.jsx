@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyledCanvas} from '../styles/atoms';
+
+import { StyledCanvas } from './styles';
 
 class ShadowCanvas extends React.Component {
   componentDidMount() {

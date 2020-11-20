@@ -184,7 +184,7 @@ class Flipbook extends React.Component {
               >prev</Button>
 
               <ClearCanvasButton
-                targetCanvas={this.canvasRef}
+                targetCanvas={this.canvasEl}
               />
 
               <Button
