@@ -14,25 +14,25 @@ import {
 const MAX_COLOR_CARD_WIDTH = 26;
 
 function CanvasColorPicker(props) {
-  const [pen, setPen] = useState({});
+  const [penColor, setPenColor] = useState();
   const [colors, setColors] = useState([]);
   const [cardsActive, setCardsActive] = useState(false);
 
   useEffect(() => {
-    props.updatePen(pen);
-  }, [pen]);
+    props.updatePenColor(penColor);
+  }, [penColor]);
 
   const saveColor = e => {
-    if (colors.indexOf(pen.color) > -1) return;
+    if (colors.indexOf(penColor) > -1) return;
 
     e.stopPropagation();
 
     const oldColors = colors;
-    setColors([...oldColors, pen.color]);
+    setColors([...oldColors, penColor]);
   };
 
   const changeColor = e => {
-    setPen({ color: e.color });
+    setPenColor(e.color);
   };
 
   const colorCards = () => {
@@ -62,7 +62,7 @@ function CanvasColorPicker(props) {
     if (!cardsActive) return;
 
     e.stopPropagation();
-    setPen({ color: pickedColor });
+    setPenColor(pickedColor);
   };
 
   const closeColorCards = e => {
@@ -86,7 +86,7 @@ function CanvasColorPicker(props) {
     >
       <div>
         <PenButtonWrapper
-          color={pen.color || 'black'}
+          color={penColor || 'black'}
         >
 
           <ColorCardContainer

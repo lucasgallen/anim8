@@ -24,7 +24,8 @@ class CanvasContainer extends React.Component {
     });
   }
 
-  updatePen(newPen) {
+  updatePenColor(color) {
+    const newPen = { ...this.state.pen, color: color };
     this.setState({
       pen: newPen
     });
@@ -62,7 +63,7 @@ class CanvasContainer extends React.Component {
 
         <CanvasColorPicker
           placement='bottomRight'
-          updatePen={pen => this.updatePen(pen)}
+          updatePenColor={color => this.updatePenColor(color)}
           onClick={e => console.log(e)}
         />
       </>
