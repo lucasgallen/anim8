@@ -51,7 +51,6 @@ const Canvas = React.forwardRef((props, ref) => {
   const drawTouchPath = e => {
     let touchPos;
 
-    e.preventDefault();
     if (e.touches.length > 1) return;
     if (!isPenDown) return;
 
