@@ -11,7 +11,6 @@ const Global = createGlobalStyle`
     background-color: ${props => props.backgroundColor};
     font-family: sans-serif;
     font-size: 10px;
-    ${props => props.noScroll ? 'touch-action: none;' : '' }
   }
 `;
 

@@ -23,6 +23,7 @@ function IllustratorSetup(props) {
       slug={props.slug}
       canvasImg={canvasImg}
       toggleScroll={props.toggleScroll}
+      openFullscreen={props.openFullscreen}
     />
   );
 }

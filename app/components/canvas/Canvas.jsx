@@ -25,6 +25,8 @@ const Canvas = React.forwardRef((props, ref) => {
 
   const startPath = () => {
     const color = props.pen.color || '#000';
+    if (props.drawDisabled) return;
+
     canvasContext.strokeStyle = color;
     canvasContext.beginPath();
     setIsPenDown(true);
@@ -60,6 +62,8 @@ const Canvas = React.forwardRef((props, ref) => {
   };
 
   const endPath = () => {
+    if (props.drawDisabled) return;
+
     setIsPenDown(false);
   };
 
@@ -82,8 +86,10 @@ const Canvas = React.forwardRef((props, ref) => {
       onMouseUp={() => endPath()}
       onTouchEnd={() => endPath()}
       background={props.background}
-      width={props.width || '600'}
-      height={props.height || '600'}
+      left={props.position.left}
+      top={props.position.top}
+      width={842}
+      height={595}
       ref={canvas}
     ></StyledCanvas>
   );

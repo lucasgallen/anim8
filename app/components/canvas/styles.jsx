@@ -52,18 +52,6 @@ const ColorCardContainer = styled.div`
 `;
 
 
-const Container = styled.div`
-  box-shadow: 1px 1px 2px 1px #00000017;
-  height: 0;
-  ${props => props.isSaving ? 'pointer-events: none;' : ''}
-  ${props => props.isSaving ? 'filter: blur(3px);' : ''}
-  margin-bottom: 0.5rem;
-  padding-bottom: 42.85%;
-  position: relative;
-  transition: filter 0.5s ease-in-out;
-`;
-
-
 const PenButtonWrapper = styled.div`
   background-color: white !important;
   border: 2px solid black;
@@ -88,15 +76,51 @@ const SaveColorButton = styled(Button)`
 `;
 
 const StyledCanvas = styled.canvas.attrs(props => ({
-  'data-shadow': `${props.isShadow || false}`
+  'data-shadow': `${props.isShadow || false}`,
+  style: {
+    left: `${props.left}px` || '0',
+    top: `${props.top}px` || '0'
+  }
 }))`
   background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
   bottom: ${props => props.isShadow && '2px'};
-  left: 0;
-  position: ${props => props.isShadow ? 'absolute' : 'relative'};
-  top: 0;
+  box-shadow: 0px 0px 6px 1px #00000038;
+  position: absolute;
   touch-action: none;
   z-index: ${props => !props.isShadow && 2};
+`;
+
+const Container = styled.div`
+  background: repeating-linear-gradient(
+    45deg,
+    #5f9ea0,
+    #5f9ea0 10px,
+    #868692 10px,
+    #868692 20px
+  );
+  box-shadow: 1px 1px 2px 1px #00000017;
+  height: 0;
+  ${props => props.isSaving ? 'pointer-events: none;' : ''}
+  ${props => props.isSaving ? 'filter: blur(3px);' : ''}
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  padding-bottom: 70.665%;
+  position: relative;
+  touch-action: none;
+  transition: filter 0.5s ease-in-out;
+  width: 100%;
+
+  &:fullscreen {
+    align-items: center;
+    background: lavender;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+
+    ${StyledCanvas} {
+      position: relative;
+    }
+  }
 `;
 
 export {

@@ -44,7 +44,7 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, canvasDims: {}, noscroll: false };
+    this.state = { page: 1, canvasDims: {} };
     this.throttle = false;
 
     this.canvasContainerRef = React.createRef();
@@ -168,7 +168,7 @@ class Flipbook extends React.Component {
 
     return (
       <Container>
-        <Global backgroundColor='' noScroll={this.state.noscroll} />
+        <Global backgroundColor='' />
         <FlipbookContainer>
           <CanvasContainer
             ref={this.canvasContainerRef}

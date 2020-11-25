@@ -7,9 +7,9 @@ const Container = styled.div`
   animation-timing-function: sine;
   animation-fill-mode: forwards;
   margin: 0 auto 0;
-  max-width: 55rem;
+  max-width: 842px;
   position: relative;
-  width: 75%;
+  width: calc(100% - 2rem);
 
   @media (min-width: 700px)  {
     margin: 0 auto;

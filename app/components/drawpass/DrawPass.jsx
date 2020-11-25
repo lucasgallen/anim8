@@ -38,7 +38,7 @@ function DrawPassApp() {
 
   return (
     <Container>
-      <Global backgroundColor='' noScroll={noscroll} />
+      <Global backgroundColor='' />
       <Title><h1>drawpass</h1></Title>
       <Switch>
         <Route path={`${path}/tutorial/:step?`} render={({ path, match }) => (
