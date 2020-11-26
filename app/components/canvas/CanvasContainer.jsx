@@ -2,17 +2,32 @@ import React from 'react';
 
 import { Container } from './styles';
 
-import CanvasColorPicker from './CanvasColorPicker';
 import Canvas from './Canvas';
+import CanvasUI from './CanvasUI';
 import ShadowCanvas from './ShadowCanvas';
 
 class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { canvasPos: {}, drawDisabled: true, grabStartPos: {}, hasGrip: false, isFullscreen: false, positionLock: false, pen: {} };
+    this.state = {
+      canMove: true,
+      canvasPos: {},
+      drawDisabled: true,
+      grabStartPos: {},
+      hasGrip: false,
+      isFullscreen: false,
+      positionLock: false,
+      pen: {}
+    };
+
     this.canvasRef = React.createRef();
     this.canvasContainerRef = React.createRef();
+  }
+
+  componentDidMount() {
+    console.log('mounted');
+    this.setFullscreenHandler();
   }
 
   updatePenColor(color) {
@@ -24,6 +39,7 @@ class CanvasContainer extends React.Component {
 
   grabCanvas(e) {
     if (this.state.positionLock) return;
+    if (!this.state.canMove) return;
 
     this.setState({
       hasGrip: true,
@@ -71,22 +87,44 @@ class CanvasContainer extends React.Component {
   openFullscreen() {
     const container = this.canvasContainerRef.current;
     container.requestFullscreen();
-    this.setState({ isFullscreen: true });
   }
 
   exitFullscreen() {
     document.exitFullscreen();
-    this.setState({ isFullscreen: false });
   }
 
   toggleFullscreen() {
     const fullscreenEl = document.fullscreenElement;
-    console.log(fullscreenEl);
+
     if (fullscreenEl) {
       this.exitFullscreen();
     } else {
       this.openFullscreen();
     }
+  }
+
+  setFullscreenHandler() {
+    const container = this.canvasContainerRef.current;
+    if (!container) return;
+
+    container.onfullscreenchange = () => this.handleFullscreenChange();
+  }
+
+  handleFullscreenChange() {
+    const fullscreenEl = document.fullscreenElement;
+    if (fullscreenEl) {
+      this.handleFullscreenStart();
+    } else {
+      this.handleFullscreenEnd();
+    }
+  }
+
+  handleFullscreenStart() {
+    this.setState({ isFullscreen: true });
+  }
+
+  handleFullscreenEnd() {
+    this.setState({ isFullscreen: false });
   }
 
   toggleLock() {
@@ -95,6 +133,26 @@ class CanvasContainer extends React.Component {
       positionLock: !isLocked,
       drawDisabled: isLocked
     });
+  }
+
+  menuOpts() {
+    return {
+      colorPickerParent: this.canvasContainerRef.current,
+      isFullscreen: this.state.isFullscreen,
+      updatePenColor: color => this.updatePenColor(color),
+    };
+  }
+
+  overlayOpts() {
+    return {
+      isFullscreen: this.state.isFullscreen,
+      isLocked: this.state.positionLock,
+      toggleLock: () => this.toggleLock(),
+    };
+  }
+
+  setCanMove(canMove) {
+    this.setState({ canMove: canMove });
   }
 
   render() {
@@ -132,21 +190,20 @@ class CanvasContainer extends React.Component {
             />
           }
 
-          {
-            this.props.canFullscreen &&
-            <button style={{position: 'absolute', zIndex: '2', top: '5px', left: '5px'}} onClick={() => this.toggleFullscreen()}>{this.state.isFullscreen ? 'Exit' : 'Edit'}</button>
-          }
+          <CanvasUI
+            canFullscreen={this.props.canFullscreen}
+            isFullscreen={this.state.isFullscreen}
 
-          <button style={{position: 'absolute', zIndex: '2', bottom: '5px', right: '5px'}} onClick={() => this.toggleLock()}>{this.state.positionLock ? 'unlock' : 'lock'}</button>
+            menuOpts={this.menuOpts()}
+            overlayOpts={this.overlayOpts()}
+
+            setCanMove={canMove => this.setCanMove(canMove)}
+            toggleFullscreen={() => this.toggleFullscreen()}
+          />
         </Container>
 
+        {/* TODO: account for flipbook navigation in CanvasUI */}
         { this.props.children }
-
-        <CanvasColorPicker
-          placement='bottomRight'
-          updatePenColor={color => this.updatePenColor(color)}
-          onClick={e => console.log(e)}
-        />
       </>
     );
   }

@@ -83,6 +83,7 @@ function CanvasColorPicker(props) {
     <ColorPicker 
       placement={props.placement}
       onChange={e => changeColor(e)}
+      getCalendarContainer={() => props.container}
     >
       <div>
         <PenButtonWrapper
