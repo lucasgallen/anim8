@@ -14,7 +14,6 @@ import { Global } from '/app/components/styles/atoms';
 import { Container, Title } from './styles/drawpass';
 
 function DrawPassApp() {
-  const [noscroll, setNoScroll] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { path } = useRouteMatch();
@@ -30,10 +29,6 @@ function DrawPassApp() {
 
   const toSession = slug => {
     history.push(`${path}/${slug}`);
-  };
-
-  const toggleScroll = disable => {
-    setNoScroll(disable);
   };
 
   return (
@@ -56,7 +51,6 @@ function DrawPassApp() {
             slug={match.params.slug}
             loading={loading}
             setLoading={setLoading}
-            toggleScroll={({ disable }) => toggleScroll(disable)}
           />
         )} />
         <Route path={path}>

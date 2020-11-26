@@ -98,7 +98,6 @@ function Illustrator(props) {
         canvasImg={props.canvasImg}
         height={canvasDims.height}
         width={canvasDims.width}
-        toggleScroll={props.toggleScroll}
         canFullscreen={true}
       />
     );
