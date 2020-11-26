@@ -169,7 +169,6 @@ class CanvasContainer extends React.Component {
           isSaving={this.props.isSaving}
         >
           <Canvas
-            renderUI
             background={this.props.shadowCanvas ? 'transparent' : 'white'}
             pen={this.state.pen}
             canvasImg={this.props.canvasImg}
