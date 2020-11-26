@@ -10,7 +10,6 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [canvasDims, setCanvasDims] = useState({});
-  const [throttle, setThrottle] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
 
   const canvasContainer = useRef(null);
@@ -30,23 +29,7 @@ function Illustrator(props) {
       height: container.getBoundingClientRect().height,
       width: container.getBoundingClientRect().width,
     });
-
-    window.addEventListener('resize', e => updateScreen(e));
   }, [props.loading]);
-
-  const updateScreen = () => {
-    if (throttle) return;
-
-    const container = canvasContainer.current.canvasContainerRef.current;
-
-    setThrottle(true);
-    setTimeout(() => setThrottle(false), 500);
-
-    setCanvasDims({
-      height: container.getBoundingClientRect().height,
-      width: container.getBoundingClientRect().width,
-    });
-  };
 
   const handleSaveResponse = res => {
     const message = responseMessage(res.status);
