@@ -77,10 +77,6 @@ class Flipbook extends React.Component {
     );
   }
 
-  toggleScroll(disable) {
-    this.setState({ noscroll: disable });
-  }
-
   updateScreen(e) {
     const canvasContainer = this.canvasContainerRef.canvasContainerRef.current;
 
@@ -172,7 +168,6 @@ class Flipbook extends React.Component {
         <FlipbookContainer>
           <CanvasContainer
             ref={this.canvasContainerRef}
-            toggleScroll={({ disable }) => this.toggleScroll(disable)}
             page={this.state.page}
             height={this.state.canvasDims.height}
             width={this.state.canvasDims.width}
