@@ -10,7 +10,7 @@ class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { canvasPos: {}, drawDisabled: true, grabStartPos: {}, hasGrip: false, positionLock: false, pen: {} };
+    this.state = { canvasPos: {}, drawDisabled: true, grabStartPos: {}, hasGrip: false, isFullscreen: false, positionLock: false, pen: {} };
     this.canvasRef = React.createRef();
     this.canvasContainerRef = React.createRef();
   }
@@ -68,6 +68,27 @@ class CanvasContainer extends React.Component {
     this.setState({ hasGrip: false });
   }
 
+  openFullscreen() {
+    const container = this.canvasContainerRef.current;
+    container.requestFullscreen();
+    this.setState({ isFullscreen: true });
+  }
+
+  exitFullscreen() {
+    document.exitFullscreen();
+    this.setState({ isFullscreen: false });
+  }
+
+  toggleFullscreen() {
+    const fullscreenEl = document.fullscreenElement;
+    console.log(fullscreenEl);
+    if (fullscreenEl) {
+      this.exitFullscreen();
+    } else {
+      this.openFullscreen();
+    }
+  }
+
   toggleLock() {
     const isLocked = this.state.positionLock;
     this.setState({
@@ -97,7 +118,6 @@ class CanvasContainer extends React.Component {
             height={this.props.height}
             width={this.props.width}
             ref={this.canvasRef}
-            toggleScroll={this.props.toggleScroll}
             drawDisabled={this.state.drawDisabled}
             position={this.state.canvasPos}
           />
@@ -113,8 +133,8 @@ class CanvasContainer extends React.Component {
           }
 
           {
-            this.props.openFullscreen &&
-            <button style={{position: 'absolute', zIndex: '2', top: '5px', left: '5px'}} onClick={() => this.props.openFullscreen()}>fullscreen</button>
+            this.props.canFullscreen &&
+            <button style={{position: 'absolute', zIndex: '2', top: '5px', left: '5px'}} onClick={() => this.toggleFullscreen()}>{this.state.isFullscreen ? 'Exit' : 'Edit'}</button>
           }
 
           <button style={{position: 'absolute', zIndex: '2', bottom: '5px', right: '5px'}} onClick={() => this.toggleLock()}>{this.state.positionLock ? 'unlock' : 'lock'}</button>

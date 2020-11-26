@@ -90,11 +90,6 @@ function Illustrator(props) {
     }).then(response => handleSaveResponse(response));
   };
 
-  const openFullscreen = () => {
-    const container = canvasContainer.current.canvasContainerRef.current;
-    container.requestFullscreen();
-  };
-
   const putCanvasContainer = () => {
     return (
       <CanvasContainer
@@ -104,7 +99,7 @@ function Illustrator(props) {
         height={canvasDims.height}
         width={canvasDims.width}
         toggleScroll={props.toggleScroll}
-        openFullscreen={() => openFullscreen()}
+        canFullscreen={true}
       />
     );
   };

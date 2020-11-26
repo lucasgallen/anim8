@@ -13,11 +13,6 @@ const Canvas = React.forwardRef((props, ref) => {
   }, []);
 
   useEffect(() => {
-    if (!props.toggleScroll) return;
-    props.toggleScroll({ disable: isPenDown });
-  }, [isPenDown]);
-
-  useEffect(() => {
     if (!canvasContext || !props.canvasImg) return;
 
     loadDrawing();
