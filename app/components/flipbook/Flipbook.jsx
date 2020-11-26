@@ -78,7 +78,7 @@ class Flipbook extends React.Component {
   }
 
   updateScreen(e) {
-    const canvasContainer = this.canvasContainerRef.canvasContainerRef.current;
+    const canvasContainer = this.canvasContainerRef.current.canvasContainerRef.current;
 
     if (this.throttle) return;
 

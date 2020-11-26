@@ -78,8 +78,10 @@ const SaveColorButton = styled(Button)`
 const StyledCanvas = styled.canvas.attrs(props => ({
   'data-shadow': `${props.isShadow || false}`,
   style: {
+    height: `${props.height}px`,
     left: `${props.left}px` || '0',
-    top: `${props.top}px` || '0'
+    top: `${props.top}px` || '0',
+    width: `${props.width}px`,
   }
 }))`
   background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
