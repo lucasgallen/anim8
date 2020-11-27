@@ -44,12 +44,10 @@ function CanvasUI(props) {
         />
       }
 
-      {/* hide/show for site/fullscreen */}
       <Overlay
         options={overlayOpts}
       />
 
-      {/* needs hide/show button */}
       <Menu
         isOpen={menuOpen}
         options={menuOpts}
