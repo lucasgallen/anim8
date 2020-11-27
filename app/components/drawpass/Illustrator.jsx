@@ -68,6 +68,7 @@ function Illustrator(props) {
         isSaving={isSaving}
         canvasImg={props.canvasImg}
         canFullscreen={true}
+        save={Save()}
       />
     );
   };
@@ -80,14 +81,19 @@ function Illustrator(props) {
     );
   };
 
+  const Save = () => {
+    return (
+      <SaveButton
+        isSaving={isSaving}
+        onClick={() => saveImage()}
+      >{saveLabel}</SaveButton>
+    );
+  };
+
   return (
     <>
       { props.loading ? putLoader() : putCanvasContainer() }
       <SaveContainer>
-        <SaveButton
-          isSaving={isSaving}
-          onClick={() => saveImage()}
-        >{saveLabel}</SaveButton>
         <SaveResponse error={!response.isOk} trigger={!isSaving}>{response.message}</SaveResponse>
       </SaveContainer>
     </>

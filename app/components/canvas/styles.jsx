@@ -107,14 +107,17 @@ const Container = styled.div`
   box-shadow: 1px 1px 2px 1px #00000017;
   height: 0;
   ${props => props.isSaving ? 'pointer-events: none;' : ''}
-  ${props => props.isSaving ? 'filter: blur(3px);' : ''}
   margin-bottom: 0.5rem;
   overflow: hidden;
   padding-bottom: 70.665%;
   position: relative;
   touch-action: none;
-  transition: filter 0.5s ease-in-out;
   width: 100%;
+
+  canvas {
+    ${props => props.isSaving ? 'filter: blur(3px);' : ''}
+    transition: filter 0.5s ease-in-out;
+  }
 
   &:fullscreen {
     align-items: center;

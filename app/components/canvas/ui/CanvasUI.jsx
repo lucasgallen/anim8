@@ -15,6 +15,14 @@ const OpenMenu = styled(Button)`
   z-index: 100;
 `;
 
+const SaveContainer = styled.div`
+  display: block;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 2;
+`;
+
 function CanvasUI(props) {
   const { overlayOpts, menuOpts } = props;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,11 +38,6 @@ function CanvasUI(props) {
 
   return (
     <>
-      <OpenMenu
-        isFullscreen={props.isFullscreen}
-        onClick={() => toggleMenu()}
-      >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
-
       {
         props.canFullscreen &&
         <FullscreenButton
@@ -42,6 +45,15 @@ function CanvasUI(props) {
           toggleFullscreen={props.toggleFullscreen}
         />
       }
+
+      <SaveContainer>
+        { !props.isFullscreen && props.save }
+      </SaveContainer>
+
+      <OpenMenu
+        isFullscreen={props.isFullscreen}
+        onClick={() => toggleMenu()}
+      >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
         props.isFullscreen &&

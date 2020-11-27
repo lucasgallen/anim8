@@ -236,6 +236,7 @@ class CanvasContainer extends React.Component {
           menuOpts={this.menuOpts()}
           overlayOpts={this.overlayOpts()}
 
+          save={this.props.save}
           setCanMove={canMove => this.setCanMove(canMove)}
           toggleFullscreen={() => this.toggleFullscreen()}
         />
