@@ -5,11 +5,10 @@ import Menu from './ui/Menu';
 import Overlay from './ui/Overlay';
 import FullscreenButton from './ui/FullscreenButton';
 
-const OpenMenu = styled.button`
-  background: white;
-  border: solid 2px black;
+import { Button } from '/app/components/styles/atoms';
+
+const OpenMenu = styled(Button)`
   display: ${props => props.isFullscreen ? 'block' : 'none'};
-  height: 3rem;
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -34,7 +33,7 @@ function CanvasUI(props) {
       <OpenMenu
         isFullscreen={props.isFullscreen}
         onClick={() => toggleMenu()}
-      >{ menuOpen ? 'Close' : 'Open' }</OpenMenu>
+      >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
         props.canFullscreen &&

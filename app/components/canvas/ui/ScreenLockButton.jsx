@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = styled.button`
+import { Button } from '/app/components/styles/atoms';
+
+const StyledButton = styled(Button)`
   display: ${props => props.isFullscreen ? 'block' : 'none'};
   bottom: 1rem;
   position: absolute;
@@ -11,12 +13,12 @@ const Button = styled.button`
 
 function ScreenLockButton(props) {
   return (
-    <Button
+    <StyledButton
       isFullscreen={props.isFullscreen}
       onClick={() => props.toggleLock()}
     >
       {props.isLocked ? 'unlock' : 'lock'}
-    </Button>
+    </StyledButton>
   );
 }
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = styled.button`
+import { Button } from '/app/components/styles/atoms';
+
+const StyledButton = styled(Button)`
   left: 1rem;
   position: absolute;
   top: 1rem;
@@ -10,11 +12,11 @@ const Button = styled.button`
 
 function FullscreenButton(props) {
   return (
-    <Button
+    <StyledButton
       onClick={() => props.toggleFullscreen()}
     >
       {props.isFullscreen ? 'Exit' : 'Edit'}
-    </Button>
+    </StyledButton>
   );
 }
 
