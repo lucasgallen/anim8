@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClearButton } from './styles';
+import { ClearButton } from '../styles';
 
 function ClearCanvasButton(props) {
   const clearPage = () => {

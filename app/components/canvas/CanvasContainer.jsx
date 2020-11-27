@@ -177,6 +177,7 @@ class CanvasContainer extends React.Component {
 
   overlayOpts() {
     return {
+      containerRef: this.canvasContainerRef,
       isFullscreen: this.state.isFullscreen,
       isLocked: this.state.positionLock,
       next: this.props.next,

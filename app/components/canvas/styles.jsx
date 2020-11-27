@@ -6,6 +6,8 @@ import { slideX } from '../styles/keyframes';
 const ClearButton = styled(Button)`
   background: black;
   color: white;
+  position: absolute;
+  bottom: 1rem;
 `;
 
 const ColorCard = styled.div`

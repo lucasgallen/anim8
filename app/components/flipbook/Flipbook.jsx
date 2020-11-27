@@ -6,17 +6,9 @@ import styled from 'styled-components';
 import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
-import ClearCanvasButton from '../canvas/ClearCanvasButton';
 import GifWindow from './GifWindow';
 
 const GIF_RATIO = 1;
-
-const NavBox = styled.div`
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  width: 100%;
-`;
 
 const Container = styled.div`
   overflow: hidden;
@@ -173,13 +165,7 @@ class Flipbook extends React.Component {
             shadowImg={shadowImg}
             shadowCanvas
             canFullscreen={true}
-          >
-            <NavBox>
-              <ClearCanvasButton
-                targetCanvas={this.canvasEl}
-              />
-            </NavBox>
-          </CanvasContainer>
+          />
         </FlipbookContainer>
 
         <GifWindow
