@@ -193,54 +193,49 @@ class CanvasContainer extends React.Component {
 
   render() {
     return (
-      <>
-        <Container
-          onMouseDown={e => this.grabCanvas(e)}
-          onTouchStart={e => this.grabCanvas(e)}
-          onMouseMove={e => this.moveCanvas(e)}
-          onTouchMove={e => this.moveCanvas(e)}
-          onMouseUp={() => this.release()}
-          onTouchEnd={() => this.release()}
-          ref={this.canvasContainerRef}
-          isSaving={this.props.isSaving}
-        >
-          <Canvas
-            background={this.props.shadowCanvas ? 'transparent' : 'white'}
-            pen={this.state.pen}
-            canvasImg={this.props.canvasImg}
+      <Container
+        onMouseDown={e => this.grabCanvas(e)}
+        onTouchStart={e => this.grabCanvas(e)}
+        onMouseMove={e => this.moveCanvas(e)}
+        onTouchMove={e => this.moveCanvas(e)}
+        onMouseUp={() => this.release()}
+        onTouchEnd={() => this.release()}
+        ref={this.canvasContainerRef}
+        isSaving={this.props.isSaving}
+      >
+        <Canvas
+          background={this.props.shadowCanvas ? 'transparent' : 'white'}
+          pen={this.state.pen}
+          canvasImg={this.props.canvasImg}
+          height={this.props.height || HEIGHT}
+          width={this.props.width || WIDTH}
+          ref={this.canvasRef}
+          drawDisabled={this.state.drawDisabled}
+          position={this.state.canvasPos}
+        />
+
+        {
+          this.props.shadowCanvas &&
+          <ShadowCanvas
+            canvasImg={this.props.shadowImg}
             height={this.props.height || HEIGHT}
             width={this.props.width || WIDTH}
-            ref={this.canvasRef}
-            drawDisabled={this.state.drawDisabled}
+            ref={(canvas) => this.shadowCanvas = canvas}
             position={this.state.canvasPos}
           />
+        }
 
-          {
-            this.props.shadowCanvas &&
-            <ShadowCanvas
-              canvasImg={this.props.shadowImg}
-              height={this.props.height || HEIGHT}
-              width={this.props.width || WIDTH}
-              ref={(canvas) => this.shadowCanvas = canvas}
-              position={this.state.canvasPos}
-            />
-          }
+        <CanvasUI
+          canFullscreen={this.props.canFullscreen}
+          isFullscreen={this.state.isFullscreen}
 
-          <CanvasUI
-            canFullscreen={this.props.canFullscreen}
-            isFullscreen={this.state.isFullscreen}
+          menuOpts={this.menuOpts()}
+          overlayOpts={this.overlayOpts()}
 
-            menuOpts={this.menuOpts()}
-            overlayOpts={this.overlayOpts()}
-
-            setCanMove={canMove => this.setCanMove(canMove)}
-            toggleFullscreen={() => this.toggleFullscreen()}
-          />
-        </Container>
-
-        {/* TODO: account for flipbook navigation in CanvasUI */}
-        { this.props.children }
-      </>
+          setCanMove={canMove => this.setCanMove(canMove)}
+          toggleFullscreen={() => this.toggleFullscreen()}
+        />
+      </Container>
     );
   }
 }
