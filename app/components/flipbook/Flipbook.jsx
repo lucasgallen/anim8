@@ -165,6 +165,7 @@ class Flipbook extends React.Component {
             shadowImg={shadowImg}
             shadowCanvas
             canFullscreen={true}
+            canClearCanvas={true}
           />
         </FlipbookContainer>
 

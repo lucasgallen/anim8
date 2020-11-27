@@ -16,6 +16,7 @@ const FlipbookNav = styled.nav`
 
 function Overlay(props) {
   const { 
+    canClearCanvas,
     containerRef,
     isFullscreen,
     isLocked,
@@ -34,7 +35,10 @@ function Overlay(props) {
         { next }
         { prev }
       </FlipbookNav>
-      <ClearCanvasButton targetCanvas={canvasEl()} />
+      {
+        canClearCanvas &&
+        <ClearCanvasButton targetCanvas={canvasEl()} />
+      }
       <ScreenLockButton
         isFullscreen={isFullscreen}
         isLocked={isLocked}

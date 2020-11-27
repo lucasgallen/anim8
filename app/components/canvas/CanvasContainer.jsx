@@ -177,6 +177,7 @@ class CanvasContainer extends React.Component {
 
   overlayOpts() {
     return {
+      canClearCanvas: this.props.canClearCanvas,
       containerRef: this.canvasContainerRef,
       isFullscreen: this.state.isFullscreen,
       isLocked: this.state.positionLock,
