@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import Menu from './ui/Menu';
-import Overlay from './ui/Overlay';
-import FullscreenButton from './ui/FullscreenButton';
+import Menu from './Menu';
+import Overlay from './Overlay';
+import FullscreenButton from './FullscreenButton';
 
 import { Button } from '/app/components/styles/atoms';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { Container } from './styles';
 
 import Canvas from './Canvas';
-import CanvasUI from './CanvasUI';
+import CanvasUI from './ui/CanvasUI';
 import ShadowCanvas from './ShadowCanvas';
 
 const HEIGHT = 595;
