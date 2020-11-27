@@ -121,7 +121,6 @@ const Container = styled.div`
 
   &:fullscreen {
     align-items: center;
-    background: lavender;
     display: flex;
     justify-content: center;
     padding: 0;
