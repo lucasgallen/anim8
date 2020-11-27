@@ -51,50 +51,25 @@ class Flipbook extends React.Component {
   }
 
   componentDidMount() {
-    let canvasContainer;
-
     this.canvasImg = '';
     this.shadowImg = '';
     this.canvasContainer = this.canvasContainerRef.current;
-    canvasContainer = this.canvasContainer.canvasContainerRef.current;
 
     this.canvasEl = this.getCanvasEl();
     this.shadowCanvas = this.canvasContainerRef.current.shadowCanvas;
 
     this.setState({
       canvasDims: {
-        height: canvasContainer.getBoundingClientRect().height,
-        width: canvasContainer.getBoundingClientRect().width,
+        height: this.canvasEl.height,
+        width: this.canvasEl.width,
       }
     });
-
-    window.addEventListener('resize', e => this.updateScreen(e));
   }
 
   getCanvasEl() {
     return (
       this.canvasContainer.canvasContainerRef.current.querySelector('canvas[data-shadow="false"]')
     );
-  }
-
-  updateScreen(e) {
-    const canvasContainer = this.canvasContainerRef.current.canvasContainerRef.current;
-
-    if (this.throttle) return;
-
-    this.throttle = true;
-    setTimeout(() => { this.throttle = false; }, 200);
-    this.props.updateScreen({
-      height: e.currentTarget.screen.availHeight,
-      width: e.currentTarget.availWidth,
-    });
-
-    this.setState({
-      canvasDims: {
-        height: canvasContainer.getBoundingClientRect().height,
-        width: canvasContainer.getBoundingClientRect().width,
-      }
-    });
   }
 
   prevPage() {
@@ -169,11 +144,10 @@ class Flipbook extends React.Component {
           <CanvasContainer
             ref={this.canvasContainerRef}
             page={this.state.page}
-            height={this.state.canvasDims.height}
-            width={this.state.canvasDims.width}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
             shadowCanvas
+            canFullscreen={true}
           >
             <NavBox>
               <Button

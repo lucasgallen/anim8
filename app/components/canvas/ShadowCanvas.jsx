@@ -53,8 +53,10 @@ class ShadowCanvas extends React.Component {
   render() {
     return (
       <StyledCanvas
-        width={this.props.width || '600'}
-        height={this.props.height || '600'}
+        left={this.props.position.left}
+        top={this.props.position.top}
+        width={this.props.width}
+        height={this.props.height}
         ref={(canvas) => this.canvas = canvas}
         isShadow={true}
       ></StyledCanvas>

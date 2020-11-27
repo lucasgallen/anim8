@@ -9,7 +9,7 @@ const Container = styled.div`
   margin: 0 auto 0;
   max-width: 842px;
   position: relative;
-  width: calc(100% - 2rem);
+  width: calc(100% - 8rem);
 
   @media (min-width: 700px)  {
     margin: 0 auto;

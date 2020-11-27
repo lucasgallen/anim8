@@ -83,8 +83,8 @@ const Canvas = React.forwardRef((props, ref) => {
       background={props.background}
       left={props.position.left}
       top={props.position.top}
-      width={props.width || 842}
-      height={props.height || 595}
+      width={props.width}
+      height={props.height}
       ref={canvas}
     ></StyledCanvas>
   );

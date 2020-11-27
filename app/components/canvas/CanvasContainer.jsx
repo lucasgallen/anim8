@@ -6,6 +6,9 @@ import Canvas from './Canvas';
 import CanvasUI from './CanvasUI';
 import ShadowCanvas from './ShadowCanvas';
 
+const HEIGHT = 595;
+const WIDTH = 842;
+
 class CanvasContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -117,6 +120,25 @@ class CanvasContainer extends React.Component {
     } else {
       this.handleFullscreenEnd();
     }
+
+    // Call after fullscreen has set
+    // TODO: find a way to 'know' when fullscreen is finished
+    // (safari/ie don't provide promise functionality)
+    setTimeout(() => this.centerCanvasPosition());
+  }
+
+  centerCanvasPosition() {
+    const container = this.canvasContainerRef.current;
+
+    const left = (container.getBoundingClientRect().width - WIDTH) * 0.5;
+    const top = (container.getBoundingClientRect().height - HEIGHT) * 0.5;
+
+    this.setState({
+      canvasPos: {
+        left: left,
+        top: top
+      }
+    });
   }
 
   handleFullscreenStart() {
@@ -172,8 +194,8 @@ class CanvasContainer extends React.Component {
             background={this.props.shadowCanvas ? 'transparent' : 'white'}
             pen={this.state.pen}
             canvasImg={this.props.canvasImg}
-            height={this.props.height}
-            width={this.props.width}
+            height={this.props.height || HEIGHT}
+            width={this.props.width || WIDTH}
             ref={this.canvasRef}
             drawDisabled={this.state.drawDisabled}
             position={this.state.canvasPos}
@@ -183,9 +205,10 @@ class CanvasContainer extends React.Component {
             this.props.shadowCanvas &&
             <ShadowCanvas
               canvasImg={this.props.shadowImg}
-              height={this.props.height}
-              width={this.props.width}
+              height={this.props.height || HEIGHT}
+              width={this.props.width || WIDTH}
               ref={(canvas) => this.shadowCanvas = canvas}
+              position={this.state.canvasPos}
             />
           }
 

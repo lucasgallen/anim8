@@ -87,7 +87,9 @@ const StyledCanvas = styled.canvas.attrs(props => ({
   background: ${props => props.isShadow ? 'white' : props.background || 'transparent'};
   bottom: ${props => props.isShadow && '2px'};
   box-shadow: 0px 0px 6px 1px #00000038;
+  left: 0;
   position: absolute;
+  top: 0;
   touch-action: none;
   z-index: ${props => !props.isShadow && 2};
 `;
@@ -118,10 +120,6 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     padding: 0;
-
-    ${StyledCanvas} {
-      position: relative;
-    }
   }
 `;
 

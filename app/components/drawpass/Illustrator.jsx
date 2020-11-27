@@ -9,7 +9,6 @@ import { LoadingContainer } from './styles/drawpass';
 function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
-  const [canvasDims, setCanvasDims] = useState({});
   const [response, setResponse] = useState({ status: '', isOk: false });
 
   const canvasContainer = useRef(null);
@@ -18,18 +17,6 @@ function Illustrator(props) {
     const label = isSaving ? 'saving image' : 'save image';
     setSaveLabel(label);
   }, [isSaving]);
-
-  useEffect(() => {
-    if (!canvasContainer || !canvasContainer.current) return;
-
-    const container = canvasContainer.current.canvasContainerRef.current;
-    if (!container) return;
-
-    setCanvasDims({
-      height: container.getBoundingClientRect().height,
-      width: container.getBoundingClientRect().width,
-    });
-  }, [props.loading]);
 
   const handleSaveResponse = res => {
     const message = responseMessage(res.status);
@@ -79,8 +66,6 @@ function Illustrator(props) {
         ref={canvasContainer}
         isSaving={isSaving}
         canvasImg={props.canvasImg}
-        height={canvasDims.height}
-        width={canvasDims.width}
         canFullscreen={true}
       />
     );
