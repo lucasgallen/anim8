@@ -133,6 +133,28 @@ class Flipbook extends React.Component {
     return this.props.pages[this.state.page - 2].canvasImg;
   }
 
+  PrevButton() {
+    return (
+      <Button
+        onClick={() => this.prevPage()}
+        side='left'
+        hoverColor={'white'}
+        hoverBackground={'black'}
+      >prev</Button>
+    );
+  }
+
+  NextButton() {
+    return (
+      <Button
+        onClick={() => this.nextPage()}
+        side='right'
+        hoverColor={'white'}
+        hoverBackground={'black'}
+      >next</Button>
+    );
+  }
+
   render() {
     const canvasImg = this.getCanvasImage() || this.cavasImg || '';
     const shadowImg = this.getShadowCanvasImage() || '';
@@ -145,29 +167,17 @@ class Flipbook extends React.Component {
             ref={this.canvasContainerRef}
             key={'flipbook'}
             page={this.state.page}
+            next={this.NextButton()}
+            prev={this.PrevButton()}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
             shadowCanvas
             canFullscreen={true}
           >
             <NavBox>
-              <Button
-                onClick={() => this.prevPage()}
-                side='left'
-                hoverColor={'white'}
-                hoverBackground={'black'}
-              >prev</Button>
-
               <ClearCanvasButton
                 targetCanvas={this.canvasEl}
               />
-
-              <Button
-                onClick={() => this.nextPage()}
-                side='right'
-                hoverColor={'white'}
-                hoverBackground={'black'}
-              >next</Button>
             </NavBox>
           </CanvasContainer>
         </FlipbookContainer>

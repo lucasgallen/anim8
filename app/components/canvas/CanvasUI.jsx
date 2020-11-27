@@ -44,9 +44,12 @@ function CanvasUI(props) {
         />
       }
 
-      <Overlay
-        options={overlayOpts}
-      />
+      {
+        props.isFullscreen &&
+        <Overlay
+          options={overlayOpts}
+        />
+      }
 
       <Menu
         isOpen={menuOpen}

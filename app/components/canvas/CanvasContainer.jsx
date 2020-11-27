@@ -179,6 +179,8 @@ class CanvasContainer extends React.Component {
     return {
       isFullscreen: this.state.isFullscreen,
       isLocked: this.state.positionLock,
+      next: this.props.next,
+      prev: this.props.prev,
       toggleLock: () => this.toggleLock(),
     };
   }
