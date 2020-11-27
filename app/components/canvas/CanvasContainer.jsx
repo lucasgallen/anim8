@@ -30,6 +30,7 @@ class CanvasContainer extends React.Component {
 
   componentDidMount() {
     this.setFullscreenHandler();
+    this.centerCanvasPosition();
   }
 
   componentWillUnmount() {
