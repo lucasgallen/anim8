@@ -156,7 +156,11 @@ class CanvasContainer extends React.Component {
   }
 
   handleFullscreenEnd() {
-    this.setState({ isFullscreen: false });
+    this.setState({
+      isFullscreen: false,
+      positionLock: false,
+      drawDisabled: true,
+    });
   }
 
   toggleLock() {
