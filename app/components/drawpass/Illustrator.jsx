@@ -64,6 +64,7 @@ function Illustrator(props) {
     return (
       <CanvasContainer
         ref={canvasContainer}
+        key={'drawpass'}
         isSaving={isSaving}
         canvasImg={props.canvasImg}
         canFullscreen={true}

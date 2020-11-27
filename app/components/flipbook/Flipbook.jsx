@@ -143,6 +143,7 @@ class Flipbook extends React.Component {
         <FlipbookContainer>
           <CanvasContainer
             ref={this.canvasContainerRef}
+            key={'flipbook'}
             page={this.state.page}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
