@@ -29,8 +29,11 @@ class CanvasContainer extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted');
     this.setFullscreenHandler();
+  }
+
+  componentWillUnmount() {
+    this.unsetFullscreenHandler();
   }
 
   updatePenColor(color) {
@@ -111,6 +114,13 @@ class CanvasContainer extends React.Component {
     if (!container) return;
 
     container.onfullscreenchange = () => this.handleFullscreenChange();
+  }
+
+  unsetFullscreenHandler() {
+    const container = this.canvasContainerRef.current;
+    if (!container) return;
+
+    container.onfullscreenchange = null;
   }
 
   handleFullscreenChange() {
