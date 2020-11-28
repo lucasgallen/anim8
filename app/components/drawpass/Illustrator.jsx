@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
@@ -10,8 +10,6 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
-
-  const canvasContainer = useRef(null);
 
   useEffect(() => {
     const label = isSaving ? 'saving image' : 'save image';
@@ -38,13 +36,8 @@ function Illustrator(props) {
     }
   };
 
-  const getCanvasEl = element => {
-    return element.getElementsByTagName('canvas')[0];
-  };
-
-  const saveImage = () => {
+  const saveImage = canvas => {
     const isOk = response.isOk;
-    const canvas = getCanvasEl(canvasContainer.current.canvasContainerRef.current);
     const dataURL = canvas.toDataURL('image/png', 0.9);
 
     setIsSaving(true);
@@ -63,12 +56,11 @@ function Illustrator(props) {
   const putCanvasContainer = () => {
     return (
       <CanvasContainer
-        ref={canvasContainer}
         key={'drawpass'}
         isSaving={isSaving}
         canvasImg={props.canvasImg}
         canFullscreen={true}
-        save={Save()}
+        save={canvas => Save(canvas)}
       />
     );
   };
@@ -81,11 +73,11 @@ function Illustrator(props) {
     );
   };
 
-  const Save = () => {
+  const Save = canvas => {
     return (
       <SaveButton
         isSaving={isSaving}
-        onClick={() => saveImage()}
+        onClick={() => saveImage(canvas)}
       >{saveLabel}</SaveButton>
     );
   };
