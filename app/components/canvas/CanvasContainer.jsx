@@ -231,7 +231,7 @@ function CanvasContainer(props) {
         menuOpts={menuOpts()}
         overlayOpts={overlayOpts()}
 
-        save={props.save(canvas())}
+        save={props.save && props.save(canvas())}
         setCanMove={canMove => setCanMove(canMove)}
         toggleFullscreen={() => toggleFullscreen()}
       />
