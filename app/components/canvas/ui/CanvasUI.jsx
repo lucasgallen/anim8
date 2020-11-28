@@ -65,6 +65,7 @@ function CanvasUI(props) {
       <Menu
         isOpen={menuOpen}
         options={menuOpts}
+        toggleMenu={() => toggleMenu()}
       />
     </>
   );

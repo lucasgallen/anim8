@@ -84,6 +84,7 @@ function CanvasColorPicker(props) {
       placement={props.placement}
       onChange={e => changeColor(e)}
       getCalendarContainer={() => props.container}
+      onClose={() => props.setTimedMenuSkip(true)}
     >
       <div>
         <PenButtonWrapper

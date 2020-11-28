@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import CanvasColorPicker from '../CanvasColorPicker';
@@ -20,22 +20,46 @@ const Container = styled.div`
   z-index: 10;
 `;
 
+const SKIP_LENGTH_MS = 100;
+
 function Menu(props) {
+  const [timedMenuSkip, setTimedMenuSkip] = useState(false);
+
   const { 
     colorPickerParent,
     isFullscreen,
     updatePenColor,
   } = props.options;
 
+  const container = useRef(null);
+
+  useEffect(() => {
+    if (!timedMenuSkip) return;
+
+    setTimeout(() => {
+      setTimedMenuSkip(false);
+    }, SKIP_LENGTH_MS);
+  }, [timedMenuSkip]);
+
+  const handleContainer = e => {
+    if (e.target !== container.current) return;
+    if (timedMenuSkip) return;
+
+    props.toggleMenu();
+  };
+
   return (
     <Container
       isFullscreen={isFullscreen}
       isOpen={props.isOpen}
+      onClick={e => handleContainer(e)}
+      ref={container}
     >
       <CanvasColorPicker
         placement='bottomRight'
         container={colorPickerParent}
         updatePenColor={updatePenColor}
+        setTimedMenuSkip={skip => setTimedMenuSkip(skip)}
       />
     </Container>
   );
