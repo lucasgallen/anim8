@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Container } from './styles';
 
@@ -9,248 +9,227 @@ import ShadowCanvas from './ShadowCanvas';
 const HEIGHT = 595;
 const WIDTH = 842;
 
-class CanvasContainer extends React.Component {
-  constructor(props) {
-    super(props);
+function CanvasContainer(props) {
+  const [canMove, setCanMove]             = useState(true);
+  const [canvasContext, setCanvasContext] = useState();
+  const [canvasPos, setCanvasPos]         = useState({});
+  const [drawDisabled, setDrawDisabled]   = useState(true);
+  const [grabStartPos, setGrabStartPos]   = useState({});
+  const [hasGrip, setHasGrip]             = useState(false);
+  const [isFullscreen, setIsFullscreen]   = useState(false);
+  const [pen, setPen]                     = useState({});
+  const [positionLock, setPositionLock]   = useState(false);
 
-    this.state = {
-      canMove: true,
-      canvasContext: null,
-      canvasPos: {},
-      drawDisabled: true,
-      grabStartPos: {},
-      hasGrip: false,
-      isFullscreen: false,
-      positionLock: false,
-      pen: {}
+  const canvasContainerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const shadowCanvas = useRef(null);
+
+  useEffect(() => {
+    setFullscreenHandler();
+    centerCanvasPosition();
+
+    return () => {
+      unsetFullscreenHandler();
     };
+  }, []);
 
-    this.canvasRef = React.createRef();
-    this.canvasContainerRef = React.createRef();
-  }
+  const canvas = () => {
+    const container = canvasContainerRef.current;
+    if (!container) return;
 
-  componentDidMount() {
-    this.setFullscreenHandler();
-    this.centerCanvasPosition();
-  }
+    return container.querySelector('canvas[data-shadow="false"]');
+  };
 
-  componentWillUnmount() {
-    this.unsetFullscreenHandler();
-  }
+  const updatePenColor = color => {
+    const newPen = { ...pen, color: color };
+    setPen(newPen);
+  };
 
-  setCanvasContext(ctx) {
-    this.setState({ canvasContext: ctx });
-  }
+  const grabCanvas = e => {
+    if (positionLock) return;
+    if (!canMove) return;
 
-  updatePenColor(color) {
-    const newPen = { ...this.state.pen, color: color };
-    this.setState({
-      pen: newPen
-    });
-  }
+    setHasGrip(true);
+    setGrabStartPos(currentPosition(e));
+  };
 
-  grabCanvas(e) {
-    if (this.state.positionLock) return;
-    if (!this.state.canMove) return;
-
-    this.setState({
-      hasGrip: true,
-      grabStartPos: this.currentPosition(e),
-    });
-  }
-
-  currentPosition(e) {
+  const currentPosition = e => {
     const eventRoot = e.touches ? e.touches[0] : e;
     return { x: eventRoot.clientX, y: eventRoot.clientY };
-  }
+  };
 
-  moveCanvas(e) {
-    if (!this.state.hasGrip) return;
-    this.currentPosition(e);
+  const moveCanvas = e => {
+    if (!hasGrip) return;
 
-    const relPosition = this.relativeMousePos(e);
-    const currentPosition = {
-      x: this.state.canvasPos.left || 0,
-      y: this.state.canvasPos.top || 0,
+    const relPosition = relativeMousePos(e);
+    const position = {
+      x: canvasPos.left || 0,
+      y: canvasPos.top || 0,
     };
 
-    this.setState({
-      grabStartPos: this.currentPosition(e),
-      canvasPos: {
-        left: relPosition.x + currentPosition.x,
-        top: relPosition.y + currentPosition.y,
-      }
+    setGrabStartPos(currentPosition(e));
+    setCanvasPos({
+      left: relPosition.x + position.x,
+      top: relPosition.y + position.y,
     });
-  }
+  };
 
-  relativeMousePos(e) {
-    const currentPos = this.currentPosition(e);
+  const relativeMousePos = e => {
+    const currentPos = currentPosition(e);
 
     return {
-      x: currentPos.x - this.state.grabStartPos.x,
-      y: currentPos.y - this.state.grabStartPos.y
+      x: currentPos.x - grabStartPos.x,
+      y: currentPos.y - grabStartPos.y
     };
-  }
+  };
 
-  release() {
-    this.setState({ hasGrip: false });
-  }
+  const release = () => {
+    setHasGrip(false);
+  };
 
-  openFullscreen() {
-    const container = this.canvasContainerRef.current;
+  const openFullscreen = () => {
+    const container = canvasContainerRef.current;
     container.requestFullscreen();
-  }
+  };
 
-  exitFullscreen() {
+  const exitFullscreen = () => {
     document.exitFullscreen();
-  }
+  };
 
-  toggleFullscreen() {
+  const toggleFullscreen = () => {
     const fullscreenEl = document.fullscreenElement;
 
     if (fullscreenEl) {
-      this.exitFullscreen();
+      exitFullscreen();
     } else {
-      this.openFullscreen();
+      openFullscreen();
     }
-  }
+  };
 
-  setFullscreenHandler() {
-    const container = this.canvasContainerRef.current;
+  const setFullscreenHandler = () => {
+    const container = canvasContainerRef.current;
     if (!container) return;
 
-    container.onfullscreenchange = () => this.handleFullscreenChange();
-  }
+    container.onfullscreenchange = () => handleFullscreenChange();
+  };
 
-  unsetFullscreenHandler() {
-    const container = this.canvasContainerRef.current;
+  const unsetFullscreenHandler = () => {
+    const container = canvasContainerRef.current;
     if (!container) return;
 
     container.onfullscreenchange = null;
-  }
+  };
 
-  handleFullscreenChange() {
+  const handleFullscreenChange = () => {
     const fullscreenEl = document.fullscreenElement;
     if (fullscreenEl) {
-      this.handleFullscreenStart();
+      handleFullscreenStart();
     } else {
-      this.handleFullscreenEnd();
+      handleFullscreenEnd();
     }
 
     // Call after fullscreen has set
     // TODO: find a way to 'know' when fullscreen is finished
     // (safari/ie don't provide promise functionality)
-    setTimeout(() => this.centerCanvasPosition());
-  }
+    setTimeout(() => centerCanvasPosition());
+  };
 
-  centerCanvasPosition() {
-    const container = this.canvasContainerRef.current;
+  const centerCanvasPosition = () => {
+    const container = canvasContainerRef.current;
 
     const left = (container.getBoundingClientRect().width - WIDTH) * 0.5;
     const top = (container.getBoundingClientRect().height - HEIGHT) * 0.5;
 
-    this.setState({
-      canvasPos: {
-        left: left,
-        top: top
+    setCanvasPos({
+      left: left,
+      top: top
+    });
+  };
+
+  const handleFullscreenStart = () => {
+    setIsFullscreen(true);
+  };
+
+  const handleFullscreenEnd = () => {
+    setIsFullscreen(false);
+    setPositionLock(false);
+    setDrawDisabled(true);
+  };
+
+  const toggleLock = () => {
+    const isLocked = positionLock;
+    setPositionLock(!isLocked);
+    setDrawDisabled(isLocked);
+  };
+
+  const menuOpts = () => {
+    return {
+      colorPickerParent: canvasContainerRef.current,
+      isFullscreen: isFullscreen,
+      updatePenColor: color => updatePenColor(color),
+    };
+  };
+
+  const overlayOpts= () => {
+    return {
+      canClearCanvas: props.canClearCanvas,
+      containerRef: canvasContainerRef,
+      isFullscreen: isFullscreen,
+      isLocked: positionLock,
+      next: props.next,
+      prev: props.prev,
+      toggleLock: () => toggleLock(),
+    };
+  };
+
+  return (
+    <Container
+      onMouseDown={e => grabCanvas(e)}
+      onTouchStart={e => grabCanvas(e)}
+      onMouseMove={e => moveCanvas(e)}
+      onTouchMove={e => moveCanvas(e)}
+      onMouseUp={() => release()}
+      onTouchEnd={() => release()}
+      ref={canvasContainerRef}
+      isSaving={props.isSaving}
+    >
+      <Canvas
+        background={props.shadowCanvas ? 'transparent' : 'white'}
+        pen={pen}
+        canvasImg={props.canvasImg}
+        height={props.height || HEIGHT}
+        width={props.width || WIDTH}
+        ref={canvasRef}
+        drawDisabled={drawDisabled}
+        position={canvasPos}
+        setCanvasContext={ctx => setCanvasContext(ctx)}
+        canvasContext={canvasContext}
+      />
+
+      {
+        props.shadowCanvas &&
+        <ShadowCanvas
+          canvasImg={props.shadowImg}
+          height={props.height || HEIGHT}
+          width={props.width || WIDTH}
+          ref={shadowCanvas}
+          position={canvasPos}
+        />
       }
-    });
-  }
 
-  handleFullscreenStart() {
-    this.setState({ isFullscreen: true });
-  }
+      <CanvasUI
+        canFullscreen={props.canFullscreen}
+        isFullscreen={isFullscreen}
 
-  handleFullscreenEnd() {
-    this.setState({
-      isFullscreen: false,
-      positionLock: false,
-      drawDisabled: true,
-    });
-  }
+        menuOpts={menuOpts()}
+        overlayOpts={overlayOpts()}
 
-  toggleLock() {
-    const isLocked = this.state.positionLock;
-    this.setState({
-      positionLock: !isLocked,
-      drawDisabled: isLocked
-    });
-  }
-
-  menuOpts() {
-    return {
-      colorPickerParent: this.canvasContainerRef.current,
-      isFullscreen: this.state.isFullscreen,
-      updatePenColor: color => this.updatePenColor(color),
-    };
-  }
-
-  overlayOpts() {
-    return {
-      canClearCanvas: this.props.canClearCanvas,
-      containerRef: this.canvasContainerRef,
-      isFullscreen: this.state.isFullscreen,
-      isLocked: this.state.positionLock,
-      next: this.props.next,
-      prev: this.props.prev,
-      toggleLock: () => this.toggleLock(),
-    };
-  }
-
-  setCanMove(canMove) {
-    this.setState({ canMove: canMove });
-  }
-
-  render() {
-    return (
-      <Container
-        onMouseDown={e => this.grabCanvas(e)}
-        onTouchStart={e => this.grabCanvas(e)}
-        onMouseMove={e => this.moveCanvas(e)}
-        onTouchMove={e => this.moveCanvas(e)}
-        onMouseUp={() => this.release()}
-        onTouchEnd={() => this.release()}
-        ref={this.canvasContainerRef}
-        isSaving={this.props.isSaving}
-      >
-        <Canvas
-          background={this.props.shadowCanvas ? 'transparent' : 'white'}
-          pen={this.state.pen}
-          canvasImg={this.props.canvasImg}
-          height={this.props.height || HEIGHT}
-          width={this.props.width || WIDTH}
-          ref={this.canvasRef}
-          drawDisabled={this.state.drawDisabled}
-          position={this.state.canvasPos}
-          setCanvasContext={ctx => this.setCanvasContext(ctx)}
-          canvasContext={this.state.canvasContext}
-        />
-
-        {
-          this.props.shadowCanvas &&
-          <ShadowCanvas
-            canvasImg={this.props.shadowImg}
-            height={this.props.height || HEIGHT}
-            width={this.props.width || WIDTH}
-            ref={(canvas) => this.shadowCanvas = canvas}
-            position={this.state.canvasPos}
-          />
-        }
-
-        <CanvasUI
-          canFullscreen={this.props.canFullscreen}
-          isFullscreen={this.state.isFullscreen}
-
-          menuOpts={this.menuOpts()}
-          overlayOpts={this.overlayOpts()}
-
-          save={this.props.save}
-          setCanMove={canMove => this.setCanMove(canMove)}
-          toggleFullscreen={() => this.toggleFullscreen()}
-        />
-      </Container>
-    );
-  }
+        save={props.save(canvas())}
+        setCanMove={canMove => setCanMove(canMove)}
+        toggleFullscreen={() => toggleFullscreen()}
+      />
+    </Container>
+  );
 }
 
 export default CanvasContainer;
