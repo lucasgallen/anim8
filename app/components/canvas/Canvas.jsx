@@ -7,7 +7,10 @@ function Canvas(props) {
   const canvas = useRef(null);
 
   useEffect(() => {
-    props.setCanvasContext(canvas.current.getContext('2d'));
+    const ctx = canvas.current.getContext('2d');
+
+    props.setCanvasContext(ctx);
+    ctx.lineJoin = 'round';
     setIsPenDown(false);
   }, []);
 
@@ -19,9 +22,11 @@ function Canvas(props) {
 
   const startPath = () => {
     const color = props.pen.color || '#000';
+    const width = props.pen.width || 1;
     if (props.drawDisabled) return;
 
     props.canvasContext.strokeStyle = color;
+    props.canvasContext.lineWidth = width;
     props.canvasContext.beginPath();
     setIsPenDown(true);
   };

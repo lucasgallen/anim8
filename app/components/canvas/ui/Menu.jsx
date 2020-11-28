@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import CanvasColorPicker from '../CanvasColorPicker';
+import PenWidthSlider from './PenWidthSlider';
 
 const Container = styled.div`
   align-items: flex-start;
   background: #5f9ea099;
   display: ${props => props.isFullscreen ? 'flex' : 'none' };
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   left: 0;
   min-height: calc(100vh - 6rem);
   opacity: ${props => props.isOpen ? '1' : '0' };
@@ -29,6 +31,7 @@ function Menu(props) {
     colorPickerParent,
     isFullscreen,
     updatePenColor,
+    updatePenWidth,
   } = props.options;
 
   const container = useRef(null);
@@ -60,6 +63,10 @@ function Menu(props) {
         container={colorPickerParent}
         updatePenColor={updatePenColor}
         setTimedMenuSkip={skip => setTimedMenuSkip(skip)}
+      />
+
+      <PenWidthSlider
+        updatePenWidth={updatePenWidth}
       />
     </Container>
   );

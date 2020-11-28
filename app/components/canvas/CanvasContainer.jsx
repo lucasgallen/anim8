@@ -54,6 +54,11 @@ function CanvasContainer(props) {
     setPen(newPen);
   };
 
+  const updatePenWidth = width => {
+    const newPen = { ...pen, width: width };
+    setPen(newPen);
+  };
+
   const grabCanvas = e => {
     if (positionLock) return;
     if (!canMove) return;
@@ -176,6 +181,7 @@ function CanvasContainer(props) {
       colorPickerParent: canvasContainerRef.current,
       isFullscreen: isFullscreen,
       updatePenColor: color => updatePenColor(color),
+      updatePenWidth: width => updatePenWidth(width),
     };
   };
 
