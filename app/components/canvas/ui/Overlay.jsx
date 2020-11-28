@@ -32,8 +32,8 @@ function Overlay(props) {
   return (
     <>
       <FlipbookNav>
-        { next }
-        { prev }
+        { next(canvasEl()) }
+        { prev(canvasEl()) }
       </FlipbookNav>
       {
         canClearCanvas &&

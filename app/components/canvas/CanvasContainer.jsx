@@ -21,9 +21,9 @@ function CanvasContainer(props) {
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
-  const shadowCanvas = useRef(null);
 
   useEffect(() => {
+    maybeSetCanvasSize();
     setFullscreenHandler();
     centerCanvasPosition();
 
@@ -37,6 +37,16 @@ function CanvasContainer(props) {
     if (!container) return;
 
     return container.querySelector('canvas[data-shadow="false"]');
+  };
+
+  const maybeSetCanvasSize = () => {
+    const canvasEl = canvas();
+    if (!props.setCanvasDims) return;
+
+    props.setCanvasDims({
+      height: canvasEl.height,
+      width: canvasEl.width,
+    });
   };
 
   const updatePenColor = color => {
@@ -210,7 +220,6 @@ function CanvasContainer(props) {
           canvasImg={props.shadowImg}
           height={props.height || HEIGHT}
           width={props.width || WIDTH}
-          ref={shadowCanvas}
           position={canvasPos}
         />
       }

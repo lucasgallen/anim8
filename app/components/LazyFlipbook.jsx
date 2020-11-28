@@ -9,11 +9,9 @@ function LazyFlipbook(props) {
   const appContainer = useAppContainer(props);
 
   return appContainer(
-    <div>
-      <Suspense fallback={<Loading />}>
-        <Flipbook {...props} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<Loading />}>
+      <Flipbook {...props} />
+    </Suspense>
   );
 }
 

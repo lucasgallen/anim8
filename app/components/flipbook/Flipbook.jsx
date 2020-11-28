@@ -8,11 +8,10 @@ import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 import GifWindow from './GifWindow';
 
-const GIF_RATIO = 1;
-
 const Container = styled.div`
+  margin: 0 auto;
   overflow: hidden;
-  padding: 2.5rem;
+  padding: 2.5rem 0;
   width: calc(100vw - 5rem);
 `;
 
@@ -36,26 +35,8 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, canvasDims: {} };
+    this.state = { page: 1, canvasImg: '', canvasDims: {} };
     this.throttle = false;
-
-    this.canvasContainerRef = React.createRef();
-  }
-
-  componentDidMount() {
-    this.canvasImg = '';
-    this.shadowImg = '';
-    this.canvasContainer = this.canvasContainerRef.current;
-
-    this.canvasEl = this.getCanvasEl();
-    this.shadowCanvas = this.canvasContainerRef.current.shadowCanvas;
-
-    this.setState({
-      canvasDims: {
-        height: this.canvasEl.height,
-        width: this.canvasEl.width,
-      }
-    });
   }
 
   getCanvasEl() {
@@ -64,9 +45,9 @@ class Flipbook extends React.Component {
     );
   }
 
-  prevPage() {
+  prevPage(canvasEl) {
     if (this.state.page > 1) {
-      this.clearPage();
+      this.clearPage(canvasEl);
 
       this.setState({
         page: this.state.page - 1
@@ -76,39 +57,39 @@ class Flipbook extends React.Component {
 
   addPage() {
     this.props.addPage({
-      canvasImg: this.canvasImg,
+      canvasImg: this.state.canvasImg,
       id: this.state.page,
     });
   }
 
-  nextPage() {
-    this.canvasImg = this.canvasEl.toDataURL();
+  nextPage(canvasEl) {
+    this.setState({ canvasImg: canvasEl.toDataURL() }, () => {
+      if (this.state.page - 1 === this.props.pages.length) {
+        this.addPage();
+      }
 
-    if (this.state.page - 1 === this.props.pages.length) {
-      this.addPage();
-    }
-
-    this.savePage();
-    this.clearPage();
-    this.setState({
-      page: this.state.page + 1,
+      this.savePage();
+      this.clearPage(canvasEl);
+      this.setState({
+        page: this.state.page + 1,
+      });
     });
   }
 
   savePage() {
     this.props.savePage({
-      canvasImg: this.canvasImg,
+      canvasImg: this.state.canvasImg,
       pageIndex: this.state.page - 1,
     });
   }
 
-  clearPage() {
-    let shadowCanvas = this.shadowCanvas.canvas;
-    let ctx = this.canvasEl.getContext('2d');
+  clearPage(canvasEl) {
+    let shadowCanvas = canvasEl.parentElement.querySelector('canvas[data-shadow="true"]');
+    let ctx = canvasEl.getContext('2d');
     let shadowCtx = shadowCanvas.getContext('2d');
 
-    ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
-    shadowCtx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    shadowCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
   }
 
   getCanvasImage() {
@@ -125,10 +106,10 @@ class Flipbook extends React.Component {
     return this.props.pages[this.state.page - 2].canvasImg;
   }
 
-  PrevButton() {
+  PrevButton(canvasEl) {
     return (
       <Button
-        onClick={() => this.prevPage()}
+        onClick={() => this.prevPage(canvasEl)}
         side='left'
         hoverColor={'white'}
         hoverBackground={'black'}
@@ -136,10 +117,10 @@ class Flipbook extends React.Component {
     );
   }
 
-  NextButton() {
+  NextButton(canvasEl) {
     return (
       <Button
-        onClick={() => this.nextPage()}
+        onClick={() => this.nextPage(canvasEl)}
         side='right'
         hoverColor={'white'}
         hoverBackground={'black'}
@@ -148,7 +129,7 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const canvasImg = this.getCanvasImage() || this.cavasImg || '';
+    const canvasImg = this.getCanvasImage() || this.state.cavasImg || '';
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (
@@ -156,22 +137,22 @@ class Flipbook extends React.Component {
         <Global backgroundColor='' />
         <FlipbookContainer>
           <CanvasContainer
-            ref={this.canvasContainerRef}
             key={'flipbook'}
             page={this.state.page}
-            next={this.NextButton()}
-            prev={this.PrevButton()}
+            next={canvasEl => this.NextButton(canvasEl)}
+            prev={canvasEl => this.PrevButton(canvasEl)}
             canvasImg={canvasImg}
             shadowImg={shadowImg}
             shadowCanvas
             canFullscreen={true}
             canClearCanvas={true}
+            setCanvasDims={dims => this.setState({ canvasDims: dims })}
           />
         </FlipbookContainer>
 
         <GifWindow
-          height={this.state.canvasDims.height * GIF_RATIO}
-          width={this.state.canvasDims.width * GIF_RATIO}
+          height={this.state.canvasDims.height || 1}
+          width={this.state.canvasDims.width || 1}
           store={this.props.store}
           pages={this.props.pages}
         />

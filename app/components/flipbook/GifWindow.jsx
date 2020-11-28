@@ -24,17 +24,16 @@ const CreateButton = styled(Button)`
   background-color: deeppink;
   margin: 0 auto;
   display: block;
-
-  @media (min-width: 900px) {
-  }
 `;
 
 const CustomGif = styled.img`
   border: none;
   box-shadow: ${props => props.active ? '1px 1px 2px 1px #00000017' : ''};
   display: block;
+  height: auto;
   margin: 0 auto;
   margin-bottom: ${props => props.active ? '0.5rem' : '0'};
+  width: calc(100% - 10rem);
 `;
 
 const UI = styled.div`
@@ -133,8 +132,6 @@ class GifWindow extends React.Component {
   }
 
   render() {
-    const width = Math.floor(this.props.width) || 0;
-
     return (
       <Window
         active={this.state.active}
@@ -145,8 +142,6 @@ class GifWindow extends React.Component {
         <CustomGif
           active={this.state.active}
           ref={(image) => this.customGif = image}
-          width={width}
-          height={this.dynamicHeight()}
         />
 
         <CreateButton
