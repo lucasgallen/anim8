@@ -15,6 +15,7 @@ class CanvasContainer extends React.Component {
 
     this.state = {
       canMove: true,
+      canvasContext: null,
       canvasPos: {},
       drawDisabled: true,
       grabStartPos: {},
@@ -35,6 +36,10 @@ class CanvasContainer extends React.Component {
 
   componentWillUnmount() {
     this.unsetFullscreenHandler();
+  }
+
+  setCanvasContext(ctx) {
+    this.setState({ canvasContext: ctx });
   }
 
   updatePenColor(color) {
@@ -217,6 +222,8 @@ class CanvasContainer extends React.Component {
           ref={this.canvasRef}
           drawDisabled={this.state.drawDisabled}
           position={this.state.canvasPos}
+          setCanvasContext={ctx => this.setCanvasContext(ctx)}
+          canvasContext={this.state.canvasContext}
         />
 
         {
