@@ -1,17 +1,25 @@
 import styled from 'styled-components';
 import { movingStripes } from '/app/components/styles/keyframes';
 
-const Container = styled.div`
+const ContainerGrid = styled.div`
   align-items: center;
   display: grid;
   margin: 0 auto;
   max-width: 25rem;
-  padding: 2.2rem 0 0;
   height: 12.5rem;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 18.4rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  vertical-align: bottom;
 
   @media (min-width: 700px) {
-    float: right;
-    padding: 3rem 0 0;
+    display: inline-flex;
+    padding-left: 8rem;
   }
 `;
 
@@ -73,6 +81,7 @@ const Divider = styled.span`
 `;
 
 export {
+  ContainerGrid,
   Container,
   Copy,
   Button,

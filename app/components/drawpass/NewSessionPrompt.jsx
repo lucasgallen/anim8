@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import NewSessionResponse from './NewSessionResponse';
 
-import { Container, Copy, Button, Divider } from './styles/newSessionPrompt';
+import { Container, ContainerGrid, Copy, Button, Divider } from './styles/newSessionPrompt';
 import useCreateSession from '/app/hooks/useCreateSession';
 
 function NewSessionPrompt(props) {
@@ -25,8 +25,8 @@ function NewSessionPrompt(props) {
   }, [id]);
 
   return (
-    <>
-      <Container>
+    <Container>
+      <ContainerGrid>
         <Copy>Familiar?</Copy>
         <Button
           loadingSession={props.loading}
@@ -40,12 +40,12 @@ function NewSessionPrompt(props) {
           loadingSession={props.loading}
           onClick={props.toTutorial}
         >What is this?</Button>
-      </Container>
+      </ContainerGrid>
       <NewSessionResponse
         loading={props.loading}
         response={response}
       />
-    </>
+    </Container>
   );
 }
 

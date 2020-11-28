@@ -5,8 +5,9 @@ const Container = styled.div`
   animation-name: ${reveal};
   animation-duration: 1.5s;
   animation-timing-function: sine;
-  overflow: hidden;
   margin-bottom: 2rem;
+  overflow: hidden;
+  text-align: left;
 `;
 
 const Copy = styled.p`
