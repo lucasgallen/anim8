@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { StyledCanvas } from './styles';
 
-const Canvas = React.forwardRef((props, ref) => {
+function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState();
-  const canvas = useRef(ref);
+  const canvas = useRef(null);
 
   useEffect(() => {
     props.setCanvasContext(canvas.current.getContext('2d'));
@@ -89,8 +89,6 @@ const Canvas = React.forwardRef((props, ref) => {
       ref={canvas}
     ></StyledCanvas>
   );
-});
-
-Canvas.displayName = 'Canvas';
+}
 
 export default Canvas;

@@ -21,7 +21,6 @@ function CanvasContainer(props) {
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
-  const canvasRef = useRef(null);
   const shadowCanvas = useRef(null);
 
   useEffect(() => {
@@ -199,7 +198,6 @@ function CanvasContainer(props) {
         canvasImg={props.canvasImg}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
-        ref={canvasRef}
         drawDisabled={drawDisabled}
         position={canvasPos}
         setCanvasContext={ctx => setCanvasContext(ctx)}
