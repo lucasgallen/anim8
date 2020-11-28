@@ -1,11 +1,6 @@
 import styled from 'styled-components';
-import { slideY } from '../../styles/keyframes';
 
 const Container = styled.div`
-  animation-name: ${props => slideY(props.start, props.end)};
-  animation-duration: 0.5s;
-  animation-timing-function: sine;
-  animation-fill-mode: forwards;
   margin: 0 auto 0;
   max-width: 842px;
   position: relative;
