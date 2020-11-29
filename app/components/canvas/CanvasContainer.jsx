@@ -6,6 +6,7 @@ import Canvas from './Canvas';
 import CanvasUI from './ui/CanvasUI';
 import ShadowCanvas from './ShadowCanvas';
 
+const DEFAULT_PEN_WIDTH = 3;
 const HEIGHT = 595;
 const WIDTH = 842;
 
@@ -17,7 +18,7 @@ function CanvasContainer(props) {
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [isFullscreen, setIsFullscreen]   = useState(false);
-  const [pen, setPen]                     = useState({});
+  const [pen, setPen]                     = useState({ width: DEFAULT_PEN_WIDTH });
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
@@ -56,6 +57,11 @@ function CanvasContainer(props) {
 
   const updatePenWidth = width => {
     const newPen = { ...pen, width: width };
+    setPen(newPen);
+  };
+
+  const setPenEraser = isEraser => {
+    const newPen = { ...pen, isEraser: isEraser };
     setPen(newPen);
   };
 
@@ -180,6 +186,7 @@ function CanvasContainer(props) {
     return {
       colorPickerParent: canvasContainerRef.current,
       isFullscreen: isFullscreen,
+      setPenEraser: isEraser => setPenEraser(isEraser),
       updatePenColor: color => updatePenColor(color),
       updatePenWidth: width => updatePenWidth(width),
     };

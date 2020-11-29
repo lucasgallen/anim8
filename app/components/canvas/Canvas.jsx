@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { StyledCanvas } from './styles';
 
+const DEFAULT_OP = 'source-out';
+
 function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState();
+  const [canvasAction, setCanvasAction] = useState();
   const canvas = useRef(null);
 
   useEffect(() => {
@@ -20,10 +23,18 @@ function Canvas(props) {
     loadDrawing();
   }, [props.canvasContext, props.canvasImg]);
 
+  useEffect(() => {
+    if (!props.canvasContext) return;
+
+    const op = canvasAction.globalCompositeOperation || DEFAULT_OP;
+    props.canvasContext.globalCompositeOperation = op;
+
+    canvasAction.action();
+  }, [canvasAction]);
+
   const startPath = () => {
     const color = props.pen.color || '#000';
     const width = props.pen.width || 1;
-    if (props.drawDisabled) return;
 
     props.canvasContext.strokeStyle = color;
     props.canvasContext.lineWidth = width;
@@ -41,30 +52,30 @@ function Canvas(props) {
   };
 
   const drawPath = e => {
-    if (!isPenDown) return;
+    const positionRoot = e.touches ? e.touches[0] : e;
+    const position = relativeMousePos(positionRoot);
 
-    let mousePos = relativeMousePos(e);
-
-    props.canvasContext.lineTo(mousePos.x, mousePos.y);
+    props.canvasContext.lineTo(position.x, position.y);
     props.canvasContext.stroke();
   };
 
-  const drawTouchPath = e => {
-    let touchPos;
+  const eraseCircle = e => {
+    const positionRoot = e.touches ? e.touches[0] : e;
+    const position = relativeMousePos(positionRoot);
 
-    if (e.touches.length > 1) return;
-    if (!isPenDown) return;
-
-    touchPos = relativeMousePos(e.touches[0]);
-    props.canvasContext.lineTo(touchPos.x, touchPos.y);
-    props.canvasContext.stroke();
+    props.canvasContext.beginPath();
+    props.canvasContext.arc(position.x, position.y, props.pen.width, 0, Math.PI*2, true);
+    props.canvasContext.closePath();
+    props.canvasContext.fill();
   };
+
 
   const endPath = () => {
     if (props.drawDisabled) return;
-
-    props.canvasContext.save();
     setIsPenDown(false);
+
+    if (props.pen.isEraser) return;
+    props.canvasContext.closePath();
   };
 
   const loadDrawing = () => {
@@ -78,12 +89,39 @@ function Canvas(props) {
     img.setAttribute('src', props.canvasImg.replace(/\n|\r/g, ''));
   };
 
+  const handlePointerDown = e => {
+    if (props.drawDisabled) return;
+
+    setIsPenDown(true);
+    if (props.pen.isEraser) {
+      setCanvasAction({
+        globalCompositeOperation: 'destination-out',
+        action: () => eraseCircle(e),
+      });
+    } else {
+      setCanvasAction({
+        globalCompositeOperation: 'source-over',
+        action: () => startPath(),
+      });
+    }
+  };
+
+  const handlePointerMove = e => {
+    if (!isPenDown) return;
+
+    if (props.pen.isEraser) {
+      eraseCircle(e);
+    } else {
+      drawPath(e);
+    }
+  };
+
   return (
     <StyledCanvas
-      onMouseDown={() => startPath()}
-      onTouchStart={() => startPath()}
-      onMouseMove={(e) => drawPath(e)}
-      onTouchMove={(e) => drawTouchPath(e)}
+      onMouseDown={e => handlePointerDown(e)}
+      onTouchStart={e => handlePointerDown(e)}
+      onMouseMove={e => handlePointerMove(e)}
+      onTouchMove={e => handlePointerMove(e)}
       onMouseUp={() => endPath()}
       onTouchEnd={() => endPath()}
       background={props.background}

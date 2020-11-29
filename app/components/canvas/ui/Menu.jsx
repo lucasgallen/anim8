@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import CanvasColorPicker from '../CanvasColorPicker';
+import EraserToggle from './EraserToggle';
 import PenWidthSlider from './PenWidthSlider';
 
 const Container = styled.div`
@@ -30,6 +31,7 @@ function Menu(props) {
   const { 
     colorPickerParent,
     isFullscreen,
+    setPenEraser,
     updatePenColor,
     updatePenWidth,
   } = props.options;
@@ -68,6 +70,8 @@ function Menu(props) {
       <PenWidthSlider
         updatePenWidth={updatePenWidth}
       />
+
+      <EraserToggle setPenEraser={setPenEraser}/>
     </Container>
   );
 }
