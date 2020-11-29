@@ -32,7 +32,6 @@ function PenWidthSlider(props) {
   }, [width]);
 
   const handleChange = e => {
-    console.log(e);
     setWidth(e.currentTarget.value);
   };
 
