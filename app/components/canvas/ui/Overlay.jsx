@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ScreenLockButton from './ScreenLockButton';
+import RedoUndo from './RedoUndo';
 import ClearCanvasButton from './ClearCanvasButton';
 
 const FlipbookNav = styled.nav`
@@ -18,11 +19,14 @@ function Overlay(props) {
   const { 
     canClearCanvas,
     containerRef,
+    currentCanvasIndex,
     isFullscreen,
     isLocked,
     next,
     prev,
+    redo,
     toggleLock,
+    undo,
   } = props.options;
 
   const canvasEl = () => {
@@ -44,6 +48,8 @@ function Overlay(props) {
         isLocked={isLocked}
         toggleLock={toggleLock}
       />
+
+      <RedoUndo redo={redo} undo={undo} indexState={currentCanvasIndex} />
     </>
   );
 }

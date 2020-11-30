@@ -13,10 +13,12 @@ const WIDTH = 842;
 function CanvasContainer(props) {
   const [canMove, setCanMove]             = useState(true);
   const [canvasContext, setCanvasContext] = useState();
+  const [canvasState, setCanvasState]     = useState({ index: 0, images: [props.canvasImg] });
   const [canvasPos, setCanvasPos]         = useState({});
   const [drawDisabled, setDrawDisabled]   = useState(true);
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
+  const [img, setImg]                     = useState(props.canvasImg);
   const [isFullscreen, setIsFullscreen]   = useState(false);
   const [pen, setPen]                     = useState({ width: DEFAULT_PEN_WIDTH });
   const [positionLock, setPositionLock]   = useState(false);
@@ -32,6 +34,14 @@ function CanvasContainer(props) {
       unsetFullscreenHandler();
     };
   }, []);
+
+  useEffect(() => {
+    setCanvasState({ index: 0, images: [props.canvasImg] });
+  }, [props.canvasImg]);
+
+  useEffect(() => {
+    setImg(canvasState.images[canvasState.index]);
+  }, [canvasState.index]);
 
   const canvas = () => {
     const container = canvasContainerRef.current;
@@ -196,12 +206,46 @@ function CanvasContainer(props) {
     return {
       canClearCanvas: props.canClearCanvas,
       containerRef: canvasContainerRef,
+      currentCanvasIndex: {
+        current: canvasState.index,
+        max: canvasState.images.length - 1
+      },
       isFullscreen: isFullscreen,
       isLocked: positionLock,
       next: props.next,
       prev: props.prev,
+      redo: () => redo(),
       toggleLock: () => toggleLock(),
+      undo: () => undo(),
     };
+  };
+
+  const maybeSliceCanvasImages = () => {
+    const images = [...canvasState.images];
+
+    return images.slice(0, canvasState.index + 1);
+  };
+
+  const pushCanvasImg = img => {
+    const slicedImages = maybeSliceCanvasImages();
+    const newImages = [...slicedImages, img];
+    const newState = { ...canvasState, index: newImages.length - 1, images: newImages };
+
+    setCanvasState(newState);
+  };
+
+  const redo = () => {
+    const newIndex = canvasState.index + 1;
+    const newState = { ...canvasState, index: newIndex };
+
+    setCanvasState(newState);
+  };
+
+  const undo = () => {
+    const newIndex = canvasState.index - 1;
+    const newState = { ...canvasState, index: newIndex };
+
+    setCanvasState(newState);
   };
 
   return (
@@ -218,13 +262,14 @@ function CanvasContainer(props) {
       <Canvas
         background={props.shadowCanvas ? 'transparent' : 'white'}
         pen={pen}
-        canvasImg={props.canvasImg}
+        canvasImg={img}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
         drawDisabled={drawDisabled}
         position={canvasPos}
         setCanvasContext={ctx => setCanvasContext(ctx)}
         canvasContext={canvasContext}
+        pushCanvasState={image => pushCanvasImg(image)}
       />
 
       {

@@ -29,6 +29,11 @@ const Button = styled.button`
     color: ${props => props.hoverColor || 'black'};
     background: ${props => props.hoverBackground || 'white'};
   }
+
+  &:disabled {
+    cursor: default;
+    filter: opacity(0.5);
+  }
 `;
 
 const Label = styled.label`
