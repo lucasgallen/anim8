@@ -71,6 +71,7 @@ class Flipbook extends React.Component {
       this.savePage();
       this.clearPage(canvasEl);
       this.setState({
+        canvasImg: canvasEl.toDataURL(),
         page: this.state.page + 1,
       });
     });
@@ -93,7 +94,6 @@ class Flipbook extends React.Component {
   }
 
   getCanvasImage() {
-    if (!this.props.pages.length) return;
     if (this.state.page - 1 >= this.props.pages.length) return;
 
     return this.props.pages[this.state.page - 1].canvasImg;
@@ -109,6 +109,7 @@ class Flipbook extends React.Component {
   PrevButton(canvasEl) {
     return (
       <Button
+        disabled={this.state.page > 1 ? false : 'disabled'}
         onClick={() => this.prevPage(canvasEl)}
         side='left'
         hoverColor={'white'}
@@ -129,7 +130,7 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const canvasImg = this.getCanvasImage() || this.state.cavasImg || '';
+    const canvasImg = this.getCanvasImage() || this.state.canvasImg;
     const shadowImg = this.getShadowCanvasImage() || '';
 
     return (

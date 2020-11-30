@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import usePrevious from '/app/hooks/usePrevious';
+
 import { Container } from './styles';
 
 import Canvas from './Canvas';
@@ -24,6 +26,7 @@ function CanvasContainer(props) {
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
+  const prevPage = usePrevious(props.page);
 
   useEffect(() => {
     maybeSetCanvasSize();
@@ -40,8 +43,12 @@ function CanvasContainer(props) {
   }, [props.canvasImg]);
 
   useEffect(() => {
-    setImg(canvasState.images[canvasState.index]);
-  }, [canvasState.index]);
+    if (prevPage !== props.page) {
+      setImg(props.canvasImg);
+    } else {
+      setImg(canvasState.images[canvasState.index]);
+    }
+  }, [canvasState.index, props.canvasImg]);
 
   const canvas = () => {
     const container = canvasContainerRef.current;

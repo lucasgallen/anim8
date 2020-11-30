@@ -89,7 +89,6 @@ function Canvas(props) {
     img.onload = () => {
       props.canvasContext.clearRect(0, 0, canvas.current.width, canvas.current.height);
       props.canvasContext.drawImage(img, 0, 0);
-      props.canvasContext.save();
     };
 
     img.setAttribute('src', props.canvasImg.replace(/\n|\r/g, ''));
