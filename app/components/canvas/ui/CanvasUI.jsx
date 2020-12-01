@@ -7,6 +7,13 @@ import FullscreenButton from './FullscreenButton';
 
 import { Button } from '/app/components/styles/atoms';
 
+const Download = styled.div`
+  bottom: 1rem;
+  position: absolute;
+  right: 1rem;
+  z-index: 2;
+`;
+
 const OpenMenu = styled(Button)`
   display: ${props => props.isFullscreen ? 'block' : 'none'};
   position: absolute;
@@ -49,6 +56,10 @@ function CanvasUI(props) {
       <SaveContainer>
         { !props.isFullscreen && props.save }
       </SaveContainer>
+
+      <Download>
+        { !props.isFullscreen && props.downloadLink }
+      </Download>
 
       <OpenMenu
         isFullscreen={props.isFullscreen}

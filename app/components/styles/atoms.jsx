@@ -21,6 +21,7 @@ const Button = styled.button`
   cursor: pointer;
   display: inline-block;
   float: ${props => props.side};
+  font-size: 1.3rem;
   padding: 1rem;
   text-decoration: none;
   text-transform: uppercase;

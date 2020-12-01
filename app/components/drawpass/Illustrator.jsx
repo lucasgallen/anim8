@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
+import DownloadDrawing from './DownloadDrawing';
 import Loading from '/app/components/Loading';
 import { LoadingContainer } from './styles/drawpass';
 
@@ -60,6 +61,7 @@ function Illustrator(props) {
         isSaving={isSaving}
         canvasImg={props.canvasImg}
         canFullscreen={true}
+        downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
       />
     );
@@ -81,6 +83,10 @@ function Illustrator(props) {
       >{saveLabel}</SaveButton>
     );
   };
+
+  const DownloadLink = canvas => (
+    <DownloadDrawing dataURL={canvas && canvas.toDataURL()} sessionID={props.slug} />
+  );
 
   return (
     <>

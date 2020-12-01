@@ -291,6 +291,7 @@ function CanvasContainer(props) {
 
       <CanvasUI
         canFullscreen={props.canFullscreen}
+        downloadLink={props.downloadLink && props.downloadLink(canvas())}
         isFullscreen={isFullscreen}
 
         menuOpts={menuOpts()}
