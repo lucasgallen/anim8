@@ -9,7 +9,7 @@ import {
   ColorCardContainer,
   PenButtonWrapper,
   SaveColorButton,
-} from './styles';
+} from '../styles';
 
 const MAX_COLOR_CARD_WIDTH = 26;
 
