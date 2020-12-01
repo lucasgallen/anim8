@@ -5,7 +5,7 @@ import { StyledCanvas } from './styles';
 const DEFAULT_OP = 'source-out';
 
 function Canvas(props) {
-  const [isPenDown, setIsPenDown] = useState();
+  const [isPenDown, setIsPenDown] = useState(false);
   const [canvasAction, setCanvasAction] = useState();
   const canvas = useRef(null);
 
@@ -14,14 +14,13 @@ function Canvas(props) {
 
     props.setCanvasContext(ctx);
     ctx.lineJoin = 'round';
-    setIsPenDown(false);
   }, []);
 
   useEffect(() => {
     if (!props.canvasContext || !props.canvasImg) return;
 
     loadDrawing();
-  }, [props.canvasContext, props.canvasImg]);
+  }, [props.canvasImg]);
 
   useEffect(() => {
     if (!props.canvasContext) return;

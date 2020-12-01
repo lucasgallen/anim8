@@ -13,7 +13,9 @@ function IllustratorSetup(props) {
   const openSession = useOpenSession(props.slug, props.setLoading, (({ json }) => {
     const dataURL = json.data.relationships.shared_image.meta.data_url || '';
 
-    if (dataURL) setCanvasImg(dataURL);
+    if (!!dataURL && dataURL.length) {
+      setCanvasImg(dataURL);
+    }
   }));
 
   useEffect(() => {

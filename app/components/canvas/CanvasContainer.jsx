@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import usePrevious from '/app/hooks/usePrevious';
-
 import { Container } from './styles';
 
 import Canvas from './Canvas';
@@ -20,13 +18,13 @@ function CanvasContainer(props) {
   const [drawDisabled, setDrawDisabled]   = useState(true);
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
-  const [img, setImg]                     = useState(props.canvasImg);
+  const [img, setImg]                     = useState(null);
   const [isFullscreen, setIsFullscreen]   = useState(false);
   const [pen, setPen]                     = useState({ width: DEFAULT_PEN_WIDTH });
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
-  const prevPage = usePrevious(props.page);
+  const fromReset = useRef(false);
 
   useEffect(() => {
     maybeSetCanvasSize();
@@ -39,11 +37,13 @@ function CanvasContainer(props) {
   }, []);
 
   useEffect(() => {
+    fromReset.current = true;
     setCanvasState({ index: 0, images: [props.canvasImg] });
   }, [props.canvasImg]);
 
   useEffect(() => {
-    if (prevPage !== props.page) {
+    if (fromReset.current) {
+      fromReset.current = false;
       setImg(props.canvasImg);
     } else {
       setImg(canvasState.images[canvasState.index]);
