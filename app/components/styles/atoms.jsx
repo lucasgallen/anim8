@@ -26,9 +26,9 @@ const Button = styled.button`
   text-decoration: none;
   text-transform: uppercase;
 
-  &:hover {
-    color: ${props => props.hoverColor || 'black'};
-    background: ${props => props.hoverBackground || 'white'};
+  &:hover:not(:disabled) {
+    color: ${props => props.hoverColor || 'white'};
+    background: ${props => props.hoverBackground || 'black'};
   }
 
   &:disabled {
