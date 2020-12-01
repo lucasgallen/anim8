@@ -145,6 +145,7 @@ class Flipbook extends React.Component {
             canvasImg={canvasImg}
             shadowImg={shadowImg}
             shadowCanvas
+            background='white'
             canFullscreen={true}
             canClearCanvas={true}
             setCanvasDims={dims => this.setState({ canvasDims: dims })}

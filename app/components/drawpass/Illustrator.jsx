@@ -59,6 +59,7 @@ function Illustrator(props) {
       <CanvasContainer
         key={'drawpass'}
         isSaving={isSaving}
+        background='white'
         canvasImg={props.canvasImg}
         canFullscreen={true}
         downloadLink={canvas => DownloadLink(canvas)}
