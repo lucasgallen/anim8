@@ -14,7 +14,7 @@ import {
 const MAX_COLOR_CARD_WIDTH = 26;
 
 function CanvasColorPicker(props) {
-  const [penColor, setPenColor] = useState();
+  const [penColor, setPenColor] = useState({});
   const [colors, setColors] = useState([]);
   const [cardsActive, setCardsActive] = useState(false);
 
@@ -32,7 +32,7 @@ function CanvasColorPicker(props) {
   };
 
   const changeColor = e => {
-    setPenColor(e.color);
+    setPenColor({ color: e.color.slice(1), alpha: e.alpha / 100 });
   };
 
   const colorCards = () => {

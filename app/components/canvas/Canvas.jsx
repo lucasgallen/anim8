@@ -1,8 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { StyledCanvas } from './styles';
 
 const DEFAULT_OP = 'source-out';
+
+function hexToRGB(hex) {
+  if (!hex) return { red: 0, green: 0, blue: 0 };
+
+  return {
+    red: parseInt(hex.slice(0, 2), 16),
+    green: parseInt(hex.slice(2, 4), 16),
+    blue: parseInt(hex.slice(4, 6), 16)
+  };
+}
 
 function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState(false);
@@ -13,6 +23,7 @@ function Canvas(props) {
     const ctx = canvas.current.getContext('2d');
 
     props.setCanvasContext(ctx);
+    ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }, []);
 
@@ -31,11 +42,16 @@ function Canvas(props) {
     canvasAction.action();
   }, [canvasAction]);
 
+
+  const memoizedRGB = useMemo(() => hexToRGB(props.pen.color), [props.pen.color]);
+
   const startPath = () => {
-    const color = props.pen.color || '#000';
+    const alpha = props.pen.alpha || 1;
     const width = props.pen.width || 1;
 
-    props.canvasContext.strokeStyle = color;
+    props.canvasContext.strokeStyle = `
+      rgba(${memoizedRGB.red}, ${memoizedRGB.green}, ${memoizedRGB.blue}, ${alpha})
+    `;
     props.canvasContext.lineWidth = width;
     props.canvasContext.beginPath();
     setIsPenDown(true);
@@ -56,6 +72,9 @@ function Canvas(props) {
 
     props.canvasContext.lineTo(position.x, position.y);
     props.canvasContext.stroke();
+
+    props.canvasContext.beginPath();
+    props.canvasContext.moveTo(position.x, position.y);
   };
 
   const eraseCircle = e => {

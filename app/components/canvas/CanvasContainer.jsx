@@ -67,8 +67,8 @@ function CanvasContainer(props) {
     });
   };
 
-  const updatePenColor = color => {
-    const newPen = { ...pen, color: color };
+  const updatePenColor = ({ color, alpha }) => {
+    const newPen = { ...pen, color: color, alpha: alpha };
     setPen(newPen);
   };
 
@@ -272,7 +272,7 @@ function CanvasContainer(props) {
             colorPickerParent: canvasContainerRef.current,
             isFullscreen: isFullscreen,
             setPenEraser: isEraser => setPenEraser(isEraser),
-            updatePenColor: color => updatePenColor(color),
+            updatePenColor: ({ color, alpha }) => updatePenColor({ color, alpha }),
             updatePenWidth: width => updatePenWidth(width),
           }}
 
