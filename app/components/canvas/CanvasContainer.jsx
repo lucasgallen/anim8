@@ -85,6 +85,7 @@ function CanvasContainer(props) {
   const grabCanvas = e => {
     if (positionLock) return;
     if (!canMove) return;
+    if (e.target.nodeName !== 'CANVAS') return;
 
     setHasGrip(true);
     setGrabStartPos(currentPosition(e));
@@ -199,34 +200,6 @@ function CanvasContainer(props) {
     setDrawDisabled(isLocked);
   };
 
-  const menuOpts = () => {
-    return {
-      colorPickerParent: canvasContainerRef.current,
-      isFullscreen: isFullscreen,
-      setPenEraser: isEraser => setPenEraser(isEraser),
-      updatePenColor: color => updatePenColor(color),
-      updatePenWidth: width => updatePenWidth(width),
-    };
-  };
-
-  const overlayOpts= () => {
-    return {
-      canClearCanvas: props.canClearCanvas,
-      containerRef: canvasContainerRef,
-      currentCanvasIndex: {
-        current: canvasState.index,
-        max: canvasState.images.length - 1
-      },
-      isFullscreen: isFullscreen,
-      isLocked: positionLock,
-      next: props.next,
-      prev: props.prev,
-      redo: () => redo(),
-      toggleLock: () => toggleLock(),
-      undo: () => undo(),
-    };
-  };
-
   const maybeSliceCanvasImages = () => {
     const images = [...canvasState.images];
 
@@ -289,18 +262,41 @@ function CanvasContainer(props) {
         />
       }
 
-      <CanvasUI
-        canFullscreen={props.canFullscreen}
-        downloadLink={props.downloadLink && props.downloadLink(canvas())}
-        isFullscreen={isFullscreen}
+      { !hasGrip &&
+        <CanvasUI
+          canFullscreen={props.canFullscreen}
+          downloadLink={props.downloadLink && props.downloadLink(canvas())}
+          isFullscreen={isFullscreen}
 
-        menuOpts={menuOpts()}
-        overlayOpts={overlayOpts()}
+          menuOpts={{
+            colorPickerParent: canvasContainerRef.current,
+            isFullscreen: isFullscreen,
+            setPenEraser: isEraser => setPenEraser(isEraser),
+            updatePenColor: color => updatePenColor(color),
+            updatePenWidth: width => updatePenWidth(width),
+          }}
 
-        save={props.save && props.save(canvas())}
-        setCanMove={canMove => setCanMove(canMove)}
-        toggleFullscreen={() => toggleFullscreen()}
-      />
+          overlayOpts={{
+            canClearCanvas: props.canClearCanvas,
+            containerRef: canvasContainerRef,
+            currentCanvasIndex: {
+              current: canvasState.index,
+              max: canvasState.images.length - 1
+            },
+            isFullscreen: isFullscreen,
+            isLocked: positionLock,
+            next: props.next,
+            prev: props.prev,
+            redo: () => redo(),
+            toggleLock: () => toggleLock(),
+            undo: () => undo(),
+          }}
+
+          save={props.save && props.save(canvas())}
+          setCanMove={canMove => setCanMove(canMove)}
+          toggleFullscreen={() => toggleFullscreen()}
+        />
+      }
     </Container>
   );
 }
