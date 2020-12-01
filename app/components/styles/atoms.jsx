@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 const AppContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 5rem;
   min-height: ${props => `calc(100vh - ${props.headerHeight} - ${props.footerHeight})`}
 `;
 
