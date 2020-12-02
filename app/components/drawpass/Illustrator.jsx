@@ -1,21 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
+import useMinWait from '/app/hooks/useMinWait';
+
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
 import DownloadDrawing from './DownloadDrawing';
 import Loading from '/app/components/Loading';
+
 import { LoadingContainer } from './styles/drawpass';
 
 function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
+  const [data, setData] = useState({ url: '', action: ()=>{} });
 
   useEffect(() => {
     const label = isSaving ? 'saving image' : 'save image';
     setSaveLabel(label);
   }, [isSaving]);
+
+  useEffect(() => {
+    if (!data.url.length) return;
+
+    data.action(data.url);
+  }, [data]);
+
+  const saveImageFetch = dataURL => (
+    fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
+      method: 'PATCH',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({ data_url: dataURL }),
+    })
+  );
+
+  const minWaitSave = useMinWait(saveImageFetch);
 
   const handleSaveResponse = res => {
     const message = responseMessage(res.status);
@@ -39,19 +62,16 @@ function Illustrator(props) {
 
   const saveImage = canvas => {
     const isOk = response.isOk;
-    const dataURL = canvas.toDataURL('image/png', 0.9);
+    const url = canvas.toDataURL('image/png', 0.9);
 
     setIsSaving(true);
     setResponse({ message: '', isOk: isOk });
-
-    fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
-      method: 'PATCH',
-      headers: new Headers({
-        'Authorization': `Token token=${process.env.API_TOKEN}`,
-        'Content-Type': 'application/json',
-      }),
-      body: JSON.stringify({ data_url: dataURL }),
-    }).then(response => handleSaveResponse(response));
+    setData({
+      url: url,
+      action: dataURL => (
+        minWaitSave(dataURL).then(response => handleSaveResponse(response))
+      ),
+    });
   };
 
   const putCanvasContainer = () => {
