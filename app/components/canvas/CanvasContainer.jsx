@@ -37,11 +37,13 @@ function CanvasContainer(props) {
   }, []);
 
   useEffect(() => {
+    console.log('canvas img change -> update state');
     fromReset.current = true;
     setCanvasState({ index: 0, images: [props.canvasImg] });
   }, [props.canvasImg]);
 
   useEffect(() => {
+    console.log('index or img change -> update img');
     if (fromReset.current) {
       fromReset.current = false;
       setImg(props.canvasImg);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import useMinWait from '/app/hooks/useMinWait';
+import useStateCallback from '/app/hooks/useStateCallback';
 
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
@@ -14,18 +15,17 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
-  const [data, setData] = useState({ url: '', action: ()=>{} });
+
+  const [dataURL, setDataURL] = useStateCallback('');
+
+  useEffect(() => {
+    dataURL.callback(dataURL.state);
+  }, [dataURL.state]);
 
   useEffect(() => {
     const label = isSaving ? 'saving image' : 'save image';
     setSaveLabel(label);
   }, [isSaving]);
-
-  useEffect(() => {
-    if (!data.url.length) return;
-
-    data.action(data.url);
-  }, [data]);
 
   const saveImageFetch = dataURL => (
     fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
@@ -66,9 +66,9 @@ function Illustrator(props) {
 
     setIsSaving(true);
     setResponse({ message: '', isOk: isOk });
-    setData({
-      url: url,
-      action: dataURL => (
+    setDataURL({
+      state: url,
+      callback: dataURL => (
         minWaitSave(dataURL).then(response => handleSaveResponse(response))
       ),
     });
