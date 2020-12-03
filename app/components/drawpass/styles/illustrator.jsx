@@ -1,24 +1,7 @@
 import styled from 'styled-components';
 
 import { Button } from '../../styles/atoms';
-import { movingStripes, fadeAway } from '../../styles/keyframes';
-
-const SaveContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const SaveResponse = styled.span`
-  animation-name: ${props => props.trigger ? fadeAway : ''};
-  animation-delay: 3s;
-  animation-duration: 3s;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-  color: ${props => props.error ? 'red' : 'green'};
-  font-size: 2rem;
-  font-weight: bold;
-  margin-left: 1rem;
-`;
+import { movingStripes } from '../../styles/keyframes';
 
 const SaveButton = styled(Button)`
   ${props => {
@@ -46,6 +29,4 @@ const SaveButton = styled(Button)`
 
 export {
   SaveButton,
-  SaveContainer,
-  SaveResponse,
 };

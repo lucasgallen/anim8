@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
 
 import useMinWait from '/app/hooks/useMinWait';
 import useStateCallback from '/app/hooks/useStateCallback';
 
-import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
 import DownloadDrawing from './DownloadDrawing';
+import SaveResponse from '../SaveResponse';
+
+import { SaveButton } from './styles/illustrator';
 
 function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
@@ -44,9 +45,9 @@ function Illustrator(props) {
 
   const responseMessage = status => {
     switch (true) {
-    case 200:
+    case +status === 200:
       return 'saved!';
-    case 404:
+    case +status === 404:
       return 'error: either the session or image was not found';
     case +status >= 500:
       return 'error: something went wrong on the server. wait & try again';
@@ -79,6 +80,11 @@ function Illustrator(props) {
 
   return (
     <>
+      <SaveResponse
+        response={response}
+        isSaving={isSaving}
+      />
+
       <CanvasContainer
         key={'drawpass'}
         isSaving={isSaving}
@@ -88,12 +94,8 @@ function Illustrator(props) {
         downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
       />
-
-      <SaveContainer>
-        <SaveResponse error={!response.isOk} trigger={!isSaving}>{response.message}</SaveResponse>
-      </SaveContainer>
     </>
   );
 }
 
-export default withRouter(Illustrator);
+export default Illustrator;
