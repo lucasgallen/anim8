@@ -20,6 +20,7 @@ function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState(false);
   const [ , setGlobalCompositeOp] = useStateCallback([DEFAULT_OP, '']);
   const canvas = useRef(null);
+  const firstLoad = useRef(true);
 
   useEffect(() => {
     const ctx = canvas.current.getContext('2d');
@@ -32,6 +33,7 @@ function Canvas(props) {
   useEffect(() => {
     if (!props.canvasContext || !props.canvasImg) return;
 
+    if (!firstLoad.current && props.setCanSave) props.setCanSave(true);
     loadDrawing();
   }, [props.canvasImg]);
 
@@ -109,6 +111,7 @@ function Canvas(props) {
     };
 
     img.setAttribute('src', props.canvasImg.replace(/\n|\r/g, ''));
+    firstLoad.current = false;
   };
 
   const handlePointerDown = e => {

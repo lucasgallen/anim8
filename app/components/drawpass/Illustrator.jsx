@@ -10,6 +10,7 @@ import SaveResponse from '../SaveResponse';
 import { SaveButton } from './styles/illustrator';
 
 function Illustrator(props) {
+  const [canSave, setCanSave] = useState(false);
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
@@ -38,6 +39,7 @@ function Illustrator(props) {
     const message = responseMessage(res.status);
 
     setIsSaving(false);
+    setCanSave(false);
     setResponse({ message: message, isOk: res.ok });
 
     return res.json();
@@ -68,6 +70,7 @@ function Illustrator(props) {
   const Save = canvas => {
     return (
       <SaveButton
+        disabled={canSave ? false : 'disabled'}
         isSaving={isSaving}
         onClick={() => saveImage(canvas)}
       >{saveLabel}</SaveButton>
@@ -93,6 +96,7 @@ function Illustrator(props) {
         canFullscreen={true}
         downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
+        setCanSave={can => setCanSave(can)}
       />
     </>
   );

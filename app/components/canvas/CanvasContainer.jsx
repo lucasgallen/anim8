@@ -241,6 +241,7 @@ function CanvasContainer(props) {
     >
       <Canvas
         background={props.shadowCanvas ? 'transparent' : props.background}
+        setCanSave={props.setCanSave}
         pen={pen}
         canvasImg={img}
         height={props.height || HEIGHT}
