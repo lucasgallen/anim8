@@ -58,6 +58,7 @@ function IllustratorSetup(props) {
       setID(json.data.id);
     }
 
+    props.setFetchFromSlug(false);
     setNewSessionResponse(response);
   });
 

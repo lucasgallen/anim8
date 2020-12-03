@@ -17,6 +17,7 @@ const Tutorial = props => {
       props.toSession(json.data.id);
     }
 
+    props.setFetchFromSlug(false);
     setResponse(response);
   });
 

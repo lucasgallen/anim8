@@ -15,6 +15,7 @@ import { Container, Title } from './styles/drawpass';
 
 function DrawPassApp() {
   const [loading, setLoading] = useState(false);
+  const [fetchFromSlug, setFetchFromSlug] = useState(true);
 
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -41,6 +42,7 @@ function DrawPassApp() {
             key={match.params.step || 0}
             step={match.params.step || 0}
             path={path}
+            setFetchFromSlug={setFetchFromSlug}
             setLoading={setLoading}
             toTutorial={toTutorial}
             toSession={toSession}
@@ -49,6 +51,8 @@ function DrawPassApp() {
         <Route path={`${path}/:slug`} render={({ match }) => (
           <IllustratorSetup
             key={match.params.slug}
+            fetchFromSlug={fetchFromSlug}
+            setFetchFromSlug={setFetchFromSlug}
             slug={match.params.slug}
             loading={loading}
             setLoading={setLoading}
@@ -58,6 +62,7 @@ function DrawPassApp() {
         <Route path={path}>
           <NewSessionPrompt
             loading={loading}
+            setFetchFromSlug={setFetchFromSlug}
             setLoading={setLoading}
             toSession={toSession}
             toTutorial={toTutorial}

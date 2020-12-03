@@ -16,6 +16,7 @@ function NewSessionPrompt(props) {
       setID(json.data.id);
     }
 
+    props.setFetchFromSlug(false);
     setResponse(response);
   });
 
