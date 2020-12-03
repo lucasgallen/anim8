@@ -5,6 +5,7 @@ import useMinWait from './useMinWait';
 function useOpenSession(slug, setLoading, cb) {
   const callback = cb || function(){};
   const [ json, setJSON ] = useState();
+  const [ res, setRes ] = useState();
 
   const openSessionPromise = () => (
     fetch(`${process.env.API_SERVER}/api/session_group/${slug}`, {
@@ -19,6 +20,7 @@ function useOpenSession(slug, setLoading, cb) {
   const minPromise = useMinWait(openSessionPromise);
 
   const handleResponse = res => {
+    setRes(res);
     setLoading(false);
     return res.json();
   };
@@ -28,10 +30,10 @@ function useOpenSession(slug, setLoading, cb) {
   };
 
   useEffect(() => {
-    if (!json) return;
+    if (!json || !res) return;
 
-    callback({ json });
-  }, [json]);
+    callback({ res, json });
+  }, [json, res]);
 
   return (() => {
     setLoading(true);

@@ -7,9 +7,6 @@ import useStateCallback from '/app/hooks/useStateCallback';
 import { SaveButton, SaveContainer, SaveResponse } from './styles/illustrator';
 import CanvasContainer from '../canvas/CanvasContainer';
 import DownloadDrawing from './DownloadDrawing';
-import Loading from '/app/components/Loading';
-
-import { LoadingContainer } from './styles/drawpass';
 
 function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
@@ -67,28 +64,6 @@ function Illustrator(props) {
     ));
   };
 
-  const putCanvasContainer = () => {
-    return (
-      <CanvasContainer
-        key={'drawpass'}
-        isSaving={isSaving}
-        background='white'
-        canvasImg={props.canvasImg}
-        canFullscreen={true}
-        downloadLink={canvas => DownloadLink(canvas)}
-        save={canvas => Save(canvas)}
-      />
-    );
-  };
-
-  const putLoader = () => {
-    return (
-      <LoadingContainer>
-        <Loading />
-      </LoadingContainer>
-    );
-  };
-
   const Save = canvas => {
     return (
       <SaveButton
@@ -104,7 +79,16 @@ function Illustrator(props) {
 
   return (
     <>
-      { props.loading ? putLoader() : putCanvasContainer() }
+      <CanvasContainer
+        key={'drawpass'}
+        isSaving={isSaving}
+        background='white'
+        canvasImg={props.canvasImg}
+        canFullscreen={true}
+        downloadLink={canvas => DownloadLink(canvas)}
+        save={canvas => Save(canvas)}
+      />
+
       <SaveContainer>
         <SaveResponse error={!response.isOk} trigger={!isSaving}>{response.message}</SaveResponse>
       </SaveContainer>

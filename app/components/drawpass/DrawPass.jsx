@@ -48,9 +48,11 @@ function DrawPassApp() {
         )} />
         <Route path={`${path}/:slug`} render={({ match }) => (
           <IllustratorSetup
+            key={match.params.slug}
             slug={match.params.slug}
             loading={loading}
             setLoading={setLoading}
+            toSession={toSession}
           />
         )} />
         <Route path={path}>
