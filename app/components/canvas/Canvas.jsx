@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
+import useStateCallback from '/app/hooks/useStateCallback';
+
 import { StyledCanvas } from './styles';
 
-const DEFAULT_OP = 'source-out';
+const DEFAULT_OP = 'source-over';
 
 function hexToRGB(hex) {
   if (!hex) return { red: 0, green: 0, blue: 0 };
@@ -16,7 +18,7 @@ function hexToRGB(hex) {
 
 function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState(false);
-  const [canvasAction, setCanvasAction] = useState();
+  const [ , setGlobalCompositeOp] = useStateCallback([DEFAULT_OP, '']);
   const canvas = useRef(null);
 
   useEffect(() => {
@@ -32,16 +34,6 @@ function Canvas(props) {
 
     loadDrawing();
   }, [props.canvasImg]);
-
-  useEffect(() => {
-    if (!props.canvasContext) return;
-
-    const op = canvasAction.globalCompositeOperation || DEFAULT_OP;
-    props.canvasContext.globalCompositeOperation = op;
-
-    canvasAction.action();
-  }, [canvasAction]);
-
 
   const memoizedRGB = useMemo(() => hexToRGB(props.pen.color), [props.pen.color]);
 
@@ -91,13 +83,14 @@ function Canvas(props) {
   const endPath = () => {
     if (props.drawDisabled) return;
 
-    setCanvasAction({
-      globalCompositeOperation: 'source-over',
-      action: () => {
-        props.canvasContext.closePath();
-        setIsPenDown(false);
-        props.pushCanvasState(canvas.current.toDataURL());
-      },
+    setGlobalCompositeOp(['', 'endPath'], () => {
+      if (!props.canvasContext) return;
+
+      props.canvasContext.globalCompositeOperation = DEFAULT_OP;
+
+      props.canvasContext.closePath();
+      setIsPenDown(false);
+      props.pushCanvasState(canvas.current.toDataURL());
     });
   };
 
@@ -123,14 +116,18 @@ function Canvas(props) {
 
     setIsPenDown(true);
     if (props.pen.isEraser) {
-      setCanvasAction({
-        globalCompositeOperation: 'destination-out',
-        action: () => eraseCircle(e),
+      setGlobalCompositeOp(['destination-out', 'handlePointerDown'], ([globalComp, ]) => {
+        if (!props.canvasContext) return;
+
+        props.canvasContext.globalCompositeOperation = globalComp;
+        eraseCircle(e);
       });
     } else {
-      setCanvasAction({
-        globalCompositeOperation: 'source-over',
-        action: () => startPath(),
+      setGlobalCompositeOp(['source-over', 'handlePointerDown'], ([globalComp, ]) => {
+        if (!props.canvasContext) return;
+
+        props.canvasContext.globalCompositeOperation = globalComp;
+        startPath();
       });
     }
   };

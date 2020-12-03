@@ -16,11 +16,7 @@ function Illustrator(props) {
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
 
-  const [dataURL, setDataURL] = useStateCallback('');
-
-  useEffect(() => {
-    dataURL.callback(dataURL.state);
-  }, [dataURL.state]);
+  const [ , setDataURL] = useStateCallback('');
 
   useEffect(() => {
     const label = isSaving ? 'saving image' : 'save image';
@@ -66,12 +62,9 @@ function Illustrator(props) {
 
     setIsSaving(true);
     setResponse({ message: '', isOk: isOk });
-    setDataURL({
-      state: url,
-      callback: dataURL => (
-        minWaitSave(dataURL).then(response => handleSaveResponse(response))
-      ),
-    });
+    setDataURL(url, url => (
+      minWaitSave(url).then(response => handleSaveResponse(response))
+    ));
   };
 
   const putCanvasContainer = () => {
