@@ -90,7 +90,6 @@ function Canvas(props) {
 
       props.canvasContext.globalCompositeOperation = DEFAULT_OP;
 
-      props.canvasContext.closePath();
       setIsPenDown(false);
       props.pushCanvasState(canvas.current.toDataURL());
     });
