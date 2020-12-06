@@ -55,18 +55,18 @@ const ColorCardContainer = styled.div`
 
 
 const PenButtonWrapper = styled.div`
-  background-color: white !important;
+  background-color: white;
   border: 2px solid black;
   margin-top: 1rem;
-  padding: 1rem;
+  padding-bottom: 85%;
   position: relative;
 
   &::before {
     content: '';
     background-color: ${props => props.color};
     right: 0.5rem;
-    height: 1rem;
-    width: 1rem;
+    height: 2rem;
+    width: 2rem;
     position: absolute;
     bottom: 0.5rem;
     border-radius: 0.5rem;

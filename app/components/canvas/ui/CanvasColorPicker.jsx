@@ -124,7 +124,7 @@ function CanvasColorPicker(props) {
     >
       <div>
         <PenButtonWrapper
-          color={penColor || 'black'}
+          color={ penColor.color ? `#${penColor.color}` : 'black'}
         >
 
           <ColorCardContainer
