@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
+import Range from './range';
 
 const AppContainer = styled.div`
   display: flex;
@@ -90,4 +91,5 @@ export {
   Button,
   Label,
   Input,
+  Range,
 };

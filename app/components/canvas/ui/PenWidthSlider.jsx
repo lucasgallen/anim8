@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { Input, Label } from '/app/components/styles/atoms';
+import { Range, Label } from '/app/components/styles/atoms';
 
 const MIN_WIDTH = 1;
 const MAX_WIDTH = 20;
@@ -22,6 +22,20 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   height: ${MAX_WIDTH / 10}rem;
+  max-width: 30rem;
+  width: 100%;
+`;
+
+const RangeInput = styled(Range)`
+  width: 70%;
+`;
+
+const RangeLabel = styled(Label)`
+  border: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 0;
 `;
 
 function PenWidthSlider(props) {
@@ -37,8 +51,8 @@ function PenWidthSlider(props) {
 
   return (
     <Container>
-      <Label>pen width</Label>
-      <Input
+      <RangeLabel>pen width</RangeLabel>
+      <RangeInput
         type='range' min={MIN_WIDTH} max={MAX_WIDTH} step='1'
         onChange={e => handleChange(e)}
         value={ width }
