@@ -77,7 +77,7 @@ function CanvasColorPicker(props) {
       cards.push(
         <ColorCard
           data-index={index}
-          colorIndex={index} color={val} key={index}
+          colorIndex={index} color={val.color} key={index}
           onClick={e => pickColor(e)}
           active={cardsActive}
         />

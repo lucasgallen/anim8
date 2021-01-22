@@ -11,7 +11,7 @@ const ClearButton = styled(Button)`
 `;
 
 const ColorCard = styled.div`
-  background-color: ${props => props.color};
+  background-color: #${props => props.color};
   display: inline-block;
   height: 4rem;
   left: ${props => props.active ? 0 : `${props.colorIndex}rem`};
