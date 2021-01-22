@@ -1,20 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { hexToRGB } from '/app/helpers';
 
 import useStateCallback from '/app/hooks/useStateCallback';
 
 import { StyledCanvas } from './styles';
 
 const DEFAULT_OP = 'source-over';
-
-function hexToRGB(hex) {
-  if (!hex) return { red: 0, green: 0, blue: 0 };
-
-  return {
-    red: parseInt(hex.slice(0, 2), 16),
-    green: parseInt(hex.slice(2, 4), 16),
-    blue: parseInt(hex.slice(4, 6), 16)
-  };
-}
 
 function Canvas(props) {
   const [isPenDown, setIsPenDown] = useState(false);
