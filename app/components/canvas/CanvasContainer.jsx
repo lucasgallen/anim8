@@ -272,6 +272,7 @@ function CanvasContainer(props) {
           menuOpts={{
             colorPickerParent: canvasContainerRef.current,
             isFullscreen: isFullscreen,
+            penColor: pen.color || '000',
             setPenEraser: isEraser => setPenEraser(isEraser),
             updatePenColor: ({ color, alpha }) => updatePenColor({ color, alpha }),
             updatePenWidth: width => updatePenWidth(width),

@@ -12,7 +12,8 @@ const Preview = styled.div.attrs(props => ({
     width: `${props.width}px`,
   }
 }))`
-  background-color: black;
+  background-color: ${props => props.color};
+  border: 2px solid white;
   border-radius: 100%;
   display: inline-block;
   margin-left: 1rem;
@@ -59,6 +60,7 @@ function PenWidthSlider(props) {
         width={'20rem'}
       />
       <Preview
+        color={`#${props.color}`}
         width={(+width * 1.5) + 2}
       />
     </Container>
