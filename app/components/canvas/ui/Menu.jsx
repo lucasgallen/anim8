@@ -61,10 +61,12 @@ function Menu(props) {
       ref={container}
     >
       <CanvasColorPicker
+        colorArray={props.options.colorArray}
         placement='bottomRight'
         container={colorPickerParent}
         updatePenColor={updatePenColor}
         setTimedMenuSkip={skip => setTimedMenuSkip(skip)}
+        updateColors={props.options.updateColors}
       />
 
       <PenWidthSlider

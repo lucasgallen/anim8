@@ -14,6 +14,7 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
+  const [colors, setColors] = useState([]);
 
   const [ , setDataURL] = useStateCallback('');
 
@@ -29,7 +30,10 @@ function Illustrator(props) {
         'Authorization': `Token token=${process.env.API_TOKEN}`,
         'Content-Type': 'application/json',
       }),
-      body: JSON.stringify({ data_url: dataURL }),
+      body: JSON.stringify({
+        colors: JSON.stringify({list: colors}),
+        data_url: dataURL
+      }),
     })
   );
 
@@ -94,9 +98,11 @@ function Illustrator(props) {
         background='white'
         canvasImg={props.canvasImg}
         canFullscreen={true}
+        colorArray={props.colorArray}
         downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
         setCanSave={can => setCanSave(can)}
+        updateColors={colors => setColors(colors)}
       />
     </>
   );

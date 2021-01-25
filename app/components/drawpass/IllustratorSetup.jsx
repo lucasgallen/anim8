@@ -27,6 +27,7 @@ const Response = styled.span`
 
 function IllustratorSetup(props) {
   const [canvasImg, setCanvasImg] = useState(MIN_DATA_URL);
+  const [colorArray, setColorArray] = useState([]);
   const [id, setID] = useState();
   const [opened, setOpened] = useState(false);
   const [newSessionResponse, setNewSessionResponse] = useState(false);
@@ -82,9 +83,13 @@ function IllustratorSetup(props) {
     if (handleMissingSession(res)) return;
 
     const dataURL = json.data.relationships.shared_image.meta.data_url || '';
+    const colorList = JSON.parse(json.data.relationships.shared_image.meta.colors) || {};
 
     if (!!dataURL && dataURL.length) {
       setCanvasImg(dataURL);
+    }
+    if (colorList.list) {
+      setColorArray(colorList.list);
     }
     setOpened(true);
   };
@@ -110,6 +115,7 @@ function IllustratorSetup(props) {
 
     return (
       <Illustrator
+        colorArray={colorArray}
         slug={props.slug}
         canvasImg={canvasImg}
         toggleScroll={props.toggleScroll}

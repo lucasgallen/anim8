@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { rgbaColor } from '/app/helpers';
 import styled from 'styled-components';
 
@@ -56,9 +56,23 @@ function CanvasColorPicker(props) {
   const [colors, setColors] = useState([]);
   const [cardsActive, setCardsActive] = useState(false);
 
+  const isInit = useRef(true);
+
   useEffect(() => {
+    setColors(props.colorArray);
+    isInit.current = false;
+  }, []);
+
+  useEffect(() => {
+    if (isInit.current) return;
+
     props.updatePenColor(penColor);
   }, [penColor]);
+
+  useEffect(() => {
+    if (isInit.current) return;
+    props.updateColors(colors);
+  }, [colors]);
 
   const saveColor = e => {
     if (colors.indexOf(penColor) > -1) return;
