@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { rgbaColor } from '/app/helpers';
 
 import { Range, Label } from '/app/components/styles/atoms';
+import { colorSelectStyles } from '../styles';
 
 const MIN_WIDTH = 1;
 const MAX_WIDTH = 20;
 
 const Preview = styled.div.attrs(props => ({
   style: {
+    background: colorSelectStyles(props),
     height: `${props.width}px`,
     width: `${props.width}px`,
   }
 }))`
-  background-color: ${props => props.color};
   border: 2px solid white;
   border-radius: 100%;
   display: inline-block;
@@ -60,7 +62,7 @@ function PenWidthSlider(props) {
         width={'20rem'}
       />
       <Preview
-        color={`#${props.color}`}
+        color={rgbaColor(props.pen)}
         width={(+width * 1.5) + 2}
       />
     </Container>

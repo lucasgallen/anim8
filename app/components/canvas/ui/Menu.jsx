@@ -68,7 +68,7 @@ function Menu(props) {
       />
 
       <PenWidthSlider
-        color={props.options.penColor}
+        pen={props.options.pen}
         updatePenWidth={updatePenWidth}
       />
 

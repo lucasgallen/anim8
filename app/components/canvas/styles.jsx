@@ -3,6 +3,17 @@ import styled from 'styled-components';
 import { Button } from '../styles/atoms';
 import { slideX } from '../styles/keyframes';
 
+const GRADIENT_WIDTH = 4;
+
+function colorSelectStyles(props) {
+  return `
+    linear-gradient(${`${props.color},${props.color}`}),
+    repeating-linear-gradient(0deg, transparent, transparent ${GRADIENT_WIDTH}px, rgba(0, 0, 0, 0.0980392) ${GRADIENT_WIDTH}px, rgba(0, 0, 0, 0.0980392) ${GRADIENT_WIDTH * 2}px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.0980392), rgba(0, 0, 0, 0.0980392) ${GRADIENT_WIDTH}px, transparent ${GRADIENT_WIDTH}px, transparent ${GRADIENT_WIDTH * 2}px),
+    white
+  `;
+}
+
 const ClearButton = styled(Button)`
   background: black;
   color: white;
@@ -10,8 +21,10 @@ const ClearButton = styled(Button)`
   bottom: 1rem;
 `;
 
-const ColorCard = styled.div`
-  background-color: #${props => props.color};
+const ColorCard = styled.div.attrs(props => ({
+  style: { background: colorSelectStyles(props) }
+}))`
+  ${props => colorSelectStyles(props)}
   display: inline-block;
   height: 4rem;
   left: ${props => props.active ? 0 : `${props.colorIndex}rem`};
@@ -60,16 +73,17 @@ const PenButtonWrapper = styled.div`
   margin-top: 1rem;
   padding-bottom: 85%;
   position: relative;
+`;
 
-  &::before {
-    content: '';
-    background-color: ${props => props.color};
-    right: 0.5rem;
-    height: 2rem;
-    width: 2rem;
-    position: absolute;
-    bottom: 0.5rem;
+const PenIndicator = styled.span.attrs(props => ({
+  style: { background: colorSelectStyles(props) }
+}))`
     border-radius: 0.5rem;
+    bottom: 0.5rem;
+    height: 2rem;
+    position: absolute;
+    right: 0.5rem;
+    width: 2rem;
   }
 `;
 
@@ -134,6 +148,9 @@ export {
   ColorCardContainer,
   Container,
   PenButtonWrapper,
+  PenIndicator,
   SaveColorButton,
   StyledCanvas,
+
+  colorSelectStyles,
 };

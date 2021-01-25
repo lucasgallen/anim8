@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { rgbaColor } from '/app/helpers';
 import styled from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
@@ -9,6 +10,7 @@ import {
   ColorCardCloseButton,
   ColorCardContainer,
   PenButtonWrapper,
+  PenIndicator,
   SaveColorButton,
 } from '../styles';
 
@@ -77,7 +79,9 @@ function CanvasColorPicker(props) {
       cards.push(
         <ColorCard
           data-index={index}
-          colorIndex={index} color={val.color || '000'} key={index}
+          colorIndex={index}
+          color={rgbaColor(val)}
+          key={index}
           onClick={e => pickColor(e)}
           active={cardsActive}
         />
@@ -123,9 +127,8 @@ function CanvasColorPicker(props) {
       onClose={() => props.setTimedMenuSkip(true)}
     >
       <div>
-        <PenButtonWrapper
-          color={ penColor.color ? `#${penColor.color}` : 'black'}
-        >
+        <PenButtonWrapper>
+          <PenIndicator color={rgbaColor(penColor)} />
 
           <ColorCardContainer
             onClick={e => expandSavedColors(e)}

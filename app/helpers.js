@@ -8,6 +8,14 @@ const hexToRGB = hex => {
   };
 };
 
+const rgbaColor = color => {
+  if (!color || !color.color) return 'rgba(0,0,0,1)';
+  const rgb = hexToRGB(color.color);
+  const alpha = color.alpha || 1;
+  return `rgba(${rgb.red},${rgb.green},${rgb.blue},${alpha})`;
+};
+
 export {
   hexToRGB,
+  rgbaColor,
 };
