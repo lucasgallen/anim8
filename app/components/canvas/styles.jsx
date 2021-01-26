@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { Button } from '../styles/atoms';
-import { slideX } from '../styles/keyframes';
 
 const GRADIENT_WIDTH = 4;
 
@@ -24,46 +23,48 @@ const ClearButton = styled(Button)`
 const ColorCard = styled.div.attrs(props => ({
   style: { background: colorSelectStyles(props) }
 }))`
-  ${props => colorSelectStyles(props)}
+  border: 1px solid white;
   display: inline-block;
   height: 4rem;
-  left: ${props => props.active ? 0 : `${props.colorIndex}rem`};
-  margin-left: ${props => props.active ? '1rem' : 0};
-  position: ${props => props.active ? 'relative' : 'absolute'};
-  top: 0;
-  width: 4rem;
-`;
-
-const ColorCardCloseButton = styled(Button)`
-  animation-name: ${props => slideX(props.start, props.end)};
-  animation-duration: 0.2s;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-  background-color: transparent;
-  border: none;
-  display: block;
-  font-size: 2rem;
-  opacity: ${props => props.active ? 1 : 0};
+  right: 0;
   position: absolute;
-  transition: opacity 0.2s;
-  top: -0.2rem;
+  transform: rotate(${props => `${props.colorIndex * 10}deg`});
+  transform-origin: bottom left;
+  width: 4rem;
+
+  ${props => props.active ? `
+    margin: 0 0 1rem 1rem;
+    position: relative;
+    transform: rotate(0);
+  ` : ''}
 `;
 
 const ColorCardContainer = styled.div`
+  align-items: flex-end;
   cursor: pointer;
-  height: 4.2rem;
-  left: calc(100% + 1rem);
-  margin: 0;
-  overflow: auto;
-  position: absolute;
-  padding-left: ${props => {
-    if (props.active) return '0rem';
-    return `${4 + (props.colorCount - 1)}rem`;
-  }};
-  transition: width 0.25s;
-  top: 0;
+  display: flex;
+  margin-left: 1rem;
+  position: relative;
   white-space: nowrap;
-  width: ${props => props.active ? `${props.dynamicWidth}rem` : '0'};
+  width: 8rem;
+
+  ${props => props.active ? `
+    align-content: center;
+    background: repeating-linear-gradient(
+      -45deg,
+      #fff,
+      #fff 10px,
+      #555 10px,
+      #555 20px
+    );
+    justify-content: space-around;
+    flex-wrap: wrap;
+    left: 25vw;
+    margin: 0;
+    padding-top: 1rem;
+    position: absolute;
+    width: 50vw;
+  ` : ''}
 `;
 
 
@@ -144,7 +145,6 @@ const Container = styled.div`
 export {
   ClearButton,
   ColorCard,
-  ColorCardCloseButton,
   ColorCardContainer,
   Container,
   PenButtonWrapper,

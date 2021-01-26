@@ -7,12 +7,16 @@ import { ColorPicker } from 'rc-color-picker';
 
 import {
   ColorCard,
-  ColorCardCloseButton,
   ColorCardContainer,
   PenButtonWrapper,
   PenIndicator,
   SaveColorButton,
 } from '../styles';
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const CustomColorPicker = styled(ColorPicker)`
   .rc-color-picker-panel {
@@ -48,8 +52,6 @@ const CustomColorPicker = styled(ColorPicker)`
     display: none;
   }
 `;
-
-const MAX_COLOR_CARD_WIDTH = 26;
 
 function CanvasColorPicker(props) {
   const [penColor, setPenColor] = useState({});
@@ -104,9 +106,14 @@ function CanvasColorPicker(props) {
     return cards;
   };
 
-  const expandSavedColors = e => {
+  const toggleCardContainer = e => {
     e.stopPropagation();
-    setCardsActive(true);
+
+    if (!cardsActive) {
+      setCardsActive(true);
+    } else {
+      closeColorCards(e);
+    }
   };
 
   const pickColor = e => {
@@ -117,6 +124,7 @@ function CanvasColorPicker(props) {
 
     e.stopPropagation();
     setPenColor(pickedColor);
+    closeColorCards(e);
   };
 
   const closeColorCards = e => {
@@ -124,46 +132,31 @@ function CanvasColorPicker(props) {
     setCardsActive(false);
   };
 
-  const dynamicLeft = () => {
-    return dynamicWidth() + 3;
-  };
-
-  const dynamicWidth = () => {
-    const width = (colors.length * 5) + 1;
-    return width < MAX_COLOR_CARD_WIDTH ? width : MAX_COLOR_CARD_WIDTH;
-  };
-
   return (
-    <CustomColorPicker
-      placement={props.placement}
-      onChange={e => changeColor(e)}
-      getCalendarContainer={() => props.container}
-      onClose={() => props.setTimedMenuSkip(true)}
-    >
-      <div>
-        <PenButtonWrapper>
-          <PenIndicator color={rgbaColor(penColor)} />
+    <Container>
+      <CustomColorPicker
+        placement={props.placement}
+        onChange={e => changeColor(e)}
+        getCalendarContainer={() => props.container}
+        onClose={() => props.setTimedMenuSkip(true)}
+      >
+        <div>
+          <PenButtonWrapper>
+            <PenIndicator color={rgbaColor(penColor)} />
+          </PenButtonWrapper>
 
-          <ColorCardContainer
-            onClick={e => expandSavedColors(e)}
-            colorCount={colors.length}
-            active={cardsActive}
-            dynamicWidth={dynamicWidth()}
-          >
-            { colorCards() }
-          </ColorCardContainer>
+          <SaveColorButton onClick={e => saveColor(e)}>save</SaveColorButton>
+        </div>
+      </CustomColorPicker>
 
-          <ColorCardCloseButton
-            onClick={e => closeColorCards(e)}
-            active={cardsActive}
-            start={cardsActive ? `calc(100% + ${dynamicLeft()}rem)` : '-10rem'}
-            end={cardsActive ? '-10rem' : `calc(100% + ${dynamicLeft()}rem)` }
-          />
-        </PenButtonWrapper>
-
-        <SaveColorButton onClick={e => saveColor(e)}>save</SaveColorButton>
-      </div>
-    </CustomColorPicker>
+      <ColorCardContainer
+        onClick={e => toggleCardContainer(e)}
+        colorCount={colors.length}
+        active={cardsActive}
+      >
+        { colorCards() }
+      </ColorCardContainer>
+    </Container>
   );
 }
 
