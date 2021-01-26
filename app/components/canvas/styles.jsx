@@ -28,7 +28,7 @@ const ColorCard = styled.div.attrs(props => ({
   height: 4rem;
   right: 0;
   position: absolute;
-  transform: rotate(${props => `${props.colorIndex * 10}deg`});
+  transform: rotate(${props => `${props.rotation}deg`});
   transform-origin: bottom left;
   width: 4rem;
 
@@ -43,7 +43,7 @@ const ColorCardContainer = styled.div`
   align-items: flex-end;
   cursor: pointer;
   display: flex;
-  margin-left: 1rem;
+  margin-left: 2.4rem;
   position: relative;
   white-space: nowrap;
   width: 8rem;

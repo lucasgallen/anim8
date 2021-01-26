@@ -90,20 +90,22 @@ function CanvasColorPicker(props) {
   };
 
   const colorCards = () => {
-    let cards = [];
-    colors.forEach((val, index) => {
-      cards.push(
-        <ColorCard
-          data-index={index}
-          colorIndex={index}
-          color={rgbaColor(val)}
-          key={index}
-          onClick={e => pickColor(e)}
-          active={cardsActive}
-        />
-      );
-    });
-    return cards;
+    const maxSector = 20;
+    const minSector = 5;
+    let sectorSize = Math.floor(360 / colors.length);
+    sectorSize = sectorSize > maxSector ? maxSector : sectorSize;
+    sectorSize = sectorSize < minSector ? minSector : sectorSize;
+
+    return colors.map((color, index) => (
+      <ColorCard
+        data-index={index}
+        rotation={index * sectorSize}
+        color={rgbaColor(color)}
+        key={index}
+        onClick={e => pickColor(e)}
+        active={cardsActive}
+      />
+    ));
   };
 
   const toggleCardContainer = e => {
