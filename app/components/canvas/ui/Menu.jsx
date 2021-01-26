@@ -6,7 +6,7 @@ import EraserToggle from './EraserToggle';
 import PenWidthSlider from './PenWidthSlider';
 
 const Container = styled.div`
-  align-items: flex-start;
+  align-items: center;
   background: #5f9ea099;
   display: ${props => props.isFullscreen ? 'flex' : 'none' };
   flex-direction: column;

@@ -18,7 +18,6 @@ const Preview = styled.div.attrs(props => ({
   border: 2px solid white;
   border-radius: 100%;
   display: inline-block;
-  margin-left: 1rem;
 `;
 
 const Container = styled.div`
@@ -30,7 +29,8 @@ const Container = styled.div`
 `;
 
 const RangeInput = styled(Range)`
-  width: 70%;
+  margin-right: 1rem;
+  width: calc(100% - 1rem - ${props => props.previewWidthMax}px);
 `;
 
 const RangeLabel = styled(Label)`
@@ -52,18 +52,21 @@ function PenWidthSlider(props) {
     setWidth(e.currentTarget.value);
   };
 
+  const previewWidth = width => (+width * 1.5) + 2;
+
   return (
     <Container>
       <RangeLabel>pen width</RangeLabel>
       <RangeInput
         type='range' min={MIN_WIDTH} max={MAX_WIDTH} step='1'
         onChange={e => handleChange(e)}
+        previewWidthMax={previewWidth(MAX_WIDTH)}
         value={ width }
         width={'20rem'}
       />
       <Preview
         color={rgbaColor(props.pen)}
-        width={(+width * 1.5) + 2}
+        width={previewWidth(width)}
       />
     </Container>
   );
