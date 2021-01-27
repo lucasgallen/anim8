@@ -1,8 +1,8 @@
 import { createStore } from 'redux';
 
 const initialState = {
-  pages: [],
   drawing: {},
+  pages: [],
   screen: {
     height: window.screen.availHeight,
     width: window.screen.availWidth,
