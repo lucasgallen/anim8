@@ -42,7 +42,7 @@ const RangeLabel = styled(Label)`
 `;
 
 function PenWidthSlider(props) {
-  const [width, setWidth] = useState(MIN_WIDTH);
+  const [width, setWidth] = useState(props.pen.width || MIN_WIDTH);
 
   useEffect(() => {
     props.updatePenWidth(width);

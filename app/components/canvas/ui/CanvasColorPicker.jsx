@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { rgbaColor } from '/app/helpers';
 import styled from 'styled-components';
 
@@ -54,35 +54,20 @@ const CustomColorPicker = styled(ColorPicker)`
 `;
 
 function CanvasColorPicker(props) {
-  const [penColor, setPenColor] = useState({});
-  const [colors, setColors] = useState([]);
+  const [penColor, setPenColor] = useState(props.pen);
   const [cardsActive, setCardsActive] = useState(false);
 
-  const isInit = useRef(true);
-
   useEffect(() => {
-    setColors(props.colorArray);
-    isInit.current = false;
-  }, []);
-
-  useEffect(() => {
-    if (isInit.current) return;
-
     props.updatePenColor(penColor);
   }, [penColor]);
 
-  useEffect(() => {
-    if (isInit.current) return;
-    props.updateColors(colors);
-  }, [colors]);
-
   const saveColor = e => {
-    if (colors.indexOf(penColor) > -1) return;
+    if (props.colorArray.indexOf(penColor) > -1) return;
 
     e.stopPropagation();
 
-    const oldColors = colors;
-    setColors([...oldColors, penColor]);
+    const oldColors = props.colorArray;
+    props.updateColors([...oldColors, penColor]);
   };
 
   const changeColor = e => {
@@ -92,11 +77,11 @@ function CanvasColorPicker(props) {
   const colorCards = () => {
     const maxSector = 20;
     const minSector = 5;
-    let sectorSize = Math.floor(360 / colors.length);
+    let sectorSize = Math.floor(360 / props.colorArray.length);
     sectorSize = sectorSize > maxSector ? maxSector : sectorSize;
     sectorSize = sectorSize < minSector ? minSector : sectorSize;
 
-    return colors.map((color, index) => (
+    return props.colorArray.map((color, index) => (
       <ColorCard
         data-index={index}
         rotation={index * sectorSize}
@@ -120,7 +105,7 @@ function CanvasColorPicker(props) {
 
   const pickColor = e => {
     const index = e.target.dataset['index'];
-    const pickedColor = colors[index];
+    const pickedColor = props.colorArray[index];
 
     if (!cardsActive) return;
 
@@ -153,7 +138,7 @@ function CanvasColorPicker(props) {
 
       <ColorCardContainer
         onClick={e => toggleCardContainer(e)}
-        colorCount={colors.length}
+        colorCount={props.colorArray.length}
         active={cardsActive}
       >
         { colorCards() }

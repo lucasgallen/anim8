@@ -62,6 +62,7 @@ function Menu(props) {
     >
       <CanvasColorPicker
         colorArray={props.options.colorArray}
+        pen={props.options.pen}
         placement='bottomRight'
         container={colorPickerParent}
         updatePenColor={updatePenColor}

@@ -14,7 +14,7 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState(props.colorArray);
 
   const [ , setDataURL] = useStateCallback('');
 
@@ -98,7 +98,7 @@ function Illustrator(props) {
         background='white'
         canvasImg={props.canvasImg}
         canFullscreen={true}
-        colorArray={props.colorArray}
+        colorArray={colors}
         downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
         setCanSave={can => setCanSave(can)}
