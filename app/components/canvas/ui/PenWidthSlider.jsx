@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { savePen } from '/app/actions/drawpass';
 import { rgbaColor } from '/app/helpers';
 
 import { Range, Label } from '/app/components/styles/atoms';
@@ -45,7 +49,7 @@ function PenWidthSlider(props) {
   const [width, setWidth] = useState(props.pen.width || MIN_WIDTH);
 
   useEffect(() => {
-    props.updatePenWidth(width);
+    props.savePen({ width: width });
   }, [width]);
 
   const handleChange = e => {
@@ -72,4 +76,14 @@ function PenWidthSlider(props) {
   );
 }
 
-export default PenWidthSlider;
+const mapStateToProps = state => {
+  return {
+    pen: state.pen,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ savePen }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PenWidthSlider);

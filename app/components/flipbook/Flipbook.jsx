@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
+import { saveColors } from '/app/actions/drawpass.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 import GifWindow from './GifWindow';
@@ -37,6 +38,10 @@ class Flipbook extends React.Component {
 
     this.state = { page: 1, canvasImg: '', canvasDims: {} };
     this.throttle = false;
+  }
+
+  componentDidMount() {
+    this.props.saveColors([{ color: '000', alpha: 1 }]);
   }
 
   getCanvasEl() {
@@ -171,7 +176,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ addPage, savePage, updateScreen }, dispatch);
+  return bindActionCreators({ addPage, saveColors, savePage, updateScreen }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);

@@ -1,8 +1,15 @@
 import { createStore } from 'redux';
 
 const initialState = {
+  colors: [{ color: '000', alpha: 1 }],
   drawing: {},
   pages: [],
+  pen: {
+    alpha: 1,
+    color: '000',
+    isEraser: false,
+    width: 3,
+  },
   screen: {
     height: window.screen.availHeight,
     width: window.screen.availWidth,
@@ -21,6 +28,14 @@ const savePage = (state, action) => {
 
 const anim8 = (state = initialState, action) => {
   switch (action.type) {
+  case 'ADD_COLOR':
+    return (Object.assign({}, state,
+      {
+        colors: [...state.colors,
+          action.payload
+        ]
+      }
+    ));
   case 'ADD_PAGE':
     return (Object.assign({}, state,
       {
@@ -29,16 +44,28 @@ const anim8 = (state = initialState, action) => {
         ]
       }
     ));
-  case 'SAVE_PAGE':
+  case 'SAVE_COLORS':
     return (Object.assign({}, state,
       {
-        pages: savePage(state, action)
+        colors: action.payload
       }
     ));
   case 'SAVE_DRAWING':
     return (Object.assign({}, state,
       {
         drawing: { canvasImg: action.canvasImg }
+      }
+    ));
+  case 'SAVE_PEN':
+    return (Object.assign({}, state,
+      {
+        pen: {...state.pen, ...action.payload}
+      }
+    ));
+  case 'SAVE_PAGE':
+    return (Object.assign({}, state,
+      {
+        pages: savePage(state, action)
       }
     ));
   case 'UPDATE_SCREEN':

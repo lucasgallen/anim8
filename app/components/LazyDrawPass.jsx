@@ -3,7 +3,7 @@ import Loading from './Loading';
 
 import useAppContainer from '/app/hooks/useAppContainer';
 
-const DrawPass = React.lazy(() => import('./drawpass/DrawPass'));
+const DrawPass = React.lazy(() => import('./drawpass/App'));
 
 function LazyDrawPass(props) {
   const appContainer = useAppContainer(props);

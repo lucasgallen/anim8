@@ -1,10 +1,14 @@
 const hexToRGB = hex => {
   if (!hex) return { red: 0, green: 0, blue: 0 };
+  if (hex.length > 6) return { red: 0, green: 0, blue: 0 };
+  if (hex.length % 3 !== 0) return { red: 0, green: 0, blue: 0 };
+
+  const increment = hex.length === 6 ? 2 : 1;
 
   return {
-    red: parseInt(hex.slice(0, 2), 16),
-    green: parseInt(hex.slice(2, 4), 16),
-    blue: parseInt(hex.slice(4, 6), 16)
+    red: parseInt(hex.slice(0, increment * 1), 16),
+    green: parseInt(hex.slice(increment*1, increment*2), 16),
+    blue: parseInt(hex.slice(increment*2, increment*3), 16)
   };
 };
 

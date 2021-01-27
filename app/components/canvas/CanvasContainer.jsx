@@ -6,7 +6,6 @@ import Canvas from './Canvas';
 import CanvasUI from './ui/CanvasUI';
 import ShadowCanvas from './ShadowCanvas';
 
-const DEFAULT_PEN_WIDTH = 3;
 const HEIGHT = 595;
 const WIDTH = 842;
 
@@ -20,7 +19,6 @@ function CanvasContainer(props) {
   const [hasGrip, setHasGrip]             = useState(false);
   const [img, setImg]                     = useState(null);
   const [isFullscreen, setIsFullscreen]   = useState(false);
-  const [pen, setPen]                     = useState({ width: DEFAULT_PEN_WIDTH });
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
@@ -65,21 +63,6 @@ function CanvasContainer(props) {
       height: canvasEl.height,
       width: canvasEl.width,
     });
-  };
-
-  const updatePenColor = ({ color, alpha }) => {
-    const newPen = { ...pen, color: color, alpha: alpha };
-    setPen(newPen);
-  };
-
-  const updatePenWidth = width => {
-    const newPen = { ...pen, width: width };
-    setPen(newPen);
-  };
-
-  const setPenEraser = isEraser => {
-    const newPen = { ...pen, isEraser: isEraser };
-    setPen(newPen);
   };
 
   const grabCanvas = e => {
@@ -242,7 +225,6 @@ function CanvasContainer(props) {
       <Canvas
         background={props.shadowCanvas ? 'transparent' : props.background}
         setCanSave={props.setCanSave}
-        pen={pen}
         canvasImg={img}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
@@ -271,13 +253,7 @@ function CanvasContainer(props) {
 
           menuOpts={{
             colorPickerParent: canvasContainerRef.current,
-            colorArray: props.colorArray,
             isFullscreen: isFullscreen,
-            pen: pen,
-            setPenEraser: isEraser => setPenEraser(isEraser),
-            updateColors: props.updateColors,
-            updatePenColor: ({ color, alpha }) => updatePenColor({ color, alpha }),
-            updatePenWidth: width => updatePenWidth(width),
           }}
 
           overlayOpts={{

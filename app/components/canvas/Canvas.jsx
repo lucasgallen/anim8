@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { hexToRGB } from '/app/helpers';
+import { connect } from 'react-redux';
 
+import { hexToRGB } from '/app/helpers';
 import useStateCallback from '/app/hooks/useStateCallback';
 
 import { StyledCanvas } from './styles';
@@ -153,4 +154,10 @@ function Canvas(props) {
   );
 }
 
-export default Canvas;
+const mapStateToProps = state => {
+  return {
+    pen: state.pen,
+  };
+};
+
+export default connect(mapStateToProps)(Canvas);

@@ -31,9 +31,6 @@ function Menu(props) {
   const { 
     colorPickerParent,
     isFullscreen,
-    setPenEraser,
-    updatePenColor,
-    updatePenWidth,
   } = props.options;
 
   const container = useRef(null);
@@ -61,21 +58,12 @@ function Menu(props) {
       ref={container}
     >
       <CanvasColorPicker
-        colorArray={props.options.colorArray}
-        pen={props.options.pen}
         placement='bottomRight'
         container={colorPickerParent}
-        updatePenColor={updatePenColor}
         setTimedMenuSkip={skip => setTimedMenuSkip(skip)}
-        updateColors={props.options.updateColors}
       />
-
-      <PenWidthSlider
-        pen={props.options.pen}
-        updatePenWidth={updatePenWidth}
-      />
-
-      <EraserToggle setPenEraser={setPenEraser}/>
+      <PenWidthSlider />
+      <EraserToggle />
     </Container>
   );
 }

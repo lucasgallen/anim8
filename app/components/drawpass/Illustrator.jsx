@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
 import useMinWait from '/app/hooks/useMinWait';
 import useStateCallback from '/app/hooks/useStateCallback';
@@ -14,7 +15,6 @@ function Illustrator(props) {
   const [saveLabel, setSaveLabel] = useState('save image');
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
-  const [colors, setColors] = useState(props.colorArray);
 
   const [ , setDataURL] = useStateCallback('');
 
@@ -31,7 +31,7 @@ function Illustrator(props) {
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({
-        colors: JSON.stringify({list: colors}),
+        colors: JSON.stringify({list: props.colors}),
         data_url: dataURL
       }),
     })
@@ -98,14 +98,14 @@ function Illustrator(props) {
         background='white'
         canvasImg={props.canvasImg}
         canFullscreen={true}
-        colorArray={colors}
         downloadLink={canvas => DownloadLink(canvas)}
         save={canvas => Save(canvas)}
         setCanSave={can => setCanSave(can)}
-        updateColors={colors => setColors(colors)}
       />
     </>
   );
 }
 
-export default Illustrator;
+const mapStateToProps = state => ({ colors: state.colors });
+
+export default connect(mapStateToProps)(Illustrator);
