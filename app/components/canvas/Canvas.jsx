@@ -43,18 +43,8 @@ function Canvas(props) {
     setIsPenDown(true);
   };
 
-  const relativeMousePos = e => {
-    let rect = canvas.current.getBoundingClientRect();
-
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
-  };
-
   const drawPath = e => {
-    const positionRoot = e.touches ? e.touches[0] : e;
-    const position = relativeMousePos(positionRoot);
+    const position = relativePosition(e);
 
     props.canvasContext.lineTo(position.x, position.y);
     props.canvasContext.stroke();
@@ -63,9 +53,22 @@ function Canvas(props) {
     props.canvasContext.moveTo(position.x, position.y);
   };
 
+  const endPath = () => {
+    if (props.drawDisabled) return;
+
+    setGlobalCompositeOp(['', 'endPath'], () => {
+      if (!props.canvasContext) return;
+
+      setIsPenDown(false);
+      props.canvasContext.strokeStyle = 'transparent';
+      props.canvasContext.globalCompositeOperation = DEFAULT_OP;
+
+      props.pushCanvasState(canvas.current.toDataURL());
+    });
+  };
+
   const eraseCircle = e => {
-    const positionRoot = e.touches ? e.touches[0] : e;
-    const position = relativeMousePos(positionRoot);
+    const position = relativePosition(e);
 
     props.canvasContext.beginPath();
     props.canvasContext.arc(position.x, position.y, props.pen.width, 0, Math.PI*2, true);
@@ -73,18 +76,14 @@ function Canvas(props) {
     props.canvasContext.fill();
   };
 
+  const relativePosition = e => {
+    const positionRoot = e.touches ? e.touches[0] : e;
+    const rect = canvas.current.getBoundingClientRect();
 
-  const endPath = () => {
-    if (props.drawDisabled) return;
-
-    setGlobalCompositeOp(['', 'endPath'], () => {
-      if (!props.canvasContext) return;
-
-      props.canvasContext.globalCompositeOperation = DEFAULT_OP;
-
-      setIsPenDown(false);
-      props.pushCanvasState(canvas.current.toDataURL());
-    });
+    return {
+      x: positionRoot.clientX - rect.left,
+      y: positionRoot.clientY - rect.top
+    };
   };
 
   const setBackground = () => {
