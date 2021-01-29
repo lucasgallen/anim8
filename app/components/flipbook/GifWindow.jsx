@@ -102,7 +102,7 @@ class GifWindow extends React.Component {
       });
 
       imagePromises.push(imagePromise);
-      image.src = page.canvasImg;
+      image.src = page.dataURL;
     });
 
     Promise.all(imagePromises).then(() => this.gif.render());

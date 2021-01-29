@@ -36,7 +36,7 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, canvasImg: '', canvasDims: {} };
+    this.state = { page: 1, dataURL: '', canvasDims: {} };
     this.throttle = false;
   }
 
@@ -62,13 +62,13 @@ class Flipbook extends React.Component {
 
   addPage() {
     this.props.addPage({
-      canvasImg: this.state.canvasImg,
+      dataURL: this.state.dataURL,
       id: this.state.page,
     });
   }
 
   nextPage(canvasEl) {
-    this.setState({ canvasImg: canvasEl.toDataURL() }, () => {
+    this.setState({ dataURL: canvasEl.toDataURL() }, () => {
       if (this.state.page - 1 === this.props.pages.length) {
         this.addPage();
       }
@@ -76,7 +76,7 @@ class Flipbook extends React.Component {
       this.savePage();
       this.clearPage(canvasEl);
       this.setState({
-        canvasImg: canvasEl.toDataURL(),
+        dataURL: canvasEl.toDataURL(),
         page: this.state.page + 1,
       });
     });
@@ -84,7 +84,7 @@ class Flipbook extends React.Component {
 
   savePage() {
     this.props.savePage({
-      canvasImg: this.state.canvasImg,
+      dataURL: this.state.dataURL,
       pageIndex: this.state.page - 1,
     });
   }
@@ -101,14 +101,14 @@ class Flipbook extends React.Component {
   getCanvasImage() {
     if (this.state.page - 1 >= this.props.pages.length) return;
 
-    return this.props.pages[this.state.page - 1].canvasImg;
+    return this.props.pages[this.state.page - 1].dataURL;
   }
 
-  getShadowCanvasImage() {
+  getShadowCanvasDataURL() {
     if (!this.props.pages.length) return;
     if (this.state.page - 2 < 0) return;
 
-    return this.props.pages[this.state.page - 2].canvasImg;
+    return this.props.pages[this.state.page - 2].dataURL;
   }
 
   PrevButton(canvasEl) {
@@ -135,8 +135,8 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const canvasImg = this.getCanvasImage() || this.state.canvasImg;
-    const shadowImg = this.getShadowCanvasImage() || '';
+    const dataURL = this.getCanvasImage() || this.state.dataURL;
+    const shadowDataURL = this.getShadowCanvasDataURL() || '';
 
     return (
       <Container>
@@ -147,8 +147,8 @@ class Flipbook extends React.Component {
             page={this.state.page}
             next={canvasEl => this.NextButton(canvasEl)}
             prev={canvasEl => this.PrevButton(canvasEl)}
-            dataURL={canvasImg}
-            shadowDataURL={shadowImg}
+            dataURL={dataURL}
+            shadowDataURL={shadowDataURL}
             shadowCanvas
             background='white'
             canFullscreen={true}

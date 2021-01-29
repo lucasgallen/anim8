@@ -20,7 +20,7 @@ const savePage = (state, action) => {
   let pages = JSON.parse(JSON.stringify(state.pages));
 
   pages[action.payload.pageIndex] = {
-    canvasImg: action.payload.canvasImg,
+    dataURL: action.payload.dataURL,
   };
 
   return pages;
