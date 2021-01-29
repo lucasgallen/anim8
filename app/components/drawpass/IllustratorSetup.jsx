@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { msToMin } from '/app/helpers';
 import Illustrator from './Illustrator';
 import NewSessionResponse from './NewSessionResponse';
 import Loading from '/app/components/Loading';
@@ -11,9 +12,11 @@ import { saveColors } from '/app/actions/drawpass.js';
 import useCreateSession from '/app/hooks/useCreateSession';
 import useOpenSession from '/app/hooks/useOpenSession';
 
+import { Link } from '/app/components/styles/atoms';
 import { LoadingContainer } from './styles/drawpass';
 import { Button } from './styles/newSessionPrompt';
 
+const MAX_UPDATE_AGE_MINUTES = 60;
 const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 const ResponseContainer = styled.div`
@@ -31,6 +34,8 @@ const Response = styled.span`
 function IllustratorSetup(props) {
   const [canvasImg, setCanvasImg] = useState(MIN_DATA_URL);
   const [id, setID] = useState();
+  const [idle, setIdle] = useState(false);
+  const [ongoing, setOngoing] = useState(false);
   const [opened, setOpened] = useState(false);
   const [newSessionResponse, setNewSessionResponse] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -53,6 +58,34 @@ function IllustratorSetup(props) {
     if (!id) return;
     props.toSession(id);
   }, [id]);
+
+  useEffect(() => {
+    if (!idle) return;
+
+    readySession();
+  }, [idle]);
+
+  const forceReady = () => {
+    readySession().then(() => refresh());
+  };
+
+  const readySession = () => (
+    fetch(`${process.env.API_SERVER}/api/session_group/${props.slug}`, {
+      method: 'PATCH',
+      headers: new Headers({
+        'Authorization': `Token token=${process.env.API_TOKEN}`,
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        image_ready: true
+      }),
+    })
+  );
+
+  const refresh = e => {
+    if (e) e.preventDefault();
+    window.location.reload();
+  };
 
   const createSession = useCreateSession(props.setLoading, ({ json, response }) => {
     if (!response || !json) return;
@@ -81,11 +114,28 @@ function IllustratorSetup(props) {
     return true;
   };
 
+
+  const handleOngoingSession = data => {
+    const lastUpdate = data.attributes.updated_at;
+    const lastUpdateMinutesAgo = msToMin(Date.now() - Date.parse(lastUpdate));
+
+    if (lastUpdateMinutesAgo > MAX_UPDATE_AGE_MINUTES) return false;
+    if (data.attributes.image_ready) return false;
+
+    setOngoing(true);
+    return true;
+  };
+
   const handleOpenSession = ({ json, res }) => {
     if (handleMissingSession(res)) return;
+    if (handleOngoingSession(json.data)) return;
 
-    const dataURL = json.data.relationships.shared_image.meta.data_url || '';
-    const colorList = JSON.parse(json.data.relationships.shared_image.meta.colors) || {};
+    handleReadySession(json.data);
+  };
+
+  const handleReadySession = data => {
+    const dataURL = data.relationships.shared_image.meta.data_url || '';
+    const colorList = JSON.parse(data.relationships.shared_image.meta.colors) || {};
 
     if (!!dataURL && dataURL.length) {
       setCanvasImg(dataURL);
@@ -114,6 +164,7 @@ function IllustratorSetup(props) {
   const maybeMountIllustrator = () => {
     if (!opened) return;
     if (sessionExpired) return;
+    if (idle) return;
 
     return (
       <Illustrator
@@ -121,6 +172,7 @@ function IllustratorSetup(props) {
         canvasImg={canvasImg}
         toggleScroll={props.toggleScroll}
         openFullscreen={props.openFullscreen}
+        setIdle={() => setIdle(true)}
       />
     );
   };
@@ -139,6 +191,44 @@ function IllustratorSetup(props) {
     );
   };
 
+  const maybeMountIdleResponse = () => {
+    if (!idle) return;
+
+    return (
+      <ResponseContainer>
+        <Response>
+          This session has gone idle.
+          <Link
+            onClick={e => refresh(e)}
+          >
+            Refresh
+          </Link>
+          the page to continue.
+        </Response>
+      </ResponseContainer>
+    );
+  };
+
+  const maybeMountOngoingSession = () => {
+    if (!ongoing) return;
+
+    return (
+      <ResponseContainer>
+        <Response>
+          Someone else is already drawing for this session ({props.slug}).
+        </Response>
+        <Response>
+          <Link
+            onClick={() => forceReady()}
+          >
+            Draw anyway
+          </Link>
+          (This may lose contributions made by others)
+        </Response>
+      </ResponseContainer>
+    );
+  };
+
   const putLoader = () => {
     return (
       <LoadingContainer>
@@ -151,6 +241,8 @@ function IllustratorSetup(props) {
     <>
       { props.loading && putLoader() }
       { maybeMountExpiredResponse() }
+      { maybeMountIdleResponse() }
+      { maybeMountOngoingSession() }
       { maybeMountIllustrator() }
       { maybeMountNewSessionResponse() }
     </>

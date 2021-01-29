@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
+import { readableNum } from '/app/helpers';
 import useMinWait from '/app/hooks/useMinWait';
 import useStateCallback from '/app/hooks/useStateCallback';
 
@@ -10,9 +11,12 @@ import SaveResponse from '../SaveResponse';
 
 import { SaveButton } from './styles/illustrator';
 
+const MAX_IDLE_TIME_MS = readableNum('300_000');
+
 function Illustrator(props) {
   const [canSave, setCanSave] = useState(false);
   const [saveLabel, setSaveLabel] = useState('save image');
+  const [idleTimeout, setIdleTimeout] = useState();
   const [isSaving, setIsSaving] = useState(false);
   const [response, setResponse] = useState({ status: '', isOk: false });
 
@@ -22,6 +26,15 @@ function Illustrator(props) {
     const label = isSaving ? 'saving image' : 'save image';
     setSaveLabel(label);
   }, [isSaving]);
+
+  useEffect(() => {
+    const newTimeout = window.setTimeout(() => {
+      props.setIdle();
+    }, MAX_IDLE_TIME_MS);
+
+    clearTimeout(idleTimeout);
+    setIdleTimeout(newTimeout);
+  }, [props.pen, props.colors]);
 
   const saveImageFetch = dataURL => (
     fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
@@ -106,6 +119,11 @@ function Illustrator(props) {
   );
 }
 
-const mapStateToProps = state => ({ colors: state.colors });
+const mapStateToProps = state => (
+  {
+    pen: state.pen,
+    colors: state.colors,
+  }
+);
 
 export default connect(mapStateToProps)(Illustrator);

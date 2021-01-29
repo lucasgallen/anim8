@@ -19,7 +19,19 @@ const rgbaColor = color => {
   return `rgba(${rgb.red},${rgb.green},${rgb.blue},${alpha})`;
 };
 
+const msToMin = ms => {
+  return secToMin(msToSec(ms));
+};
+
+const msToSec = ms => ms/1000;
+
+const readableNum = string => Number.parseInt(string.replaceAll('_', ''));
+
+const secToMin = sec => sec/60;
+
 export {
   hexToRGB,
+  msToMin,
+  readableNum,
   rgbaColor,
 };

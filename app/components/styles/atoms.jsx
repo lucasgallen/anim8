@@ -76,6 +76,13 @@ const Label = styled.label`
   }
 `;
 
+const Link = styled.a`
+  border-bottom: 2px solid blue;
+  color: blue;
+  cursor: pointer;
+  margin: 0 0.5rem 0;
+`;
+
 const Input = styled.input`
   border: 2px solid cadetblue;
   display: inline-block;
@@ -90,6 +97,7 @@ export {
   AppContainer,
   Button,
   Label,
+  Link,
   Input,
   Range,
 };
