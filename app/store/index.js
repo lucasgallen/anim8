@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 
 const initialState = {
   colors: [{ color: '000', alpha: 1 }],
-  drawing: {},
+  canvas: { index: 0, dataURLs: [] },
   pages: [],
   pen: {
     alpha: 1,
@@ -44,16 +44,16 @@ const anim8 = (state = initialState, action) => {
         ]
       }
     ));
+  case 'SAVE_CANVAS':
+    return (Object.assign({}, state,
+      {
+        canvas: { ...state.canvas, ...action.payload }
+      }
+    ));
   case 'SAVE_COLORS':
     return (Object.assign({}, state,
       {
         colors: action.payload
-      }
-    ));
-  case 'SAVE_DRAWING':
-    return (Object.assign({}, state,
-      {
-        drawing: { canvasImg: action.canvasImg }
       }
     ));
   case 'SAVE_PEN':

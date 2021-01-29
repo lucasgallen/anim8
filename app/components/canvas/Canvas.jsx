@@ -23,11 +23,11 @@ function Canvas(props) {
   }, []);
 
   useEffect(() => {
-    if (!props.canvasContext || !props.canvasImg) return;
+    if (!props.canvasContext || !props.canvasDataURL) return;
 
     if (!firstLoad.current && props.setCanSave) props.setCanSave(true);
     loadDrawing();
-  }, [props.canvasImg]);
+  }, [props.canvasDataURL]);
 
   const memoizedRGB = useMemo(() => hexToRGB(props.pen.color), [props.pen.color]);
 
@@ -100,7 +100,7 @@ function Canvas(props) {
       props.canvasContext.drawImage(img, 0, 0);
     };
 
-    img.setAttribute('src', props.canvasImg.replace(/\n|\r/g, ''));
+    img.setAttribute('src', props.canvasDataURL.replace(/\n|\r/g, ''));
     firstLoad.current = false;
   };
 

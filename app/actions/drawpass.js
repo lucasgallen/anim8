@@ -12,6 +12,13 @@ const saveColors = colorsData => (
   }
 );
 
+const saveCanvas = canvas => (
+  {
+    type: 'SAVE_CANVAS',
+    payload: canvas,
+  }
+);
+
 const savePen = penData => (
   {
     type: 'SAVE_PEN',
@@ -23,4 +30,5 @@ export {
   addColor,
   saveColors,
   savePen,
+  saveCanvas,
 };

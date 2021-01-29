@@ -8,7 +8,7 @@ class ShadowCanvas extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.canvasImg === '') {
+    if (this.props.canvasDataURL === '') {
       this.clearDrawing();
     } else {
       this.loadDrawing(true);
@@ -37,7 +37,7 @@ class ShadowCanvas extends React.Component {
   }
 
   loadDrawing() {
-    const canvasImgURL = this.props.canvasImg;
+    const canvasImgURL = this.props.canvasDataURL;
     let img = new Image();
 
     img.src = canvasImgURL;

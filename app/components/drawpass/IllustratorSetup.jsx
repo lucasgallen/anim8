@@ -32,7 +32,7 @@ const Response = styled.span`
 `;
 
 function IllustratorSetup(props) {
-  const [canvasImg, setCanvasImg] = useState(MIN_DATA_URL);
+  const [dataURL, setDataURL] = useState(MIN_DATA_URL);
   const [id, setID] = useState();
   const [idle, setIdle] = useState(false);
   const [ongoing, setOngoing] = useState(false);
@@ -138,7 +138,7 @@ function IllustratorSetup(props) {
     const colorList = JSON.parse(data.relationships.shared_image.meta.colors) || {};
 
     if (!!dataURL && dataURL.length) {
-      setCanvasImg(dataURL);
+      setDataURL(dataURL);
     }
     if (colorList.list) {
       props.saveColors(colorList.list);
@@ -169,7 +169,7 @@ function IllustratorSetup(props) {
     return (
       <Illustrator
         slug={props.slug}
-        canvasImg={canvasImg}
+        dataURL={dataURL}
         toggleScroll={props.toggleScroll}
         openFullscreen={props.openFullscreen}
         setIdle={() => setIdle(true)}

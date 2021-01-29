@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { saveCanvas } from '/app/actions/drawpass';
 
 import { Container } from './styles';
 
@@ -12,12 +16,11 @@ const WIDTH = 842;
 function CanvasContainer(props) {
   const [canMove, setCanMove]             = useState(true);
   const [canvasContext, setCanvasContext] = useState();
-  const [canvasState, setCanvasState]     = useState({ index: 0, images: [props.canvasImg] });
   const [canvasPos, setCanvasPos]         = useState({});
   const [drawDisabled, setDrawDisabled]   = useState(true);
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
-  const [img, setImg]                     = useState(null);
+  const [dataURL, setDataURL]             = useState(null);
   const [isFullscreen, setIsFullscreen]   = useState(false);
   const [positionLock, setPositionLock]   = useState(false);
 
@@ -36,17 +39,17 @@ function CanvasContainer(props) {
 
   useEffect(() => {
     fromReset.current = true;
-    setCanvasState({ index: 0, images: [props.canvasImg] });
-  }, [props.canvasImg]);
+    props.saveCanvas({ index: 0, dataURLs: [props.dataURL] });
+  }, [props.dataURL]);
 
   useEffect(() => {
     if (fromReset.current) {
       fromReset.current = false;
-      setImg(props.canvasImg);
+      setDataURL(props.dataURL);
     } else {
-      setImg(canvasState.images[canvasState.index]);
+      setDataURL(props.canvas.dataURLs[props.canvas.index]);
     }
-  }, [canvasState.index, props.canvasImg]);
+  }, [props.canvas.index, props.dataURL]);
 
   const canvas = () => {
     const container = canvasContainerRef.current;
@@ -183,32 +186,32 @@ function CanvasContainer(props) {
     setDrawDisabled(isLocked);
   };
 
-  const maybeSliceCanvasImages = () => {
-    const images = [...canvasState.images];
+  const maybeSliceCanvasURLs = () => {
+    const urls = [...props.canvas.dataURLs];
 
-    return images.slice(0, canvasState.index + 1);
+    return urls.slice(0, props.canvas.index + 1);
   };
 
-  const pushCanvasImg = img => {
-    const slicedImages = maybeSliceCanvasImages();
-    const newImages = [...slicedImages, img];
-    const newState = { ...canvasState, index: newImages.length - 1, images: newImages };
+  const pushCanvasURL = dataURL => {
+    const slicedURLs = maybeSliceCanvasURLs();
+    const newURLs = [...slicedURLs, dataURL];
+    const newState = { ...props.canvas, index: newURLs.length - 1, dataURLs: newURLs };
 
-    setCanvasState(newState);
+    props.saveCanvas(newState);
   };
 
   const redo = () => {
-    const newIndex = canvasState.index + 1;
-    const newState = { ...canvasState, index: newIndex };
+    const newIndex = props.canvas.index + 1;
+    const newState = { ...props.canvas, index: newIndex };
 
-    setCanvasState(newState);
+    props.saveCanvas(newState);
   };
 
   const undo = () => {
-    const newIndex = canvasState.index - 1;
-    const newState = { ...canvasState, index: newIndex };
+    const newIndex = props.canvas.index - 1;
+    const newState = { ...props.canvas, index: newIndex };
 
-    setCanvasState(newState);
+    props.saveCanvas(newState);
   };
 
   return (
@@ -225,20 +228,20 @@ function CanvasContainer(props) {
       <Canvas
         background={props.shadowCanvas ? 'transparent' : props.background}
         setCanSave={props.setCanSave}
-        canvasImg={img}
+        canvasDataURL={dataURL}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
         drawDisabled={drawDisabled}
         position={canvasPos}
         setCanvasContext={ctx => setCanvasContext(ctx)}
         canvasContext={canvasContext}
-        pushCanvasState={image => pushCanvasImg(image)}
+        pushCanvasState={url => pushCanvasURL(url)}
       />
 
       {
         props.shadowCanvas &&
         <ShadowCanvas
-          canvasImg={props.shadowImg}
+          canvasDataURL={props.shadowImg}
           height={props.height || HEIGHT}
           width={props.width || WIDTH}
           position={canvasPos}
@@ -260,8 +263,8 @@ function CanvasContainer(props) {
             canClearCanvas: props.canClearCanvas,
             containerRef: canvasContainerRef,
             currentCanvasIndex: {
-              current: canvasState.index,
-              max: canvasState.images.length - 1
+              current: props.canvas.index,
+              max: props.canvas.dataURLs.length - 1
             },
             isFullscreen: isFullscreen,
             isLocked: positionLock,
@@ -281,4 +284,14 @@ function CanvasContainer(props) {
   );
 }
 
-export default CanvasContainer;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ saveCanvas }, dispatch);
+};
+
+const mapStateToProps = state => (
+  {
+    canvas: state.canvas
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasContainer);
