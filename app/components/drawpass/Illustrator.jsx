@@ -34,7 +34,7 @@ function Illustrator(props) {
 
     clearTimeout(idleTimeout);
     setIdleTimeout(newTimeout);
-  }, [props.pen, props.colors]);
+  }, [props.pen, props.colors, props.canvas]);
 
   const saveImageFetch = dataURL => (
     fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
@@ -123,6 +123,7 @@ const mapStateToProps = state => (
   {
     pen: state.pen,
     colors: state.colors,
+    canvas: state.canvas,
   }
 );
 

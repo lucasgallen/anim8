@@ -147,8 +147,8 @@ class Flipbook extends React.Component {
             page={this.state.page}
             next={canvasEl => this.NextButton(canvasEl)}
             prev={canvasEl => this.PrevButton(canvasEl)}
-            canvasImg={canvasImg}
-            shadowImg={shadowImg}
+            dataURL={canvasImg}
+            shadowDataURL={shadowImg}
             shadowCanvas
             background='white'
             canFullscreen={true}

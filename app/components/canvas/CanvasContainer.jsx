@@ -241,7 +241,7 @@ function CanvasContainer(props) {
       {
         props.shadowCanvas &&
         <ShadowCanvas
-          canvasDataURL={props.shadowImg}
+          canvasDataURL={props.shadowDataURL}
           height={props.height || HEIGHT}
           width={props.width || WIDTH}
           position={canvasPos}
