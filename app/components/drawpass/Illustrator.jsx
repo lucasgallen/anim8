@@ -22,6 +22,10 @@ function Illustrator(props) {
 
   const [ , setDataURL] = useStateCallback('');
 
+  useEffect(() => (() => {
+    clearTimeout(idleTimeout);
+  }));
+
   useEffect(() => {
     const label = isSaving ? 'saving image' : 'save image';
     setSaveLabel(label);
