@@ -8,7 +8,7 @@ import {
 
 import IllustratorSetup from './IllustratorSetup';
 import NewSessionPrompt from './NewSessionPrompt';
-import Tutorial from './Tutorial';
+import Tutorial from './tutorial/Tutorial';
 
 import { Global } from '/app/components/styles/atoms';
 import { Container, Title } from './styles/drawpass';
@@ -39,7 +39,6 @@ function DrawPassApp() {
       <Switch>
         <Route path={`${path}/tutorial/:step?`} render={({ path, match }) => (
           <Tutorial
-            key={match.params.step || 0}
             step={match.params.step || 0}
             path={path}
             setFetchFromSlug={setFetchFromSlug}
