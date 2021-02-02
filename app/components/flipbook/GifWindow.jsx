@@ -51,9 +51,9 @@ class GifWindow extends React.Component {
 
     this.state = {
       active: false,
-      windowTopPos: '-1.9rem',
       delay: 300,
       needsRefresh: false,
+      windowTopPos: '-1.9rem',
     };
   }
 
@@ -71,11 +71,11 @@ class GifWindow extends React.Component {
   resetGif() {
     this.gif = new GIF({
       background: '#fff',
+      height: this.props.height,
       quality: 1,
+      width: this.props.width,
       workers: 4,
       workerScript: '/gif.worker.js',
-      width: this.props.width,
-      height: this.props.height,
     });
 
     this.gif.on('finished', blob => {
@@ -135,9 +135,9 @@ class GifWindow extends React.Component {
     return (
       <Window
         active={this.state.active}
-        topPos={this.state.windowTopPos}
         onMouseEnter={() => this.peak()}
         onMouseLeave={() => this.unPeak()}
+        topPos={this.state.windowTopPos}
       >
         <CustomGif
           active={this.state.active}
@@ -154,8 +154,8 @@ class GifWindow extends React.Component {
         <UI>
           <Label>delay</Label>
           <Input
-            type='range' min={MIN_DELAY} max={MAX_DELAY} step='100'
             onChange={e => this.handleUIChange(e)}
+            type='range' min={MIN_DELAY} max={MAX_DELAY} step='100'
             value={ this.state.delay }
             width={'20rem'}
           />
