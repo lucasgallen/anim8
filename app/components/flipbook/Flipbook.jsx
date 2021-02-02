@@ -36,7 +36,7 @@ class Flipbook extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { page: 1, dataURL: '', canvasDims: {} };
+    this.state = { page: 1, dataURL: '', canvasDims: {}, gifReady: false };
     this.throttle = false;
   }
 
@@ -61,6 +61,7 @@ class Flipbook extends React.Component {
   }
 
   addPage() {
+    this.setState({ gifReady: true });
     this.props.addPage({
       dataURL: this.state.dataURL,
       id: this.state.page,
@@ -162,6 +163,7 @@ class Flipbook extends React.Component {
           width={this.state.canvasDims.width || 1}
           store={this.props.store}
           pages={this.props.pages}
+          ready={this.state.gifReady}
         />
       </Container>
     );

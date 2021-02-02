@@ -29,7 +29,7 @@ const CreateButton = styled(Button)`
 const CustomGif = styled.img`
   border: none;
   box-shadow: ${props => props.active ? '1px 1px 2px 1px #00000017' : ''};
-  display: block;
+  display: ${props => props.hide ? 'none' : 'block'};
   height: auto;
   margin: 0 auto;
   margin-bottom: ${props => props.active ? '0.5rem' : '0'};
@@ -45,6 +45,19 @@ const UI = styled.div`
   padding: 1rem 0;
 `;
 
+const Loading = styled.div`
+  font-size: 3rem;
+  margin: 0 auto;
+  text-align: center;
+  text-transform: uppercase;
+  width: calc(100% - 10rem);
+
+  p {
+    height: 0;
+    padding: 35.5% 0;
+  }
+`;
+
 class GifWindow extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +65,7 @@ class GifWindow extends React.Component {
     this.state = {
       active: false,
       delay: 300,
+      isLoading: false,
       needsRefresh: false,
       windowTopPos: '-1.9rem',
     };
@@ -60,12 +74,17 @@ class GifWindow extends React.Component {
   activate() {
     this.setState({
       active: true,
+      isLoading: false,
       needsRefresh: false,
     });
   }
 
   deactivate() {
     this.setState({ active: false });
+  }
+
+  startLoading() {
+    this.setState({ isLoading: true });
   }
 
   resetGif() {
@@ -77,6 +96,8 @@ class GifWindow extends React.Component {
       workers: 4,
       workerScript: '/gif.worker.js',
     });
+
+    this.startLoading();
 
     this.gif.on('finished', blob => {
       this.customGif.src = URL.createObjectURL(blob);
@@ -131,24 +152,30 @@ class GifWindow extends React.Component {
     return Math.floor(this.props.height);
   }
 
+  createButtonCopy() {
+    if (this.state.isLoading) return 'Loading';
+    if (this.state.needsRefresh) return 'recreate gif';
+    return 'create gif';
+  }
+
   render() {
     return (
       <Window
         active={this.state.active}
-        onMouseEnter={() => this.peak()}
-        onMouseLeave={() => this.unPeak()}
-        topPos={this.state.windowTopPos}
       >
+        { this.state.isLoading && <Loading><p>loading</p></Loading> }
         <CustomGif
           active={this.state.active}
+          hide={this.state.isLoading}
           ref={(image) => this.customGif = image}
         />
 
         <CreateButton
           active={this.state.active}
+          disabled={this.props.ready ? '' : 'disabled'}
           onClick={() => this.createGif()}
         >
-          { this.state.needsRefresh ? 'recreate gif' : 'create gif' }
+          { this.createButtonCopy() }
         </CreateButton>
 
         <UI>
