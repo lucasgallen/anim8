@@ -36,9 +36,18 @@ const UI = styled.div`
   background: cornsilk;
   border: 2px solid black;
   display: block;
+  justify-content: space-around;
   margin-top: 0.5rem;
   max-width: calc(100% - 4px);
   padding: 1rem 0;
+`;
+
+const UIGroup = styled.div`
+  align-items: center;
+  display: inline-flex;
+  justify-content: space-around;
+  min-width: 25rem;
+  width: 50%;
 `;
 
 const Loading = styled.div`
@@ -152,14 +161,16 @@ class GifWindow extends React.Component {
         />
 
         <UI>
-          <Label>delay</Label>
-          <Input
-            onChange={e => this.handleUIChange(e)}
-            type='range' min={MIN_DELAY} max={MAX_DELAY} step='100'
-            value={ this.state.delay }
-            width={'20rem'}
-          />
-          <span style={{ fontSize: '1.5rem' }}>{ `${this.state.delay / 1000}s` }</span>
+          <UIGroup>
+            <Label>delay</Label>
+            <Input
+              onChange={e => this.handleUIChange(e)}
+              type='range' min={MIN_DELAY} max={MAX_DELAY} step='100'
+              value={ this.state.delay }
+              width={'15rem'}
+            />
+            <span style={{ fontSize: '1.5rem' }}>{ `${this.state.delay / 1000}s` }</span>
+          </UIGroup>
         </UI>
       </Window>
     );

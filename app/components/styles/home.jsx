@@ -62,7 +62,7 @@ const FlipbookLink = styled(StyledLink)`
 
 const TitleContainer = styled.div`
   box-shadow: 0 10px 0 0 aquamarine, 0 30px 0 -10px cadetblue, 0 50px 0 -20px black;
-  margin: 0 auto 150px;
+  margin: 0 auto 11rem;
   padding: 1rem 0;
   width: 100%;
 `;

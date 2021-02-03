@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const StyledFooter = styled.footer`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   font-size: 1.8rem;
   height: ${props => props.height};
   justify-content: space-evenly;

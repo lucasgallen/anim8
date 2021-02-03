@@ -13,7 +13,7 @@ import LazyDrawPass from './components/LazyDrawPass';
 import LazyFlipbook from './components/LazyFlipbook';
 
 const HEADER_HEIGHT = '8rem';
-const FOOTER_HEIGHT = '5rem';
+const FOOTER_HEIGHT = '7rem';
 
 render (
   <Router basename='/'>
