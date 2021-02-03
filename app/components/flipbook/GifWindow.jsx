@@ -134,24 +134,6 @@ class GifWindow extends React.Component {
     this.setState({ delay: uiValue, needsRefresh: this.state.active });
   }
 
-  peak() {
-    if (this.state.active) return;
-
-    this.setState({ windowTopPos: '0.8rem' });
-  }
-
-  unPeak() {
-    if (this.state.active) return;
-
-    this.setState({ windowTopPos: '-1.9rem' });
-  }
-
-  dynamicHeight() {
-    if (!this.state.active) return 0;
-
-    return Math.floor(this.props.height);
-  }
-
   createButtonCopy() {
     if (this.state.isLoading) return 'Loading';
     if (this.state.needsRefresh) return 'recreate gif';
