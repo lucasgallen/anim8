@@ -2,10 +2,10 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Range from './range';
 
 const AppContainer = styled.div`
-  display: flex;
   align-items: center;
-  margin-bottom: 5rem;
-  min-height: ${props => `calc(100vh - ${props.headerHeight} - ${props.footerHeight})`}
+  display: flex;
+  min-height: ${props => `calc(100vh - 1rem - ${props.headerHeight} - ${props.footerHeight})`};
+  padding-top: 1rem;
 `;
 
 const Global = createGlobalStyle`

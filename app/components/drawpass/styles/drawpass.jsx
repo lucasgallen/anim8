@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   margin: 0 auto 0;
   max-width: 842px;
+  padding-bottom: 2rem;
   position: relative;
   text-align: center;
   width: calc(100% - 8rem);
