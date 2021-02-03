@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Label, Input } from '../styles/atoms';
+
+import Buttons from './GifButtons';
+import { Label, Input } from '../styles/atoms';
 import GIF from 'gif';
 
 // Gif delay in ms
@@ -18,12 +20,6 @@ const Window = styled.div`
     transition: margin-top 0.3s, height 0.3s;
     width: 70rem;
   }
-`;
-
-const CreateButton = styled(Button)`
-  background-color: deeppink;
-  margin: 0 auto;
-  display: block;
 `;
 
 const CustomGif = styled.img`
@@ -134,12 +130,6 @@ class GifWindow extends React.Component {
     this.setState({ delay: uiValue, needsRefresh: this.state.active });
   }
 
-  createButtonCopy() {
-    if (this.state.isLoading) return 'Loading';
-    if (this.state.needsRefresh) return 'recreate gif';
-    return 'create gif';
-  }
-
   render() {
     return (
       <Window
@@ -152,13 +142,14 @@ class GifWindow extends React.Component {
           ref={(image) => this.customGif = image}
         />
 
-        <CreateButton
+        <Buttons
           active={this.state.active}
-          disabled={this.props.ready ? '' : 'disabled'}
-          onClick={() => this.createGif()}
-        >
-          { this.createButtonCopy() }
-        </CreateButton>
+          createGif={() => this.createGif()}
+          gif={this.customGif}
+          isLoading={this.state.isLoading}
+          needsRefresh={this.state.needsRefresh}
+          ready={this.props.ready}
+        />
 
         <UI>
           <Label>delay</Label>
