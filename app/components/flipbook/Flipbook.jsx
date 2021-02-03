@@ -8,6 +8,7 @@ import { saveColors } from '/app/actions/drawpass.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 import GifWindow from './GifWindow';
+import Title from './Title';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -30,6 +31,11 @@ const FlipbookContainer = styled.div`
     max-width: calc(50% - 0.5rem);
     width: 70rem;
   }
+`;
+
+const TitleContainer = styled.div`
+  text-align: center;
+  width: 100%;
 `;
 
 class Flipbook extends React.Component {
@@ -142,6 +148,9 @@ class Flipbook extends React.Component {
     return (
       <Container>
         <Global backgroundColor='' />
+        <TitleContainer>
+          <Title />
+        </TitleContainer>
         <FlipbookContainer>
           <CanvasContainer
             key={'flipbook'}
