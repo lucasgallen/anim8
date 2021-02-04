@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
@@ -147,6 +148,11 @@ class Flipbook extends React.Component {
 
     return (
       <Container>
+        <Helmet>
+          <title>Flipbook</title>
+          <meta name="description" content="Create your own hand-crafted animated gif" />
+        </Helmet>
+
         <Global backgroundColor='' />
         <TitleContainer>
           <Title />
