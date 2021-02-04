@@ -14,8 +14,7 @@ const StyledFooter = styled.footer`
 function Footer(props) {
   return (
     <StyledFooter height={props.height} >
-      <span>buy me a coffee</span>
-      <span>© {new Date().getFullYear()} anim8</span>
+      <span>© {new Date().getFullYear()} anim8.us</span>
       <span>built by <a href='https://lucas.devhop.net' target='_blank' rel='noreferrer'>devhop</a></span>
     </StyledFooter>
   );
