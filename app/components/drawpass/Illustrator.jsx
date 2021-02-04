@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 
 import { readableNum } from '/app/helpers';
 import useMinWait from '/app/hooks/useMinWait';
@@ -104,6 +105,10 @@ function Illustrator(props) {
 
   return (
     <>
+      <Helmet>
+        <title>Drawpass | { props.slug }</title>
+      </Helmet>
+
       <SaveResponse
         response={response}
         isSaving={isSaving}

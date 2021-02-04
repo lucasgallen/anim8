@@ -5,6 +5,7 @@ import {
   useRouteMatch,
   useHistory,
 } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import IllustratorSetup from './IllustratorSetup';
 import NewSessionPrompt from './NewSessionPrompt';
@@ -34,6 +35,11 @@ function DrawPassApp() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Drawpass</title>
+        <meta name="description" content="start a drawing to share with a friend and encourage them to contribute!"/>
+      </Helmet>
+
       <Global backgroundColor='' />
       <Title><h1>drawpass</h1></Title>
       <Switch>
