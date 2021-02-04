@@ -216,12 +216,14 @@ function CanvasContainer(props) {
 
   return (
     <Container
+      hasGrip={hasGrip}
       onMouseDown={e => grabCanvas(e)}
       onTouchStart={e => grabCanvas(e)}
       onMouseMove={e => moveCanvas(e)}
       onTouchMove={e => moveCanvas(e)}
       onMouseUp={() => release()}
       onTouchEnd={() => release()}
+      locked={positionLock}
       ref={canvasContainerRef}
       isSaving={props.isSaving}
     >

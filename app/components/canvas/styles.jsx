@@ -130,6 +130,8 @@ const Container = styled.div`
   width: 100%;
 
   canvas {
+    cursor: ${props => props.hasGrip ? 'grabbing' : 'grab'};
+    ${props => props.locked ? 'cursor: crosshair;' : ''}
     ${props => props.isSaving ? 'filter: blur(3px);' : ''}
     transition: filter 0.5s ease-in-out;
   }
