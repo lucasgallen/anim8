@@ -235,9 +235,9 @@ function CanvasContainer(props) {
         width={props.width || WIDTH}
         drawDisabled={drawDisabled}
         position={canvasPos}
-        setCanvasContext={ctx => setCanvasContext(ctx)}
+        setCanvasContext={setCanvasContext}
         canvasContext={canvasContext}
-        pushCanvasState={url => pushCanvasURL(url)}
+        pushCanvasState={pushCanvasURL}
       />
 
       {
@@ -272,14 +272,14 @@ function CanvasContainer(props) {
             isLocked: positionLock,
             next: props.next,
             prev: props.prev,
-            redo: () => redo(),
-            toggleLock: () => toggleLock(),
-            undo: () => undo(),
+            redo: redo,
+            toggleLock: toggleLock,
+            undo: undo,
           }}
 
           save={props.save && props.save(canvas())}
-          setCanMove={canMove => setCanMove(canMove)}
-          toggleFullscreen={() => toggleFullscreen()}
+          setCanMove={setCanMove}
+          toggleFullscreen={toggleFullscreen}
         />
       }
     </Container>

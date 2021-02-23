@@ -146,6 +146,8 @@ function IllustratorSetup(props) {
     setOpened(true);
   };
 
+  const makeIdle = () => setIdle(true);
+
   const maybeMountExpiredResponse = () => {
     if (!opened) return;
     if (!sessionExpired) return;
@@ -172,7 +174,7 @@ function IllustratorSetup(props) {
         dataURL={dataURL}
         toggleScroll={props.toggleScroll}
         openFullscreen={props.openFullscreen}
-        setIdle={() => setIdle(true)}
+        setIdle={makeIdle}
       />
     );
   };

@@ -120,9 +120,9 @@ function Illustrator(props) {
         background='white'
         dataURL={props.dataURL}
         canFullscreen={true}
-        downloadLink={canvas => DownloadLink(canvas)}
-        save={canvas => Save(canvas)}
-        setCanSave={can => setCanSave(can)}
+        downloadLink={DownloadLink}
+        save={Save}
+        setCanSave={setCanSave}
       />
     </>
   );

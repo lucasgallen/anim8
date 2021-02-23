@@ -63,7 +63,7 @@ function CanvasUI(props) {
 
       <OpenMenu
         isFullscreen={props.isFullscreen}
-        onClick={() => toggleMenu()}
+        onClick={toggleMenu}
       >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
@@ -76,7 +76,7 @@ function CanvasUI(props) {
       <Menu
         isOpen={menuOpen}
         options={menuOpts}
-        toggleMenu={() => toggleMenu()}
+        toggleMenu={toggleMenu}
       />
     </>
   );
