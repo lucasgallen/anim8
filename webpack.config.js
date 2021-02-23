@@ -102,7 +102,10 @@ const productionConfig = envKeys => {
         new CopyPlugin({
           patterns: [{
               context: path.join(__dirname, 'public'),
-              from: 'gif.worker.js*',
+              globOptions: {
+                ignore: ['**/index.html'],
+              },
+              from: '*',
               to: PATHS.build
             },
           ],
