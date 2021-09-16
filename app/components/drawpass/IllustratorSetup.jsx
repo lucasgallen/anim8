@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
 import { msToMin } from '/app/helpers';
-import Illustrator from './Illustrator';
-import NewSessionResponse from './NewSessionResponse';
 import Loading from '/app/components/Loading';
 
 import { saveColors } from '/app/actions/drawpass.js';
 import useCreateSession from '/app/hooks/useCreateSession';
 import useOpenSession from '/app/hooks/useOpenSession';
 
-import { Link } from '/app/components/styles/atoms';
 import { LoadingContainer } from './styles/drawpass';
-import { Button } from './styles/newSessionPrompt';
+
+import MaybeExpiredResponse from './illustrator/MaybeExpiredResponse';
+import MaybeIdleResponse from './illustrator/MaybeIdleResponse';
+import MaybeIllustrator from './illustrator/MaybeIllustrator';
+import MaybeOngoingSession from './illustrator/MaybeOngoingSession';
+import MaybeNewSessionResponse from './illustrator/MaybeNewSessionResponse';
 
 const MAX_UPDATE_AGE_MINUTES = 60;
 const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-
-const ResponseContainer = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  font-size: 2.7rem;
-  margin-top: 3rem;
-`;
-
-const Response = styled.span`
-  margin-bottom: 2rem;
-`;
 
 function IllustratorSetup(props) {
   const [dataURL, setDataURL] = useState(MIN_DATA_URL);
@@ -148,89 +137,6 @@ function IllustratorSetup(props) {
 
   const makeIdle = () => setIdle(true);
 
-  const maybeMountExpiredResponse = () => {
-    if (!opened) return;
-    if (!sessionExpired) return;
-
-    return (
-      <ResponseContainer>
-        <Response>Sorry, your session has expired due to inactivity</Response>
-        <Button
-          loadingSession={props.loading}
-          onClick={() => handleClick()}
-        >start a new session</Button>
-      </ResponseContainer>
-    );
-  };
-
-  const maybeMountIllustrator = () => {
-    if (!opened) return;
-    if (sessionExpired) return;
-    if (idle) return;
-
-    return (
-      <Illustrator
-        slug={props.slug}
-        dataURL={dataURL}
-        toggleScroll={props.toggleScroll}
-        openFullscreen={props.openFullscreen}
-        setIdle={makeIdle}
-      />
-    );
-  };
-
-  const maybeMountNewSessionResponse = () => {
-    if (!opened) return;
-    if (sessionExpired) return;
-    if (props.loading) return;
-    if (!newSessionResponse) return;
-
-    return (
-      <NewSessionResponse
-        loading={props.loading}
-        response={newSessionResponse}
-      />
-    );
-  };
-
-  const maybeMountIdleResponse = () => {
-    if (!idle) return;
-
-    return (
-      <ResponseContainer>
-        <Response>
-          This session has gone idle.
-          <Link
-            onClick={e => refresh(e)}
-          >
-            Refresh
-          </Link>
-          the page to continue.
-        </Response>
-      </ResponseContainer>
-    );
-  };
-
-  const maybeMountOngoingSession = () => {
-    if (!ongoing) return;
-
-    return (
-      <ResponseContainer>
-        <Response>
-          Someone else is already drawing for this session ({props.slug}).
-        </Response>
-        <Response>
-          <Link
-            onClick={() => forceReady()}
-          >
-            Draw anyway
-          </Link>
-          (This may lose contributions made by others)
-        </Response>
-      </ResponseContainer>
-    );
-  };
-
   const putLoader = () => {
     return (
       <LoadingContainer>
@@ -242,11 +148,34 @@ function IllustratorSetup(props) {
   return (
     <>
       { props.loading && putLoader() }
-      { maybeMountExpiredResponse() }
-      { maybeMountIdleResponse() }
-      { maybeMountOngoingSession() }
-      { maybeMountIllustrator() }
-      { maybeMountNewSessionResponse() }
+      <MaybeExpiredResponse
+        {
+          ...{
+            opened, sessionExpired, handleClick,
+            loading: props.loading
+          }
+        }
+      />
+      <MaybeIdleResponse { ...{ idle, refresh }} />
+      <MaybeOngoingSession { ...{ ongoing, slug: props.slug, forceReady }} />
+      <MaybeIllustrator
+        {
+          ...{
+            opened, sessionExpired, idle, dataURL, makeIdle,
+            slug: props.slug,
+            toggleScroll: props.toggleScroll,
+            openFullscreen: props.openFullscreen
+          }
+        }
+      />
+      <MaybeNewSessionResponse
+        {
+          ...{
+            opened, sessionExpired, newSessionResponse,
+            loading: props.loading
+          }
+        }
+      />
     </>
   );
 }
