@@ -26,9 +26,17 @@ const savePen = penData => (
   }
 );
 
+const setLoading = loading => (
+  {
+    type: 'SET_LOADING',
+    payload: loading,
+  }
+);
+
 export {
   addColor,
   saveColors,
   savePen,
   saveCanvas,
+  setLoading,
 };

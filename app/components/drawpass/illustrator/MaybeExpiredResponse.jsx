@@ -4,7 +4,7 @@ import { Button } from '../styles/newSessionPrompt';
 import ResponseContainer from './ResponseContainer';
 import Response from './Response';
 
-function MaybeExpiredResponse({ opened, sessionExpired, loading, handleClick }) {
+function MaybeExpiredResponse({ opened, sessionExpired, handleClick }) {
   if (!opened) return null;
   if (!sessionExpired) return null;
 
@@ -12,7 +12,7 @@ function MaybeExpiredResponse({ opened, sessionExpired, loading, handleClick }) 
     <ResponseContainer>
       <Response>Sorry, your session has expired due to inactivity</Response>
       <Button
-        loadingSession={loading}
+        loadingSession={false}
         onClick={handleClick}
       >start a new session</Button>
     </ResponseContainer>

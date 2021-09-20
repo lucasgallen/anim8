@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { setLoading } from '/app/actions/drawpass';
 
 import changeColor from './change_color.gif';
 import draw from './draw.gif';
@@ -88,4 +92,14 @@ const Tutorial = props => {
   );
 };
 
-export default Tutorial;
+const mapStateToProps = state => (
+  {
+    loading: state.loading
+  }
+);
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setLoading }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tutorial);

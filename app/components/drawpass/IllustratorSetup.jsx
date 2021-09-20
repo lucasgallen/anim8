@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { msToMin } from '/app/helpers';
 import Loading from '/app/components/Loading';
 
-import { saveColors } from '/app/actions/drawpass.js';
+import { saveColors, setLoading } from '/app/actions/drawpass.js';
 import useCreateSession from '/app/hooks/useCreateSession';
 import useOpenSession from '/app/hooks/useOpenSession';
 
@@ -180,8 +180,14 @@ function IllustratorSetup(props) {
   );
 }
 
+const mapStateToProps = state => (
+  {
+    loading: state.loading
+  }
+);
+
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ saveColors }, dispatch);
+  return bindActionCreators({ saveColors, setLoading }, dispatch);
 };
 
-export default connect(null, mapDispatchToProps)(IllustratorSetup);
+export default connect(mapStateToProps, mapDispatchToProps)(IllustratorSetup);
