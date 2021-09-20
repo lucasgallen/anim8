@@ -84,7 +84,7 @@ function IllustratorSetup(props) {
     setNewSessionResponse(response);
   });
 
-  const handleClick = () => {
+  const handleCreateSession = () => {
     setOpened(false);
     setSessionExpired(false);
 
@@ -146,7 +146,7 @@ function IllustratorSetup(props) {
       <MaybeExpiredResponse
         {
           ...{
-            handleClick,
+            handleCreateSession,
             loading: props.loading,
             opened,
             sessionExpired,
