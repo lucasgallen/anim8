@@ -130,9 +130,9 @@ function Illustrator(props) {
 
 const mapStateToProps = state => (
   {
-    pen: state.pen,
-    colors: state.colors,
     canvas: state.canvas,
+    colors: state.colors,
+    pen: state.pen,
   }
 );
 
