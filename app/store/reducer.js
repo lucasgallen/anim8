@@ -42,6 +42,12 @@ const reducer = (initialState) => (state = initialState, action) => {
         pages: savePage(state, action)
       }
     ));
+  case 'SET_DATA_URL':
+    return (Object.assign({}, state,
+      {
+        dataURL: action.payload
+      }
+    ));
   case 'SET_IDLE':
     return (Object.assign({}, state,
       {

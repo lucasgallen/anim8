@@ -1,9 +1,12 @@
 import { createStore } from 'redux';
 import reducer from './reducer.js';
 
+const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
 const initialState = {
   colors: [{ color: '000', alpha: 1 }],
   canvas: { index: 0, dataURLs: [] },
+  dataURL: MIN_DATA_URL,
   idle: false,
   loading: false,
   pages: [],

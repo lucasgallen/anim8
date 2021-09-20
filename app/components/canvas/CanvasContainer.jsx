@@ -292,7 +292,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => (
   {
-    canvas: state.canvas
+    canvas: state.canvas,
+    dataURL: state.dataURL,
   }
 );
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Illustrator from '../Illustrator';
 
-export default function MaybeIllustrator({ opened, sessionExpired, idle, slug, dataURL, toggleScroll, openFullscreen }) {
+export default function MaybeIllustrator({ opened, sessionExpired, idle, slug, toggleScroll, openFullscreen }) {
   if (!opened) return null;
   if (sessionExpired) return null;
   if (idle) return null;
@@ -10,7 +10,6 @@ export default function MaybeIllustrator({ opened, sessionExpired, idle, slug, d
   return (
     <Illustrator
       slug={slug}
-      dataURL={dataURL}
       toggleScroll={toggleScroll}
       openFullscreen={openFullscreen}
     />

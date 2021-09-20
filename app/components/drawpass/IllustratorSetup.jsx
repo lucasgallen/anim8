@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { msToMin } from '/app/helpers';
 import Loading from '/app/components/Loading';
 
-import { saveColors, setLoading } from '/app/actions/drawpass.js';
+import { saveColors, setDataURL, setLoading } from '/app/actions/drawpass.js';
 import useCreateSession from '/app/hooks/useCreateSession';
 import useOpenSession from '/app/hooks/useOpenSession';
 
@@ -18,10 +18,8 @@ import MaybeOngoingSession from './illustrator/MaybeOngoingSession';
 import MaybeNewSessionResponse from './illustrator/MaybeNewSessionResponse';
 
 const MAX_UPDATE_AGE_MINUTES = 60;
-const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 function IllustratorSetup(props) {
-  const [dataURL, setDataURL] = useState(MIN_DATA_URL);
   const [id, setID] = useState();
   const [ongoing, setOngoing] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -126,7 +124,7 @@ function IllustratorSetup(props) {
     const colorList = JSON.parse(data.relationships.shared_image.meta.colors) || {};
 
     if (!!dataURL && dataURL.length) {
-      setDataURL(dataURL);
+      props.setDataURL(dataURL);
     }
     if (colorList.list) {
       props.saveColors(colorList.list);
@@ -163,7 +161,7 @@ function IllustratorSetup(props) {
       <MaybeIllustrator
         {
           ...{
-            opened, sessionExpired, dataURL,
+            opened, sessionExpired,
             idle: props.idle,
             slug: props.slug,
             toggleScroll: props.toggleScroll,
@@ -191,7 +189,7 @@ const mapStateToProps = state => (
 );
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ saveColors, setLoading }, dispatch);
+  return bindActionCreators({ saveColors, setDataURL, setLoading }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(IllustratorSetup);

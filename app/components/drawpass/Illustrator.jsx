@@ -121,7 +121,6 @@ function Illustrator(props) {
         key={'drawpass'}
         isSaving={isSaving}
         background='white'
-        dataURL={props.dataURL}
         canFullscreen={true}
         downloadLink={DownloadLink}
         save={Save}
