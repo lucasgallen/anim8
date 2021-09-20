@@ -146,23 +146,32 @@ function IllustratorSetup(props) {
       <MaybeExpiredResponse
         {
           ...{
-            opened, sessionExpired, handleClick,
-            loading: props.loading
+            handleClick,
+            loading: props.loading,
+            opened,
+            sessionExpired,
           }
         }
       />
       <MaybeIdleResponse {
         ...{
           idle: props.idle,
-          refresh
+          refresh,
         }
       } />
-      <MaybeOngoingSession { ...{ ongoing, slug: props.slug, forceReady }} />
+      <MaybeOngoingSession {
+        ...{
+          forceReady,
+          ongoing,
+          slug: props.slug,
+        }
+      } />
       <MaybeIllustrator
         {
           ...{
-            opened, sessionExpired,
             idle: props.idle,
+            opened,
+            sessionExpired,
             slug: props.slug,
           }
         }
@@ -170,8 +179,10 @@ function IllustratorSetup(props) {
       <MaybeNewSessionResponse
         {
           ...{
-            opened, sessionExpired, newSessionResponse,
-            loading: props.loading
+            loading: props.loading,
+            opened,
+            newSessionResponse,
+            sessionExpired,
           }
         }
       />
