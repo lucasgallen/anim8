@@ -164,7 +164,6 @@ function IllustratorSetup(props) {
             opened, sessionExpired,
             idle: props.idle,
             slug: props.slug,
-            openFullscreen: props.openFullscreen
           }
         }
       />
