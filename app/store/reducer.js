@@ -42,6 +42,12 @@ const reducer = (initialState) => (state = initialState, action) => {
         pages: savePage(state, action)
       }
     ));
+  case 'SET_IDLE':
+    return (Object.assign({}, state,
+      {
+        idle: action.payload
+      }
+    ));
   case 'SET_LOADING':
     return (Object.assign({}, state,
       {

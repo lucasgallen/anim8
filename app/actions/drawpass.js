@@ -26,6 +26,13 @@ const savePen = penData => (
   }
 );
 
+const setIdle = idle => (
+  {
+    type: 'SET_IDLE',
+    payload: idle,
+  }
+);
+
 const setLoading = loading => (
   {
     type: 'SET_LOADING',
@@ -38,5 +45,6 @@ export {
   saveColors,
   savePen,
   saveCanvas,
+  setIdle,
   setLoading,
 };

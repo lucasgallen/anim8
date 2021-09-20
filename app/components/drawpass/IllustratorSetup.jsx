@@ -23,7 +23,6 @@ const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAAB
 function IllustratorSetup(props) {
   const [dataURL, setDataURL] = useState(MIN_DATA_URL);
   const [id, setID] = useState();
-  const [idle, setIdle] = useState(false);
   const [ongoing, setOngoing] = useState(false);
   const [opened, setOpened] = useState(false);
   const [newSessionResponse, setNewSessionResponse] = useState(false);
@@ -49,10 +48,10 @@ function IllustratorSetup(props) {
   }, [id]);
 
   useEffect(() => {
-    if (!idle) return;
+    if (!props.idle) return;
 
     readySession();
-  }, [idle]);
+  }, [props.idle]);
 
   const forceReady = () => {
     readySession().then(() => refresh());
@@ -135,8 +134,6 @@ function IllustratorSetup(props) {
     setOpened(true);
   };
 
-  const makeIdle = () => setIdle(true);
-
   const putLoader = () => {
     return (
       <LoadingContainer>
@@ -156,12 +153,18 @@ function IllustratorSetup(props) {
           }
         }
       />
-      <MaybeIdleResponse { ...{ idle, refresh }} />
+      <MaybeIdleResponse {
+        ...{
+          idle: props.idle,
+          refresh
+        }
+      } />
       <MaybeOngoingSession { ...{ ongoing, slug: props.slug, forceReady }} />
       <MaybeIllustrator
         {
           ...{
-            opened, sessionExpired, idle, dataURL, makeIdle,
+            opened, sessionExpired, dataURL,
+            idle: props.idle,
             slug: props.slug,
             toggleScroll: props.toggleScroll,
             openFullscreen: props.openFullscreen
@@ -182,6 +185,7 @@ function IllustratorSetup(props) {
 
 const mapStateToProps = state => (
   {
+    idle: state.idle,
     loading: state.loading
   }
 );

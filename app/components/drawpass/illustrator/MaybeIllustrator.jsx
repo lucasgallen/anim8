@@ -2,7 +2,7 @@ import React from 'react';
 
 import Illustrator from '../Illustrator';
 
-export default function maybeMountIllustrator({ opened, sessionExpired, idle, slug, dataURL, toggleScroll, openFullscreen, makeIdle }) {
+export default function MaybeIllustrator({ opened, sessionExpired, idle, slug, dataURL, toggleScroll, openFullscreen }) {
   if (!opened) return null;
   if (sessionExpired) return null;
   if (idle) return null;
@@ -13,7 +13,6 @@ export default function maybeMountIllustrator({ opened, sessionExpired, idle, sl
       dataURL={dataURL}
       toggleScroll={toggleScroll}
       openFullscreen={openFullscreen}
-      setIdle={makeIdle}
     />
   );
 }

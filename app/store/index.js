@@ -4,6 +4,7 @@ import reducer from './reducer.js';
 const initialState = {
   colors: [{ color: '000', alpha: 1 }],
   canvas: { index: 0, dataURLs: [] },
+  idle: false,
   loading: false,
   pages: [],
   pen: {

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+
+import { setIdle } from '/app/actions/drawpass';
 
 import { readableNum } from '/app/helpers';
 import useMinWait from '/app/hooks/useMinWait';
@@ -34,7 +37,7 @@ function Illustrator(props) {
 
   useEffect(() => {
     const newTimeout = window.setTimeout(() => {
-      props.setIdle();
+      props.setIdle(true);
     }, MAX_IDLE_TIME_MS);
 
     clearTimeout(idleTimeout);
@@ -128,6 +131,10 @@ function Illustrator(props) {
   );
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ setIdle }, dispatch);
+};
+
 const mapStateToProps = state => (
   {
     canvas: state.canvas,
@@ -136,4 +143,4 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(mapStateToProps)(Illustrator);
+export default connect(mapStateToProps, mapDispatchToProps)(Illustrator);
