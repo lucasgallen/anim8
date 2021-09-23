@@ -14,7 +14,6 @@ const HEIGHT = 595;
 const WIDTH = 842;
 
 function CanvasContainer(props) {
-  const [canMove, setCanMove]             = useState(true);
   const [canvasContext, setCanvasContext] = useState();
   const [canvasPos, setCanvasPos]         = useState({});
   const [drawDisabled, setDrawDisabled]   = useState(true);
@@ -70,7 +69,7 @@ function CanvasContainer(props) {
 
   const grabCanvas = e => {
     if (positionLock) return;
-    if (!canMove) return;
+    if (!props.ui.canMove) return;
     if (e.target.nodeName !== 'CANVAS') return;
 
     setHasGrip(true);
@@ -278,7 +277,6 @@ function CanvasContainer(props) {
           }}
 
           save={props.save && props.save(canvas())}
-          setCanMove={setCanMove}
           toggleFullscreen={toggleFullscreen}
         />
       }
@@ -294,6 +292,7 @@ const mapStateToProps = state => (
   {
     canvas: state.canvas,
     dataURL: state.dataURL,
+    ui: state.ui,
   }
 );
 

@@ -19,6 +19,9 @@ const initialState = {
   screen: {
     height: window.screen.availHeight,
     width: window.screen.availWidth,
+  },
+  ui: {
+    canMove: true,
   }
 };
 

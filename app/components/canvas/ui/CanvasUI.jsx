@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { setCanMove } from '/app/actions/canvas';
 
 import Menu from './Menu';
 import Overlay from './Overlay';
@@ -82,4 +86,8 @@ function CanvasUI(props) {
   );
 }
 
-export default CanvasUI;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setCanMove }, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(CanvasUI);
