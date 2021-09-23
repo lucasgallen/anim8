@@ -110,25 +110,6 @@ function CanvasContainer(props) {
     setHasGrip(false);
   };
 
-  const openFullscreen = () => {
-    const container = canvasContainerRef.current;
-    container.requestFullscreen();
-  };
-
-  const exitFullscreen = () => {
-    document.exitFullscreen();
-  };
-
-  const toggleFullscreen = () => {
-    const fullscreenEl = document.fullscreenElement;
-
-    if (fullscreenEl) {
-      exitFullscreen();
-    } else {
-      openFullscreen();
-    }
-  };
-
   const setFullscreenHandler = () => {
     const container = canvasContainerRef.current;
     if (!container) return;
@@ -269,7 +250,6 @@ function CanvasContainer(props) {
           }}
 
           save={props.save && props.save(canvas())}
-          toggleFullscreen={toggleFullscreen}
         />
       }
     </Container>

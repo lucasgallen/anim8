@@ -53,7 +53,6 @@ function CanvasUI(props) {
         props.canFullscreen &&
         <FullscreenButton
           isFullscreen={props.ui.fullscreen}
-          toggleFullscreen={props.toggleFullscreen}
         />
       }
 
