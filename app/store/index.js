@@ -24,6 +24,7 @@ const initialState = {
     canMove: true,
     canvasContainerID: 'canvas-container',
     fullscreen: false,
+    isLocked: false,
   }
 };
 

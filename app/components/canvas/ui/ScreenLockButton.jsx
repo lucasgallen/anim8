@@ -26,6 +26,7 @@ function ScreenLockButton(props) {
 const mapStateToProps = state => (
   {
     isFullscreen: state.ui.fullscreen,
+    isLocked: state.ui.isLocked,
   }
 );
 

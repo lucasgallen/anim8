@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { saveCanvas } from '/app/actions/drawpass';
-import { setFullscreen } from '/app/actions/canvas';
+import { setFullscreen, setIsLocked } from '/app/actions/canvas';
 
 import { Container } from './styles';
 
@@ -21,7 +21,6 @@ function CanvasContainer(props) {
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
-  const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
   const fromReset = useRef(false);
@@ -68,7 +67,7 @@ function CanvasContainer(props) {
   };
 
   const grabCanvas = e => {
-    if (positionLock) return;
+    if (props.ui.isLocked) return;
     if (!props.ui.canMove) return;
     if (e.target.nodeName !== 'CANVAS') return;
 
@@ -156,13 +155,13 @@ function CanvasContainer(props) {
 
   const handleFullscreenEnd = () => {
     props.setFullscreen(false);
-    setPositionLock(false);
+    props.setIsLocked(false);
     setDrawDisabled(true);
   };
 
   const toggleLock = () => {
-    const isLocked = positionLock;
-    setPositionLock(!isLocked);
+    const isLocked = props.ui.isLocked;
+    props.setIsLocked(!isLocked);
     setDrawDisabled(isLocked);
   };
 
@@ -203,7 +202,7 @@ function CanvasContainer(props) {
       onTouchMove={e => moveCanvas(e)}
       onMouseUp={() => release()}
       onTouchEnd={() => release()}
-      locked={positionLock}
+      locked={props.ui.isLocked}
       ref={canvasContainerRef}
       isSaving={props.isSaving}
     >
@@ -241,7 +240,6 @@ function CanvasContainer(props) {
               current: props.canvas.index,
               max: props.canvas.dataURLs.length - 1
             },
-            isLocked: positionLock,
             next: props.next,
             prev: props.prev,
             redo: redo,
@@ -261,6 +259,7 @@ const mapDispatchToProps = dispatch => {
     {
       saveCanvas,
       setFullscreen,
+      setIsLocked,
     },
     dispatch
   );

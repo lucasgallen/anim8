@@ -12,7 +12,15 @@ const setFullscreen = isFullscreen => (
   }
 );
 
+const setIsLocked = isLocked => (
+  {
+    type: 'SET_IS_LOCKED',
+    payload: { isLocked: isLocked },
+  }
+);
+
 export {
   setCanMove,
   setFullscreen,
+  setIsLocked,
 };
