@@ -158,12 +158,6 @@ function CanvasContainer(props) {
     props.setDrawDisabled(true);
   };
 
-  const toggleLock = () => {
-    const isLocked = props.ui.isLocked;
-    props.setIsLocked(!isLocked);
-    props.setDrawDisabled(isLocked);
-  };
-
   const maybeSliceCanvasURLs = () => {
     const urls = [...props.canvas.dataURLs];
 
@@ -241,7 +235,6 @@ function CanvasContainer(props) {
             next: props.next,
             prev: props.prev,
             redo: redo,
-            toggleLock: toggleLock,
             undo: undo,
           }}
 
