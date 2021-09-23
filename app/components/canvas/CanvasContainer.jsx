@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { saveCanvas } from '/app/actions/drawpass';
-import { setFullscreen, setIsLocked } from '/app/actions/canvas';
+import { setFullscreen, setIsLocked, setDrawDisabled } from '/app/actions/canvas';
 
 import { Container } from './styles';
 
@@ -17,7 +17,6 @@ const WIDTH = 842;
 function CanvasContainer(props) {
   const [canvasContext, setCanvasContext] = useState();
   const [canvasPos, setCanvasPos]         = useState({});
-  const [drawDisabled, setDrawDisabled]   = useState(true);
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
@@ -156,13 +155,13 @@ function CanvasContainer(props) {
   const handleFullscreenEnd = () => {
     props.setFullscreen(false);
     props.setIsLocked(false);
-    setDrawDisabled(true);
+    props.setDrawDisabled(true);
   };
 
   const toggleLock = () => {
     const isLocked = props.ui.isLocked;
     props.setIsLocked(!isLocked);
-    setDrawDisabled(isLocked);
+    props.setDrawDisabled(isLocked);
   };
 
   const maybeSliceCanvasURLs = () => {
@@ -212,7 +211,6 @@ function CanvasContainer(props) {
         canvasDataURL={dataURL}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
-        drawDisabled={drawDisabled}
         position={canvasPos}
         setCanvasContext={setCanvasContext}
         canvasContext={canvasContext}
@@ -258,6 +256,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       saveCanvas,
+      setDrawDisabled,
       setFullscreen,
       setIsLocked,
     },

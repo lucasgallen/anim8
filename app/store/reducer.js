@@ -54,6 +54,12 @@ const reducer = (initialState) => (state = initialState, action) => {
         dataURL: action.payload
       }
     ));
+  case 'SET_DRAW_DISABLED':
+    return (Object.assign({}, state,
+      {
+        ui: { ...state.ui, ...action.payload }
+      }
+    ));
   case 'SET_IDLE':
     return (Object.assign({}, state,
       {

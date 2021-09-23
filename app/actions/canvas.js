@@ -5,6 +5,13 @@ const setCanMove = canMove => (
   }
 );
 
+const setDrawDisabled = drawDisabled => (
+  {
+    type: 'SET_DRAW_DISABLED',
+    payload: { drawDisabled: drawDisabled },
+  }
+);
+
 const setFullscreen = isFullscreen => (
   {
     type: 'SET_FULLSCREEN',
@@ -21,6 +28,7 @@ const setIsLocked = isLocked => (
 
 export {
   setCanMove,
+  setDrawDisabled,
   setFullscreen,
   setIsLocked,
 };

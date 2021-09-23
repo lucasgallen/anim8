@@ -156,6 +156,7 @@ function Canvas(props) {
 const mapStateToProps = state => {
   return {
     pen: state.pen,
+    drawDisabled: state.ui.drawDisabled,
   };
 };
 
