@@ -214,7 +214,7 @@ function CanvasContainer(props) {
   };
 
   return (
-    <Container
+    <Container id={props.ui.canvasContainerID}
       hasGrip={hasGrip}
       onMouseDown={e => grabCanvas(e)}
       onTouchStart={e => grabCanvas(e)}
@@ -254,13 +254,8 @@ function CanvasContainer(props) {
           canFullscreen={props.canFullscreen}
           downloadLink={props.downloadLink && props.downloadLink(canvas())}
 
-          menuOpts={{
-            colorPickerParent: canvasContainerRef.current,
-          }}
-
           overlayOpts={{
             canClearCanvas: props.canClearCanvas,
-            containerRef: canvasContainerRef,
             currentCanvasIndex: {
               current: props.canvas.index,
               max: props.canvas.dataURLs.length - 1

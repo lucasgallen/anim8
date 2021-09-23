@@ -35,7 +35,7 @@ const SaveContainer = styled.div`
 `;
 
 function CanvasUI(props) {
-  const { overlayOpts, menuOpts } = props;
+  const { overlayOpts } = props;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -79,7 +79,7 @@ function CanvasUI(props) {
 
       <Menu
         isOpen={menuOpen}
-        options={{...menuOpts, isFullscreen: props.ui.fullscreen}}
+        isFullscreen={props.ui.fullscreen}
         toggleMenu={toggleMenu}
       />
     </>

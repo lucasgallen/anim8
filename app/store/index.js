@@ -22,6 +22,7 @@ const initialState = {
   },
   ui: {
     canMove: true,
+    canvasContainerID: 'canvas-container',
     fullscreen: false,
   }
 };

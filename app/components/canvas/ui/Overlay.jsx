@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import ScreenLockButton from './ScreenLockButton';
@@ -18,7 +19,6 @@ const FlipbookNav = styled.nav`
 function Overlay(props) {
   const { 
     canClearCanvas,
-    containerRef,
     currentCanvasIndex,
     isLocked,
     next,
@@ -29,7 +29,9 @@ function Overlay(props) {
   } = props.options;
 
   const canvasEl = () => {
-    return containerRef.current.querySelector('canvas[data-shadow="false"]');
+    const container = document.getElementById(props.ui.containerId);
+
+    return container.querySelector('canvas[data-shadow="false"]');
   };
 
   return (
@@ -52,4 +54,10 @@ function Overlay(props) {
   );
 }
 
-export default Overlay;
+const mapStateToProps = state => (
+  {
+    containerId: state.ui.canvasContainerID,
+  }
+);
+
+export default connect(mapStateToProps)(Overlay);
