@@ -22,6 +22,7 @@ const initialState = {
   },
   ui: {
     canMove: true,
+    fullscreen: false,
   }
 };
 

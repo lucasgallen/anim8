@@ -60,6 +60,12 @@ const reducer = (initialState) => (state = initialState, action) => {
         idle: action.payload
       }
     ));
+  case 'SET_FULLSCREEN':
+    return (Object.assign({}, state,
+      {
+        ui: { ...state.ui, ...action.payload }
+      }
+    ));
   case 'SET_LOADING':
     return (Object.assign({}, state,
       {

@@ -20,7 +20,6 @@ function Overlay(props) {
     canClearCanvas,
     containerRef,
     currentCanvasIndex,
-    isFullscreen,
     isLocked,
     next,
     prev,
@@ -44,7 +43,6 @@ function Overlay(props) {
         <ClearCanvasButton targetCanvas={canvasEl()} />
       }
       <ScreenLockButton
-        isFullscreen={isFullscreen}
         isLocked={isLocked}
         toggleLock={toggleLock}
       />

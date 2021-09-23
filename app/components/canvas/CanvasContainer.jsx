@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { saveCanvas } from '/app/actions/drawpass';
+import { setFullscreen } from '/app/actions/canvas';
 
 import { Container } from './styles';
 
@@ -20,7 +21,6 @@ function CanvasContainer(props) {
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
-  const [isFullscreen, setIsFullscreen]   = useState(false);
   const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
@@ -170,11 +170,11 @@ function CanvasContainer(props) {
   };
 
   const handleFullscreenStart = () => {
-    setIsFullscreen(true);
+    props.setFullscreen(true);
   };
 
   const handleFullscreenEnd = () => {
-    setIsFullscreen(false);
+    props.setFullscreen(false);
     setPositionLock(false);
     setDrawDisabled(true);
   };
@@ -253,11 +253,9 @@ function CanvasContainer(props) {
         <CanvasUI
           canFullscreen={props.canFullscreen}
           downloadLink={props.downloadLink && props.downloadLink(canvas())}
-          isFullscreen={isFullscreen}
 
           menuOpts={{
             colorPickerParent: canvasContainerRef.current,
-            isFullscreen: isFullscreen,
           }}
 
           overlayOpts={{
@@ -267,7 +265,6 @@ function CanvasContainer(props) {
               current: props.canvas.index,
               max: props.canvas.dataURLs.length - 1
             },
-            isFullscreen: isFullscreen,
             isLocked: positionLock,
             next: props.next,
             prev: props.prev,
@@ -285,7 +282,13 @@ function CanvasContainer(props) {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ saveCanvas }, dispatch);
+  return bindActionCreators(
+    {
+      saveCanvas,
+      setFullscreen,
+    },
+    dispatch
+  );
 };
 
 const mapStateToProps = state => (

@@ -5,6 +5,14 @@ const setCanMove = canMove => (
   }
 );
 
+const setFullscreen = isFullscreen => (
+  {
+    type: 'SET_FULLSCREEN',
+    payload: { fullscreen: isFullscreen },
+  }
+);
+
 export {
   setCanMove,
+  setFullscreen,
 };

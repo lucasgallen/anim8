@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { Button } from '/app/components/styles/atoms';
@@ -22,4 +23,10 @@ function ScreenLockButton(props) {
   );
 }
 
-export default ScreenLockButton;
+const mapStateToProps = state => (
+  {
+    isFullscreen: state.ui.fullscreen,
+  }
+);
+
+export default connect(mapStateToProps)(ScreenLockButton);

@@ -19,7 +19,7 @@ const Download = styled.div`
 `;
 
 const OpenMenu = styled(Button)`
-  display: ${props => props.isFullscreen ? 'block' : 'none'};
+  display: ${props => props.fullscreen ? 'block' : 'none'};
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -52,26 +52,26 @@ function CanvasUI(props) {
       {
         props.canFullscreen &&
         <FullscreenButton
-          isFullscreen={props.isFullscreen}
+          isFullscreen={props.ui.fullscreen}
           toggleFullscreen={props.toggleFullscreen}
         />
       }
 
       <SaveContainer>
-        { !props.isFullscreen && props.save }
+        { !props.ui.fullscreen && props.save }
       </SaveContainer>
 
       <Download>
-        { !props.isFullscreen && props.downloadLink }
+        { !props.ui.fullscreen && props.downloadLink }
       </Download>
 
       <OpenMenu
-        isFullscreen={props.isFullscreen}
+        fullscreen={props.ui.fullscreen}
         onClick={toggleMenu}
       >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
-        props.isFullscreen &&
+        props.ui.fullscreen &&
         <Overlay
           options={overlayOpts}
         />
@@ -79,15 +79,21 @@ function CanvasUI(props) {
 
       <Menu
         isOpen={menuOpen}
-        options={menuOpts}
+        options={{...menuOpts, isFullscreen: props.ui.fullscreen}}
         toggleMenu={toggleMenu}
       />
     </>
   );
 }
 
+const mapStateToProps = state => (
+  {
+    ui: state.ui,
+  }
+);
+
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({ setCanMove }, dispatch);
 };
 
-export default connect(null, mapDispatchToProps)(CanvasUI);
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasUI);
