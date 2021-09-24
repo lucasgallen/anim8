@@ -56,13 +56,17 @@ function CanvasUI(props) {
         />
       }
 
-      <SaveContainer>
-        { !props.ui.fullscreen && props.save }
-      </SaveContainer>
+      { !props.ui.fullscreen &&
+        <SaveContainer>
+          { props.save() }
+        </SaveContainer>
+      }
 
-      <Download>
-        { !props.ui.fullscreen && props.downloadLink }
-      </Download>
+      { !props.ui.fullscreen &&
+        <Download>
+          { props.downloadLink && props.downloadLink() }
+        </Download>
+      }
 
       <OpenMenu
         fullscreen={props.ui.fullscreen}

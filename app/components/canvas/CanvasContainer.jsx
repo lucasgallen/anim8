@@ -59,6 +59,11 @@ function CanvasContainer(props) {
     return container.querySelector('canvas[data-shadow="false"]');
   };
 
+  const save = () => {
+    if (!props.save) return null;
+    return props.save();
+  };
+
   const maybeSetCanvasSize = () => {
     const canvasEl = canvas();
     if (!props.setCanvasDims) return;
@@ -211,14 +216,14 @@ function CanvasContainer(props) {
 
       { !hasGrip &&
         <CanvasUI
-          downloadLink={props.downloadLink && props.downloadLink(canvas())}
+          downloadLink={props.downloadLink}
 
           overlayOpts={{
             next: props.next,
             prev: props.prev,
           }}
 
-          save={props.save && props.save(canvas())}
+          save={save}
         />
       }
     </Container>
