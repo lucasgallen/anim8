@@ -42,6 +42,18 @@ const reducer = (initialState) => (state = initialState, action) => {
         pages: savePage(state, action)
       }
     ));
+  case 'SET_CAN_CLEAR':
+    return (Object.assign({}, state,
+      {
+        ui: { ...state.ui, ...action.payload }
+      }
+    ));
+  case 'SET_CAN_FULLSCREEN':
+    return (Object.assign({}, state,
+      {
+        ui: { ...state.ui, ...action.payload }
+      }
+    ));
   case 'SET_CAN_MOVE':
     return (Object.assign({}, state,
       {

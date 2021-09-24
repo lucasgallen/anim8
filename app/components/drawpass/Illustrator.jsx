@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import { setIdle } from '/app/actions/drawpass';
+import { setCanFullscreen } from '/app/actions/canvas';
 
 import { readableNum } from '/app/helpers';
 import useMinWait from '/app/hooks/useMinWait';
@@ -25,6 +26,10 @@ function Illustrator(props) {
   const [response, setResponse] = useState({ status: '', isOk: false });
 
   const [ , setDataURL] = useStateCallback('');
+
+  useEffect(() => {
+    props.setCanFullscreen(true);
+  }, []);
 
   useEffect(() => (() => {
     clearTimeout(idleTimeout);
@@ -131,7 +136,7 @@ function Illustrator(props) {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ setIdle }, dispatch);
+  return bindActionCreators({ setIdle, setCanFullscreen }, dispatch);
 };
 
 const mapStateToProps = state => (

@@ -225,11 +225,9 @@ function CanvasContainer(props) {
 
       { !hasGrip &&
         <CanvasUI
-          canFullscreen={props.canFullscreen}
           downloadLink={props.downloadLink && props.downloadLink(canvas())}
 
           overlayOpts={{
-            canClearCanvas: props.canClearCanvas,
             currentCanvasIndex: {
               current: props.canvas.index,
               max: props.canvas.dataURLs.length - 1

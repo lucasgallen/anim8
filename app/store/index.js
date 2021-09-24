@@ -21,6 +21,8 @@ const initialState = {
     width: window.screen.availWidth,
   },
   ui: {
+    canClear: false,
+    canFullscreen: false,
     canMove: true,
     canvasContainerID: 'canvas-container',
     canvasPosition: {},

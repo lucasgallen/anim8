@@ -18,7 +18,6 @@ const FlipbookNav = styled.nav`
 
 function Overlay(props) {
   const { 
-    canClearCanvas,
     currentCanvasIndex,
     isLocked,
     next,
@@ -41,7 +40,7 @@ function Overlay(props) {
         { prev && prev(canvasEl()) }
       </FlipbookNav>
       {
-        canClearCanvas &&
+        props.canClearCanvas &&
         <ClearCanvasButton targetCanvas={canvasEl()} />
       }
       <ScreenLockButton
@@ -56,6 +55,7 @@ function Overlay(props) {
 
 const mapStateToProps = state => (
   {
+    canClear: state.ui.canClear,
     containerId: state.ui.canvasContainerID,
   }
 );

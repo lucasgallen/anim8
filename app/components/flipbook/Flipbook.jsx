@@ -10,6 +10,11 @@ import {
   updateScreen
 } from '../../actions/flipbook.js';
 
+import {
+  setCanFullscreen,
+  setCanClear,
+} from '/app/actions/canvas.js';
+
 import { saveColors } from '/app/actions/drawpass.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
@@ -54,6 +59,8 @@ class Flipbook extends React.Component {
 
   componentDidMount() {
     this.props.saveColors([{ color: '000', alpha: 1 }]);
+    this.props.setCanFullscreen(true);
+    this.props.setCanClear(true);
   }
 
   getCanvasEl() {
@@ -172,8 +179,6 @@ class Flipbook extends React.Component {
             shadowDataURL={shadowDataURL}
             shadowCanvas
             background='white'
-            canFullscreen={true}
-            canClearCanvas={true}
             setCanvasDims={dims => this.setState({ canvasDims: dims })}
           />
         </FlipbookContainer>
@@ -202,6 +207,8 @@ const mapDispatchToProps = (dispatch) => {
     addPage,
     saveColors,
     savePage,
+    setCanFullscreen,
+    setCanClear,
     updateScreen
   }, dispatch);
 };

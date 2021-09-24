@@ -1,3 +1,17 @@
+const setCanClear = canClear => (
+  {
+    type: 'SET_CAN_CLEAR',
+    payload: { canClear: canClear },
+  }
+);
+
+const setCanFullscreen = canFullscreen => (
+  {
+    type: 'SET_CAN_FULLSCREEN',
+    payload: { canFullscreen: canFullscreen },
+  }
+);
+
 const setCanMove = canMove => (
   {
     type: 'SET_CAN_MOVE',
@@ -34,6 +48,8 @@ const setIsLocked = isLocked => (
 );
 
 export {
+  setCanClear,
+  setCanFullscreen,
   setCanMove,
   setCanvasPosition,
   setDrawDisabled,
