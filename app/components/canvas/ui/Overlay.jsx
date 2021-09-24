@@ -19,11 +19,9 @@ const FlipbookNav = styled.nav`
 function Overlay(props) {
   const { 
     currentCanvasIndex,
-    isLocked,
     next,
     prev,
     redo,
-    toggleLock,
     undo,
   } = props.options;
 
@@ -43,10 +41,7 @@ function Overlay(props) {
         props.canClearCanvas &&
         <ClearCanvasButton targetCanvas={canvasEl()} />
       }
-      <ScreenLockButton
-        isLocked={isLocked}
-        toggleLock={toggleLock}
-      />
+      <ScreenLockButton/>
 
       <RedoUndo redo={redo} undo={undo} indexState={currentCanvasIndex} />
     </>
