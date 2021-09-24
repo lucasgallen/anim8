@@ -50,31 +50,31 @@ function CanvasUI(props) {
   return (
     <>
       {
-        props.ui.canFullscreen &&
+        props.canFullscreen &&
         <FullscreenButton
-          isFullscreen={props.ui.fullscreen}
+          isFullscreen={props.fullscreen}
         />
       }
 
-      { !props.ui.fullscreen &&
+      { !props.fullscreen &&
         <SaveContainer>
           { props.save() }
         </SaveContainer>
       }
 
-      { !props.ui.fullscreen &&
+      { !props.fullscreen &&
         <Download>
           { props.downloadLink && props.downloadLink() }
         </Download>
       }
 
       <OpenMenu
-        fullscreen={props.ui.fullscreen}
+        fullscreen={props.fullscreen}
         onClick={toggleMenu}
       >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
-        props.ui.fullscreen &&
+        props.fullscreen &&
         <Overlay
           options={overlayOpts}
         />
@@ -82,7 +82,7 @@ function CanvasUI(props) {
 
       <Menu
         isOpen={menuOpen}
-        isFullscreen={props.ui.fullscreen}
+        isFullscreen={props.fullscreen}
         toggleMenu={toggleMenu}
       />
     </>
@@ -91,7 +91,8 @@ function CanvasUI(props) {
 
 const mapStateToProps = state => (
   {
-    ui: state.ui,
+    fullscreen: state.ui.fullscreen,
+    canFullscreen: state.ui.canFullscreen,
   }
 );
 
