@@ -23,6 +23,7 @@ const initialState = {
   ui: {
     canMove: true,
     canvasContainerID: 'canvas-container',
+    canvasPosition: {},
     drawDisabled: true,
     fullscreen: false,
     isLocked: false,

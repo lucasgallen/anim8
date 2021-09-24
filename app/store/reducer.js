@@ -48,6 +48,12 @@ const reducer = (initialState) => (state = initialState, action) => {
         ui: { ...state.ui, ...action.payload }
       }
     ));
+  case 'SET_CANVAS_POSITION':
+    return (Object.assign({}, state,
+      {
+        ui: { ...state.ui, ...action.payload }
+      }
+    ));
   case 'SET_DATA_URL':
     return (Object.assign({}, state,
       {

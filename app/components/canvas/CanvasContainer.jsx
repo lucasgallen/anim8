@@ -3,7 +3,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { saveCanvas } from '/app/actions/drawpass';
-import { setFullscreen, setIsLocked, setDrawDisabled } from '/app/actions/canvas';
+import {
+  setCanvasPosition,
+  setFullscreen,
+  setIsLocked,
+  setDrawDisabled
+} from '/app/actions/canvas';
 
 import { Container } from './styles';
 
@@ -16,7 +21,6 @@ const WIDTH = 842;
 
 function CanvasContainer(props) {
   const [canvasContext, setCanvasContext] = useState();
-  const [canvasPos, setCanvasPos]         = useState({});
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
@@ -84,12 +88,12 @@ function CanvasContainer(props) {
 
     const relPosition = relativeMousePos(e);
     const position = {
-      x: canvasPos.left || 0,
-      y: canvasPos.top || 0,
+      x: props.ui.canvasPosition.left || 0,
+      y: props.ui.canvasPosition.top || 0,
     };
 
     setGrabStartPos(currentPosition(e));
-    setCanvasPos({
+    props.setCanvasPosition({
       left: relPosition.x + position.x,
       top: relPosition.y + position.y,
     });
@@ -142,7 +146,7 @@ function CanvasContainer(props) {
     const left = (container.getBoundingClientRect().width - WIDTH) * 0.5;
     const top = (container.getBoundingClientRect().height - HEIGHT) * 0.5;
 
-    setCanvasPos({
+    props.setCanvasPosition({
       left: left,
       top: top
     });
@@ -205,7 +209,6 @@ function CanvasContainer(props) {
         canvasDataURL={dataURL}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
-        position={canvasPos}
         setCanvasContext={setCanvasContext}
         canvasContext={canvasContext}
         pushCanvasState={pushCanvasURL}
@@ -217,7 +220,6 @@ function CanvasContainer(props) {
           canvasDataURL={props.shadowDataURL}
           height={props.height || HEIGHT}
           width={props.width || WIDTH}
-          position={canvasPos}
         />
       }
 
@@ -249,6 +251,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       saveCanvas,
+      setCanvasPosition,
       setDrawDisabled,
       setFullscreen,
       setIsLocked,

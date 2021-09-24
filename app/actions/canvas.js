@@ -5,6 +5,13 @@ const setCanMove = canMove => (
   }
 );
 
+const setCanvasPosition = position => (
+  {
+    type: 'SET_CANVAS_POSITION',
+    payload: { canvasPosition: position },
+  }
+);
+
 const setDrawDisabled = drawDisabled => (
   {
     type: 'SET_DRAW_DISABLED',
@@ -28,6 +35,7 @@ const setIsLocked = isLocked => (
 
 export {
   setCanMove,
+  setCanvasPosition,
   setDrawDisabled,
   setFullscreen,
   setIsLocked,
