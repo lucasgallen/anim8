@@ -176,20 +176,6 @@ function CanvasContainer(props) {
     props.saveCanvas(newState);
   };
 
-  const redo = () => {
-    const newIndex = props.canvas.index + 1;
-    const newState = { ...props.canvas, index: newIndex };
-
-    props.saveCanvas(newState);
-  };
-
-  const undo = () => {
-    const newIndex = props.canvas.index - 1;
-    const newState = { ...props.canvas, index: newIndex };
-
-    props.saveCanvas(newState);
-  };
-
   return (
     <Container id={props.ui.canvasContainerID}
       hasGrip={hasGrip}
@@ -228,14 +214,8 @@ function CanvasContainer(props) {
           downloadLink={props.downloadLink && props.downloadLink(canvas())}
 
           overlayOpts={{
-            currentCanvasIndex: {
-              current: props.canvas.index,
-              max: props.canvas.dataURLs.length - 1
-            },
             next: props.next,
             prev: props.prev,
-            redo: redo,
-            undo: undo,
           }}
 
           save={props.save && props.save(canvas())}

@@ -17,13 +17,7 @@ const FlipbookNav = styled.nav`
 `;
 
 function Overlay(props) {
-  const { 
-    currentCanvasIndex,
-    next,
-    prev,
-    redo,
-    undo,
-  } = props.options;
+  const { next, prev } = props.options;
 
   const canvasEl = () => {
     const container = document.getElementById(props.containerId);
@@ -43,7 +37,7 @@ function Overlay(props) {
       }
       <ScreenLockButton/>
 
-      <RedoUndo redo={redo} undo={undo} indexState={currentCanvasIndex} />
+      <RedoUndo/>
     </>
   );
 }
