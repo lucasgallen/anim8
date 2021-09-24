@@ -26,7 +26,7 @@ function Overlay(props) {
   } = props.options;
 
   const canvasEl = () => {
-    const container = document.getElementById(props.ui.containerId);
+    const container = document.getElementById(props.containerId);
 
     return container.querySelector('canvas[data-shadow="false"]');
   };
