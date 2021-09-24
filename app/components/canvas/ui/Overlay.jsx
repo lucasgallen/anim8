@@ -32,7 +32,7 @@ function Overlay(props) {
         { prev && prev(canvasEl()) }
       </FlipbookNav>
       {
-        props.canClearCanvas &&
+        props.canClear &&
         <ClearCanvasButton targetCanvas={canvasEl()} />
       }
       <ScreenLockButton/>
