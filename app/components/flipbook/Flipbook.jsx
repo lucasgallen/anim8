@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
-import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
+import {
+  addPage,
+  savePage,
+  updateScreen
+} from '../../actions/flipbook.js';
+
 import { saveColors } from '/app/actions/drawpass.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
@@ -193,7 +198,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ addPage, saveColors, savePage, updateScreen }, dispatch);
+  return bindActionCreators({
+    addPage,
+    saveColors,
+    savePage,
+    updateScreen
+  }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);
