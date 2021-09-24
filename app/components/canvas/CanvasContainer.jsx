@@ -59,6 +59,21 @@ function CanvasContainer(props) {
     return container.querySelector('canvas[data-shadow="false"]');
   };
 
+  const downloadLink = () => {
+    if (!props.downloadLink) return null;
+    return props.downloadLink();
+  };
+
+  const next = (el) => {
+    if (!props.next) return null;
+    return props.next(el);
+  };
+
+  const prev = (el) => {
+    if (!props.prev) return null;
+    return props.prev(el);
+  };
+
   const save = () => {
     if (!props.save) return null;
     return props.save();
@@ -216,11 +231,11 @@ function CanvasContainer(props) {
 
       { !hasGrip &&
         <CanvasUI
-          downloadLink={props.downloadLink}
+          downloadLink={downloadLink}
 
           overlayOpts={{
-            next: props.next,
-            prev: props.prev,
+            next: next,
+            prev: prev,
           }}
 
           save={save}
