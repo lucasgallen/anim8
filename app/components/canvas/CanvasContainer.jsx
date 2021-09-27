@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import useMaybeNullComponent from '/app/hooks/useMaybeNullComponent';
+
 import { saveCanvas } from '/app/actions/drawpass';
 import {
   setCanvasPosition,
@@ -52,31 +54,16 @@ function CanvasContainer(props) {
     }
   }, [props.canvas.index, props.dataURL]);
 
+  const downloadLink = useMaybeNullComponent(props.downloadLink);
+  const next = useMaybeNullComponent(props.next);
+  const prev = useMaybeNullComponent(props.prev);
+  const save = useMaybeNullComponent(props.save);
+
   const canvas = () => {
     const container = canvasContainerRef.current;
     if (!container) return;
 
     return container.querySelector('canvas[data-shadow="false"]');
-  };
-
-  const downloadLink = () => {
-    if (!props.downloadLink) return null;
-    return props.downloadLink();
-  };
-
-  const next = (el) => {
-    if (!props.next) return null;
-    return props.next(el);
-  };
-
-  const prev = (el) => {
-    if (!props.prev) return null;
-    return props.prev(el);
-  };
-
-  const save = () => {
-    if (!props.save) return null;
-    return props.save();
   };
 
   const maybeSetCanvasSize = () => {
