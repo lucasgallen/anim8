@@ -232,12 +232,8 @@ function CanvasContainer(props) {
       { !hasGrip &&
         <CanvasUI
           downloadLink={downloadLink}
-
-          overlayOpts={{
-            next: next,
-            prev: prev,
-          }}
-
+          next={next}
+          prev={prev}
           save={save}
         />
       }

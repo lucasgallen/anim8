@@ -17,7 +17,7 @@ const FlipbookNav = styled.nav`
 `;
 
 function Overlay(props) {
-  const { next, prev } = props.options;
+  const { next, prev } = props;
 
   const canvasEl = () => {
     const container = document.getElementById(props.containerId);
