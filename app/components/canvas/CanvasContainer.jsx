@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import useMaybeNullComponent from '/app/hooks/useMaybeNullComponent';
 
+import { currentPosition } from '/app/lib/helpers';
 import { saveCanvas } from '/app/actions/drawpass';
 import {
   setCanvasPosition,
@@ -83,11 +84,6 @@ function CanvasContainer(props) {
 
     setHasGrip(true);
     setGrabStartPos(currentPosition(e));
-  };
-
-  const currentPosition = e => {
-    const eventRoot = e.touches ? e.touches[0] : e;
-    return { x: eventRoot.clientX, y: eventRoot.clientY };
   };
 
   const moveCanvas = e => {
