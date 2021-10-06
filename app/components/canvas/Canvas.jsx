@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { hexToRGB } from '/app/helpers';
@@ -32,7 +32,7 @@ function Canvas(props) {
 
   const memoizedRGB = useMemo(() => hexToRGB(props.pen.color), [props.pen.color]);
 
-  const startPath = () => {
+  const startPath = useCallback(() => {
     const alpha = props.pen.alpha || 1;
     const width = props.pen.width || 1;
 
@@ -42,7 +42,7 @@ function Canvas(props) {
     canvasContext.lineWidth = width;
     canvasContext.beginPath();
     setIsPenDown(true);
-  };
+  }, [props.pen.alpha, props.pen.width, canvasContext]);
 
   const drawPath = e => {
     const position = relativePosition(e);
@@ -68,7 +68,7 @@ function Canvas(props) {
     });
   };
 
-  const eraseCircle = e => {
+  const eraseCircle = useCallback((e) => {
     const position = relativePosition(e);
 
     canvasContext.beginPath();
@@ -105,7 +105,7 @@ function Canvas(props) {
     firstLoad.current = false;
   };
 
-  const handlePointerDown = e => {
+  const handlePointerDown = useCallback((e) => {
     if (props.drawDisabled) return;
 
     setIsPenDown(true);
@@ -124,9 +124,9 @@ function Canvas(props) {
         startPath();
       });
     }
-  };
+  }, [props.drawDisabled, props.pen.isEraser, canvasContext, startPath, eraseCircle]);
 
-  const handlePointerMove = e => {
+  const handlePointerMove = useCallback((e) => {
     if (!isPenDown) return;
 
     if (props.pen.isEraser) {
@@ -134,16 +134,16 @@ function Canvas(props) {
     } else {
       drawPath(e);
     }
-  };
+  }, [isPenDown, props.pen.isEraser, eraseCircle, drawPath]);
 
   return (
     <StyledCanvas
-      onMouseDown={e => handlePointerDown(e)}
-      onTouchStart={e => handlePointerDown(e)}
-      onMouseMove={e => handlePointerMove(e)}
-      onTouchMove={e => handlePointerMove(e)}
-      onMouseUp={() => endPath()}
-      onTouchEnd={() => endPath()}
+      onMouseDown={handlePointerDown}
+      onTouchStart={handlePointerDown}
+      onMouseMove={handlePointerMove}
+      onTouchMove={handlePointerMove}
+      onMouseUp={endPath}
+      onTouchEnd={endPath}
       background={props.background}
       left={props.canvasPosition.left}
       top={props.canvasPosition.top}
