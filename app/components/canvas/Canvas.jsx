@@ -9,6 +9,7 @@ import { StyledCanvas } from './styles';
 const DEFAULT_OP = 'source-over';
 
 function Canvas(props) {
+  const [canvasContext, setCanvasContext] = useState();
   const [isPenDown, setIsPenDown] = useState(false);
   const [ , setGlobalCompositeOp] = useStateCallback([DEFAULT_OP, '']);
   const canvas = useRef(null);
@@ -17,13 +18,13 @@ function Canvas(props) {
   useEffect(() => {
     const ctx = canvas.current.getContext('2d');
 
-    props.setCanvasContext(ctx);
+    setCanvasContext(ctx);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }, []);
 
   useEffect(() => {
-    if (!props.canvasContext || !props.canvasDataURL) return;
+    if (!canvasContext || !props.canvasDataURL) return;
 
     if (!firstLoad.current && props.setCanSave) props.setCanSave(true);
     loadDrawing();
@@ -35,33 +36,33 @@ function Canvas(props) {
     const alpha = props.pen.alpha || 1;
     const width = props.pen.width || 1;
 
-    props.canvasContext.strokeStyle = `
+    canvasContext.strokeStyle = `
       rgba(${memoizedRGB.red}, ${memoizedRGB.green}, ${memoizedRGB.blue}, ${alpha})
     `;
-    props.canvasContext.lineWidth = width;
-    props.canvasContext.beginPath();
+    canvasContext.lineWidth = width;
+    canvasContext.beginPath();
     setIsPenDown(true);
   };
 
   const drawPath = e => {
     const position = relativePosition(e);
 
-    props.canvasContext.lineTo(position.x, position.y);
-    props.canvasContext.stroke();
+    canvasContext.lineTo(position.x, position.y);
+    canvasContext.stroke();
 
-    props.canvasContext.beginPath();
-    props.canvasContext.moveTo(position.x, position.y);
+    canvasContext.beginPath();
+    canvasContext.moveTo(position.x, position.y);
   };
 
   const endPath = () => {
     if (props.drawDisabled) return;
 
     setGlobalCompositeOp(['', 'endPath'], () => {
-      if (!props.canvasContext) return;
+      if (!canvasContext) return;
 
       setIsPenDown(false);
-      props.canvasContext.strokeStyle = 'transparent';
-      props.canvasContext.globalCompositeOperation = DEFAULT_OP;
+      canvasContext.strokeStyle = 'transparent';
+      canvasContext.globalCompositeOperation = DEFAULT_OP;
 
       props.pushCanvasState(canvas.current.toDataURL());
     });
@@ -70,11 +71,11 @@ function Canvas(props) {
   const eraseCircle = e => {
     const position = relativePosition(e);
 
-    props.canvasContext.beginPath();
-    props.canvasContext.arc(position.x, position.y, props.pen.width, 0, Math.PI*2, true);
-    props.canvasContext.closePath();
-    props.canvasContext.fill();
-  };
+    canvasContext.beginPath();
+    canvasContext.arc(position.x, position.y, props.pen.width, 0, Math.PI*2, true);
+    canvasContext.closePath();
+    canvasContext.fill();
+  }, [canvasContext]);
 
   const relativePosition = e => {
     const positionRoot = e.touches ? e.touches[0] : e;
@@ -87,17 +88,17 @@ function Canvas(props) {
   };
 
   const setBackground = () => {
-    props.canvasContext.fillStyle = props.background;
-    props.canvasContext.fillRect(0, 0, canvas.current.width, canvas.current.height);
+    canvasContext.fillStyle = props.background;
+    canvasContext.fillRect(0, 0, canvas.current.width, canvas.current.height);
   };
 
   const loadDrawing = () => {
     let img = new Image();
 
     img.onload = () => {
-      props.canvasContext.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      canvasContext.clearRect(0, 0, canvas.current.width, canvas.current.height);
       setBackground();
-      props.canvasContext.drawImage(img, 0, 0);
+      canvasContext.drawImage(img, 0, 0);
     };
 
     img.setAttribute('src', props.canvasDataURL.replace(/\n|\r/g, ''));
@@ -110,16 +111,16 @@ function Canvas(props) {
     setIsPenDown(true);
     if (props.pen.isEraser) {
       setGlobalCompositeOp(['destination-out', 'handlePointerDown'], ([globalComp, ]) => {
-        if (!props.canvasContext) return;
+        if (!canvasContext) return;
 
-        props.canvasContext.globalCompositeOperation = globalComp;
+        canvasContext.globalCompositeOperation = globalComp;
         eraseCircle(e);
       });
     } else {
       setGlobalCompositeOp(['source-over', 'handlePointerDown'], ([globalComp, ]) => {
-        if (!props.canvasContext) return;
+        if (!canvasContext) return;
 
-        props.canvasContext.globalCompositeOperation = globalComp;
+        canvasContext.globalCompositeOperation = globalComp;
         startPath();
       });
     }

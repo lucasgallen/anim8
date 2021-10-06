@@ -23,7 +23,6 @@ const HEIGHT = 595;
 const WIDTH = 842;
 
 function CanvasContainer(props) {
-  const [canvasContext, setCanvasContext] = useState();
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
@@ -198,8 +197,6 @@ function CanvasContainer(props) {
         canvasDataURL={dataURL}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
-        setCanvasContext={setCanvasContext}
-        canvasContext={canvasContext}
         pushCanvasState={pushCanvasURL}
       />
 
