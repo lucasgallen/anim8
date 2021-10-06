@@ -101,14 +101,13 @@ const productionConfig = envKeys => {
       plugins: [
         new CopyPlugin({
           patterns: [{
-              context: path.join(__dirname, 'public'),
-              globOptions: {
-                ignore: ['**/index.html'],
-              },
-              from: '*',
-              to: PATHS.build
+            context: path.join(__dirname, 'public'),
+            globOptions: {
+              ignore: ['**/*/index.html'],
             },
-          ],
+            from: '*',
+            to: PATHS.build
+          }],
         }),
         new CompressionPlugin({
           test: /\.jsx?$/i,
@@ -133,22 +132,20 @@ const developmentConfig = envKeys => {
         )),
       ],
       devServer: {
-        clientLogLevel: 'debug',
         historyApiFallback: true,
-        stats: {
-          errors: true,
-        },
 
         host: '0.0.0.0',
         port: '3000',
 
-        contentBase: path.join(__dirname, '/public'),
-        contentBasePublicPath: '/',
-
-        overlay: {
-          errors: true,
-          warnings: true,
+        static: {
+          directory: path.join(__dirname, '/public'),
+          publicPath: '/',
         },
+
+        client: {
+          logging: 'verbose',
+          overlay: true,
+        }
       },
     },
   ]);
