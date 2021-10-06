@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import CanvasColorPicker from './CanvasColorPicker';
@@ -28,12 +29,8 @@ const SKIP_LENGTH_MS = 100;
 function Menu(props) {
   const [timedMenuSkip, setTimedMenuSkip] = useState(false);
 
-  const { 
-    colorPickerParent,
-    isFullscreen,
-  } = props.options;
-
   const container = useRef(null);
+  const colorPickerParent = document.getElementById(props.ui.canvasContainerID);
 
   useEffect(() => {
     if (!timedMenuSkip) return;
@@ -52,7 +49,7 @@ function Menu(props) {
 
   return (
     <Container
-      isFullscreen={isFullscreen}
+      isFullscreen={props.isFullscreen}
       isOpen={props.isOpen}
       onClick={e => handleContainer(e)}
       ref={container}
@@ -68,4 +65,10 @@ function Menu(props) {
   );
 }
 
-export default Menu;
+const mapStateToProps = state => (
+  {
+    ui: state.ui,
+  }
+);
+
+export default connect(mapStateToProps)(Menu);

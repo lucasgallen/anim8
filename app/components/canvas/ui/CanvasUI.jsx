@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { setCanMove } from '/app/actions/canvas';
 
 import Menu from './Menu';
 import Overlay from './Overlay';
@@ -15,7 +19,7 @@ const Download = styled.div`
 `;
 
 const OpenMenu = styled(Button)`
-  display: ${props => props.isFullscreen ? 'block' : 'none'};
+  display: ${props => props.fullscreen ? 'block' : 'none'};
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -31,7 +35,7 @@ const SaveContainer = styled.div`
 `;
 
 function CanvasUI(props) {
-  const { overlayOpts, menuOpts } = props;
+  const { next, prev } = props;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -48,38 +52,50 @@ function CanvasUI(props) {
       {
         props.canFullscreen &&
         <FullscreenButton
-          isFullscreen={props.isFullscreen}
-          toggleFullscreen={props.toggleFullscreen}
+          isFullscreen={props.fullscreen}
         />
       }
 
-      <SaveContainer>
-        { !props.isFullscreen && props.save }
-      </SaveContainer>
+      { !props.fullscreen &&
+        <SaveContainer>
+          { props.save() }
+        </SaveContainer>
+      }
 
-      <Download>
-        { !props.isFullscreen && props.downloadLink }
-      </Download>
+      { !props.fullscreen &&
+        <Download>
+          { props.downloadLink && props.downloadLink() }
+        </Download>
+      }
 
       <OpenMenu
-        isFullscreen={props.isFullscreen}
+        fullscreen={props.fullscreen}
         onClick={toggleMenu}
       >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
-        props.isFullscreen &&
-        <Overlay
-          options={overlayOpts}
-        />
+        props.fullscreen &&
+        <Overlay {...{ next, prev }} />
       }
 
       <Menu
         isOpen={menuOpen}
-        options={menuOpts}
+        isFullscreen={props.fullscreen}
         toggleMenu={toggleMenu}
       />
     </>
   );
 }
 
-export default CanvasUI;
+const mapStateToProps = state => (
+  {
+    fullscreen: state.ui.fullscreen,
+    canFullscreen: state.ui.canFullscreen,
+  }
+);
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setCanMove }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasUI);

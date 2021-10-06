@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { setLoading } from '/app/actions/drawpass';
 
 import NewSessionResponse from './NewSessionResponse';
 
@@ -50,4 +54,14 @@ function NewSessionPrompt(props) {
   );
 }
 
-export default NewSessionPrompt;
+const mapStateToProps = state => (
+  {
+    loading: state.loading
+  }
+);
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ setLoading }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewSessionPrompt);

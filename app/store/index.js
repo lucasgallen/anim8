@@ -1,8 +1,14 @@
 import { createStore } from 'redux';
+import reducer from './reducer.js';
+
+const MIN_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 const initialState = {
   colors: [{ color: '000', alpha: 1 }],
   canvas: { index: 0, dataURLs: [] },
+  dataURL: MIN_DATA_URL,
+  idle: false,
+  loading: false,
   pages: [],
   pen: {
     alpha: 1,
@@ -13,71 +19,20 @@ const initialState = {
   screen: {
     height: window.screen.availHeight,
     width: window.screen.availWidth,
+  },
+  ui: {
+    canClear: false,
+    canFullscreen: false,
+    canMove: true,
+    canvasContainerID: 'canvas-container',
+    canvasPosition: {},
+    drawDisabled: true,
+    fullscreen: false,
+    isLocked: false,
   }
 };
 
-const savePage = (state, action) => {
-  let pages = JSON.parse(JSON.stringify(state.pages));
-
-  pages[action.payload.pageIndex] = {
-    dataURL: action.payload.dataURL,
-  };
-
-  return pages;
-};
-
-const anim8 = (state = initialState, action) => {
-  switch (action.type) {
-  case 'ADD_COLOR':
-    return (Object.assign({}, state,
-      {
-        colors: [...state.colors,
-          action.payload
-        ]
-      }
-    ));
-  case 'ADD_PAGE':
-    return (Object.assign({}, state,
-      {
-        pages: [...state.pages,
-          action.payload
-        ]
-      }
-    ));
-  case 'SAVE_CANVAS':
-    return (Object.assign({}, state,
-      {
-        canvas: { ...state.canvas, ...action.payload }
-      }
-    ));
-  case 'SAVE_COLORS':
-    return (Object.assign({}, state,
-      {
-        colors: action.payload
-      }
-    ));
-  case 'SAVE_PEN':
-    return (Object.assign({}, state,
-      {
-        pen: {...state.pen, ...action.payload}
-      }
-    ));
-  case 'SAVE_PAGE':
-    return (Object.assign({}, state,
-      {
-        pages: savePage(state, action)
-      }
-    ));
-  case 'UPDATE_SCREEN':
-    return (Object.assign({}, state,
-      {
-        screen: action.payload
-      }
-    ));
-  default:
-    return state;
-  }
-};
+const anim8 = reducer(initialState);
 
 const store = createStore(
   anim8,

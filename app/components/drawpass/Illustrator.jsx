@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+
+import { setIdle } from '/app/actions/drawpass';
+import { setCanFullscreen } from '/app/actions/canvas';
 
 import { readableNum } from '/app/helpers';
 import useMinWait from '/app/hooks/useMinWait';
@@ -10,7 +14,7 @@ import CanvasContainer from '../canvas/CanvasContainer';
 import DownloadDrawing from './DownloadDrawing';
 import SaveResponse from '../SaveResponse';
 
-import { SaveButton } from './styles/illustrator';
+import SaveButton from './SaveButton';
 
 const MAX_IDLE_TIME_MS = readableNum('300_000');
 
@@ -23,6 +27,10 @@ function Illustrator(props) {
 
   const [ , setDataURL] = useStateCallback('');
 
+  useEffect(() => {
+    props.setCanFullscreen(true);
+  }, []);
+
   useEffect(() => (() => {
     clearTimeout(idleTimeout);
   }));
@@ -34,12 +42,18 @@ function Illustrator(props) {
 
   useEffect(() => {
     const newTimeout = window.setTimeout(() => {
-      props.setIdle();
+      props.setIdle(true);
     }, MAX_IDLE_TIME_MS);
 
     clearTimeout(idleTimeout);
     setIdleTimeout(newTimeout);
   }, [props.pen, props.colors, props.canvas]);
+
+  const canvas = (
+    document.getElementById(props.containerID) &&
+    document.getElementById(props.containerID)
+      .querySelector('canvas[data-shadow="false"]')
+  );
 
   const saveImageFetch = dataURL => (
     fetch(`${process.env.API_SERVER}/api/shared_image/${props.slug}`, {
@@ -78,7 +92,7 @@ function Illustrator(props) {
     }
   };
 
-  const saveImage = canvas => {
+  const handleSaveImage = () => {
     const isOk = response.isOk;
     const url = canvas.toDataURL('image/png', 0.9);
 
@@ -89,18 +103,20 @@ function Illustrator(props) {
     ));
   };
 
-  const Save = canvas => {
-    return (
-      <SaveButton
-        disabled={canSave ? false : 'disabled'}
-        isSaving={isSaving}
-        onClick={() => saveImage(canvas)}
-      >{saveLabel}</SaveButton>
-    );
-  };
+  const save = () => (
+    <SaveButton {...{
+      canSave,
+      handleSaveImage,
+      isSaving,
+      saveLabel
+    }} />
+  );
 
-  const DownloadLink = canvas => (
-    <DownloadDrawing dataURL={canvas && canvas.toDataURL()} sessionID={props.slug} />
+  const DownloadLink = () => (
+    <DownloadDrawing
+      dataURL={canvas && canvas.toDataURL()}
+      sessionID={props.slug}
+    />
   );
 
   return (
@@ -118,22 +134,26 @@ function Illustrator(props) {
         key={'drawpass'}
         isSaving={isSaving}
         background='white'
-        dataURL={props.dataURL}
         canFullscreen={true}
         downloadLink={DownloadLink}
-        save={Save}
+        save={save}
         setCanSave={setCanSave}
       />
     </>
   );
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ setIdle, setCanFullscreen }, dispatch);
+};
+
 const mapStateToProps = state => (
   {
-    pen: state.pen,
-    colors: state.colors,
     canvas: state.canvas,
+    colors: state.colors,
+    containerID: state.ui.canvasContainerID,
+    pen: state.pen,
   }
 );
 
-export default connect(mapStateToProps)(Illustrator);
+export default connect(mapStateToProps, mapDispatchToProps)(Illustrator);

@@ -2,7 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import useMaybeNullComponent from '/app/hooks/useMaybeNullComponent';
+
+import { currentPosition } from '/app/lib/helpers';
 import { saveCanvas } from '/app/actions/drawpass';
+import {
+  setCanvasPosition,
+  setFullscreen,
+  setIsLocked,
+  setDrawDisabled
+} from '/app/actions/canvas';
 
 import { Container } from './styles';
 
@@ -14,15 +23,10 @@ const HEIGHT = 595;
 const WIDTH = 842;
 
 function CanvasContainer(props) {
-  const [canMove, setCanMove]             = useState(true);
   const [canvasContext, setCanvasContext] = useState();
-  const [canvasPos, setCanvasPos]         = useState({});
-  const [drawDisabled, setDrawDisabled]   = useState(true);
   const [grabStartPos, setGrabStartPos]   = useState({});
   const [hasGrip, setHasGrip]             = useState(false);
   const [dataURL, setDataURL]             = useState(null);
-  const [isFullscreen, setIsFullscreen]   = useState(false);
-  const [positionLock, setPositionLock]   = useState(false);
 
   const canvasContainerRef = useRef(null);
   const fromReset = useRef(false);
@@ -51,6 +55,11 @@ function CanvasContainer(props) {
     }
   }, [props.canvas.index, props.dataURL]);
 
+  const downloadLink = useMaybeNullComponent(props.downloadLink);
+  const next = useMaybeNullComponent(props.next);
+  const prev = useMaybeNullComponent(props.prev);
+  const save = useMaybeNullComponent(props.save);
+
   const canvas = () => {
     const container = canvasContainerRef.current;
     if (!container) return;
@@ -69,17 +78,12 @@ function CanvasContainer(props) {
   };
 
   const grabCanvas = e => {
-    if (positionLock) return;
-    if (!canMove) return;
+    if (props.ui.isLocked) return;
+    if (!props.ui.canMove) return;
     if (e.target.nodeName !== 'CANVAS') return;
 
     setHasGrip(true);
     setGrabStartPos(currentPosition(e));
-  };
-
-  const currentPosition = e => {
-    const eventRoot = e.touches ? e.touches[0] : e;
-    return { x: eventRoot.clientX, y: eventRoot.clientY };
   };
 
   const moveCanvas = e => {
@@ -87,12 +91,12 @@ function CanvasContainer(props) {
 
     const relPosition = relativeMousePos(e);
     const position = {
-      x: canvasPos.left || 0,
-      y: canvasPos.top || 0,
+      x: props.ui.canvasPosition.left || 0,
+      y: props.ui.canvasPosition.top || 0,
     };
 
     setGrabStartPos(currentPosition(e));
-    setCanvasPos({
+    props.setCanvasPosition({
       left: relPosition.x + position.x,
       top: relPosition.y + position.y,
     });
@@ -109,25 +113,6 @@ function CanvasContainer(props) {
 
   const release = () => {
     setHasGrip(false);
-  };
-
-  const openFullscreen = () => {
-    const container = canvasContainerRef.current;
-    container.requestFullscreen();
-  };
-
-  const exitFullscreen = () => {
-    document.exitFullscreen();
-  };
-
-  const toggleFullscreen = () => {
-    const fullscreenEl = document.fullscreenElement;
-
-    if (fullscreenEl) {
-      exitFullscreen();
-    } else {
-      openFullscreen();
-    }
   };
 
   const setFullscreenHandler = () => {
@@ -164,26 +149,20 @@ function CanvasContainer(props) {
     const left = (container.getBoundingClientRect().width - WIDTH) * 0.5;
     const top = (container.getBoundingClientRect().height - HEIGHT) * 0.5;
 
-    setCanvasPos({
+    props.setCanvasPosition({
       left: left,
       top: top
     });
   };
 
   const handleFullscreenStart = () => {
-    setIsFullscreen(true);
+    props.setFullscreen(true);
   };
 
   const handleFullscreenEnd = () => {
-    setIsFullscreen(false);
-    setPositionLock(false);
-    setDrawDisabled(true);
-  };
-
-  const toggleLock = () => {
-    const isLocked = positionLock;
-    setPositionLock(!isLocked);
-    setDrawDisabled(isLocked);
+    props.setFullscreen(false);
+    props.setIsLocked(false);
+    props.setDrawDisabled(true);
   };
 
   const maybeSliceCanvasURLs = () => {
@@ -200,22 +179,8 @@ function CanvasContainer(props) {
     props.saveCanvas(newState);
   };
 
-  const redo = () => {
-    const newIndex = props.canvas.index + 1;
-    const newState = { ...props.canvas, index: newIndex };
-
-    props.saveCanvas(newState);
-  };
-
-  const undo = () => {
-    const newIndex = props.canvas.index - 1;
-    const newState = { ...props.canvas, index: newIndex };
-
-    props.saveCanvas(newState);
-  };
-
   return (
-    <Container
+    <Container id={props.ui.canvasContainerID}
       hasGrip={hasGrip}
       onMouseDown={e => grabCanvas(e)}
       onTouchStart={e => grabCanvas(e)}
@@ -223,7 +188,7 @@ function CanvasContainer(props) {
       onTouchMove={e => moveCanvas(e)}
       onMouseUp={() => release()}
       onTouchEnd={() => release()}
-      locked={positionLock}
+      locked={props.ui.isLocked}
       ref={canvasContainerRef}
       isSaving={props.isSaving}
     >
@@ -233,8 +198,6 @@ function CanvasContainer(props) {
         canvasDataURL={dataURL}
         height={props.height || HEIGHT}
         width={props.width || WIDTH}
-        drawDisabled={drawDisabled}
-        position={canvasPos}
         setCanvasContext={setCanvasContext}
         canvasContext={canvasContext}
         pushCanvasState={pushCanvasURL}
@@ -246,40 +209,15 @@ function CanvasContainer(props) {
           canvasDataURL={props.shadowDataURL}
           height={props.height || HEIGHT}
           width={props.width || WIDTH}
-          position={canvasPos}
         />
       }
 
       { !hasGrip &&
         <CanvasUI
-          canFullscreen={props.canFullscreen}
-          downloadLink={props.downloadLink && props.downloadLink(canvas())}
-          isFullscreen={isFullscreen}
-
-          menuOpts={{
-            colorPickerParent: canvasContainerRef.current,
-            isFullscreen: isFullscreen,
-          }}
-
-          overlayOpts={{
-            canClearCanvas: props.canClearCanvas,
-            containerRef: canvasContainerRef,
-            currentCanvasIndex: {
-              current: props.canvas.index,
-              max: props.canvas.dataURLs.length - 1
-            },
-            isFullscreen: isFullscreen,
-            isLocked: positionLock,
-            next: props.next,
-            prev: props.prev,
-            redo: redo,
-            toggleLock: toggleLock,
-            undo: undo,
-          }}
-
-          save={props.save && props.save(canvas())}
-          setCanMove={setCanMove}
-          toggleFullscreen={toggleFullscreen}
+          downloadLink={downloadLink}
+          next={next}
+          prev={prev}
+          save={save}
         />
       }
     </Container>
@@ -287,12 +225,23 @@ function CanvasContainer(props) {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ saveCanvas }, dispatch);
+  return bindActionCreators(
+    {
+      saveCanvas,
+      setCanvasPosition,
+      setDrawDisabled,
+      setFullscreen,
+      setIsLocked,
+    },
+    dispatch
+  );
 };
 
 const mapStateToProps = state => (
   {
-    canvas: state.canvas
+    canvas: state.canvas,
+    dataURL: state.dataURL,
+    ui: state.ui,
   }
 );
 

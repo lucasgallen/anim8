@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { StyledCanvas } from './styles';
 
@@ -53,8 +54,8 @@ class ShadowCanvas extends React.Component {
   render() {
     return (
       <StyledCanvas
-        left={this.props.position.left}
-        top={this.props.position.top}
+        left={this.props.canvasPosition.left}
+        top={this.props.canvasPosition.top}
         width={this.props.width}
         height={this.props.height}
         ref={(canvas) => this.canvas = canvas}
@@ -64,4 +65,10 @@ class ShadowCanvas extends React.Component {
   }
 }
 
-export default ShadowCanvas;
+const mapStateToProps = state => {
+  return {
+    canvasPosition: state.ui.canvasPosition,
+  };
+};
+
+export default connect(mapStateToProps)(ShadowCanvas);

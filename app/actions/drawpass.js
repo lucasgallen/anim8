@@ -26,9 +26,33 @@ const savePen = penData => (
   }
 );
 
+const setDataURL = dataURL => (
+  {
+    type: 'SET_DATA_URL',
+    payload: dataURL,
+  }
+);
+
+const setIdle = idle => (
+  {
+    type: 'SET_IDLE',
+    payload: idle,
+  }
+);
+
+const setLoading = loading => (
+  {
+    type: 'SET_LOADING',
+    payload: loading,
+  }
+);
+
 export {
   addColor,
   saveColors,
   savePen,
   saveCanvas,
+  setDataURL,
+  setIdle,
+  setLoading,
 };

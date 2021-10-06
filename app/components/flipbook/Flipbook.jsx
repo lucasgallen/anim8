@@ -4,7 +4,17 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
-import { addPage, savePage, updateScreen } from '../../actions/flipbook.js';
+import {
+  addPage,
+  savePage,
+  updateScreen
+} from '../../actions/flipbook.js';
+
+import {
+  setCanFullscreen,
+  setCanClear,
+} from '/app/actions/canvas.js';
+
 import { saveColors } from '/app/actions/drawpass.js';
 import { Button, Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
@@ -48,12 +58,14 @@ class Flipbook extends React.Component {
   }
 
   componentDidMount() {
-    this.props.saveColors([{ color: '000', alpha: 1 }]);
+    this.props.setCanFullscreen(true);
+    this.props.setCanClear(true);
   }
 
   getCanvasEl() {
     return (
-      this.canvasContainer.canvasContainerRef.current.querySelector('canvas[data-shadow="false"]')
+      document.getElementByID(this.props.containerID)
+        .querySelector('canvas[data-shadow="false"]')
     );
   }
 
@@ -167,8 +179,6 @@ class Flipbook extends React.Component {
             shadowDataURL={shadowDataURL}
             shadowCanvas
             background='white'
-            canFullscreen={true}
-            canClearCanvas={true}
             setCanvasDims={dims => this.setState({ canvasDims: dims })}
           />
         </FlipbookContainer>
@@ -189,11 +199,19 @@ const mapStateToProps = (state) => {
   return {
     pages: state.pages,
     screen: state.screen,
+    containerID: state.ui.canvasContainerID,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ addPage, saveColors, savePage, updateScreen }, dispatch);
+  return bindActionCreators({
+    addPage,
+    saveColors,
+    savePage,
+    setCanFullscreen,
+    setCanClear,
+    updateScreen
+  }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);

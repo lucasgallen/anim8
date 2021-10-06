@@ -144,8 +144,8 @@ function Canvas(props) {
       onMouseUp={() => endPath()}
       onTouchEnd={() => endPath()}
       background={props.background}
-      left={props.position.left}
-      top={props.position.top}
+      left={props.canvasPosition.left}
+      top={props.canvasPosition.top}
       width={props.width}
       height={props.height}
       ref={canvas}
@@ -155,6 +155,8 @@ function Canvas(props) {
 
 const mapStateToProps = state => {
   return {
+    canvasPosition: state.ui.canvasPosition,
+    drawDisabled: state.ui.drawDisabled,
     pen: state.pen,
   };
 };

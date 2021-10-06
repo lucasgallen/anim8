@@ -1,5 +1,9 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { setIsLocked, setDrawDisabled } from '/app/actions/canvas';
 
 import { Button } from '/app/components/styles/atoms';
 
@@ -12,14 +16,36 @@ const StyledButton = styled(Button)`
 `;
 
 function ScreenLockButton(props) {
+  const toggleLock = () => {
+    props.setIsLocked(!props.isLocked);
+    props.setDrawDisabled(props.isLocked);
+  };
+
   return (
     <StyledButton
       isFullscreen={props.isFullscreen}
-      onClick={() => props.toggleLock()}
+      onClick={toggleLock}
     >
       {props.isLocked ? 'unlock' : 'lock'}
     </StyledButton>
   );
 }
 
-export default ScreenLockButton;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      setDrawDisabled,
+      setIsLocked,
+    },
+    dispatch
+  );
+};
+
+const mapStateToProps = state => (
+  {
+    isFullscreen: state.ui.fullscreen,
+    isLocked: state.ui.isLocked,
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScreenLockButton);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import ScreenLockButton from './ScreenLockButton';
@@ -16,21 +17,12 @@ const FlipbookNav = styled.nav`
 `;
 
 function Overlay(props) {
-  const { 
-    canClearCanvas,
-    containerRef,
-    currentCanvasIndex,
-    isFullscreen,
-    isLocked,
-    next,
-    prev,
-    redo,
-    toggleLock,
-    undo,
-  } = props.options;
+  const { next, prev } = props;
 
   const canvasEl = () => {
-    return containerRef.current.querySelector('canvas[data-shadow="false"]');
+    const container = document.getElementById(props.containerId);
+
+    return container.querySelector('canvas[data-shadow="false"]');
   };
 
   return (
@@ -40,18 +32,21 @@ function Overlay(props) {
         { prev && prev(canvasEl()) }
       </FlipbookNav>
       {
-        canClearCanvas &&
+        props.canClear &&
         <ClearCanvasButton targetCanvas={canvasEl()} />
       }
-      <ScreenLockButton
-        isFullscreen={isFullscreen}
-        isLocked={isLocked}
-        toggleLock={toggleLock}
-      />
+      <ScreenLockButton/>
 
-      <RedoUndo redo={redo} undo={undo} indexState={currentCanvasIndex} />
+      <RedoUndo/>
     </>
   );
 }
 
-export default Overlay;
+const mapStateToProps = state => (
+  {
+    canClear: state.ui.canClear,
+    containerId: state.ui.canvasContainerID,
+  }
+);
+
+export default connect(mapStateToProps)(Overlay);
