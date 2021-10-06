@@ -58,7 +58,6 @@ class Flipbook extends React.Component {
   }
 
   componentDidMount() {
-    this.props.saveColors([{ color: '000', alpha: 1 }]);
     this.props.setCanFullscreen(true);
     this.props.setCanClear(true);
   }
