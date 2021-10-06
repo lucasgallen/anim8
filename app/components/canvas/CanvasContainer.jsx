@@ -212,14 +212,12 @@ function CanvasContainer(props) {
         />
       }
 
-      { !hasGrip &&
-        <CanvasUI
-          downloadLink={downloadLink}
-          next={next}
-          prev={prev}
-          save={save}
-        />
-      }
+      <CanvasUI
+        downloadLink={downloadLink}
+        next={next}
+        prev={prev}
+        save={save}
+      />
     </Container>
   );
 }
