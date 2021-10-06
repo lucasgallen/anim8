@@ -64,7 +64,8 @@ class Flipbook extends React.Component {
 
   getCanvasEl() {
     return (
-      this.canvasContainer.canvasContainerRef.current.querySelector('canvas[data-shadow="false"]')
+      document.getElementByID(this.props.containerID)
+        .querySelector('canvas[data-shadow="false"]')
     );
   }
 
@@ -198,6 +199,7 @@ const mapStateToProps = (state) => {
   return {
     pages: state.pages,
     screen: state.screen,
+    containerID: state.ui.canvasContainerID,
   };
 };
 
