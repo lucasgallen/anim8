@@ -98,4 +98,6 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ setCanMove }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasUI);
+const ConnectedCanvasUI = connect(mapStateToProps, mapDispatchToProps)(CanvasUI);
+
+export default React.memo(ConnectedCanvasUI);

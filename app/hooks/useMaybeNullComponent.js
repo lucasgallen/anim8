@@ -1,9 +1,13 @@
+import { useCallback } from 'react';
+
 function useMaybeNullComponent(component) {
-  return args => {
+  const maybeNull = useCallback((args) => {
     if (!component) return null;
 
     return component(args);
-  };
+  }, [component]);
+
+  return maybeNull;
 }
 
 export default useMaybeNullComponent;

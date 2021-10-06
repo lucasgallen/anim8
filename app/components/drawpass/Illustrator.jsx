@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -92,7 +92,7 @@ function Illustrator(props) {
     }
   };
 
-  const handleSaveImage = () => {
+  const handleSaveImage = useCallback(() => {
     const isOk = response.isOk;
     const url = canvas.toDataURL('image/png', 0.9);
 
@@ -101,23 +101,23 @@ function Illustrator(props) {
     setDataURL(url, url => (
       minWaitSave(url).then(response => handleSaveResponse(response))
     ));
-  };
+  }, [response.isOk, canvas]);
 
-  const save = () => (
+  const save = useCallback(() => (
     <SaveButton {...{
       canSave,
       handleSaveImage,
       isSaving,
       saveLabel
     }} />
-  );
+  ), [canSave, handleSaveImage, isSaving, saveLabel]);
 
-  const DownloadLink = () => (
+  const DownloadLink = useCallback(() => (
     <DownloadDrawing
       dataURL={canvas && canvas.toDataURL()}
       sessionID={props.slug}
     />
-  );
+  ), [props.canvasContainerID, props.slug]);
 
   return (
     <>
