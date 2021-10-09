@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
+
+import {
+  Container,
+  FlipbookContainer,
+  TitleContainer,
+} from './styled/index';
+
+import NextButton from './NextButton';
+import PrevButton from './PrevButton';
 
 import {
   addPage,
@@ -17,175 +25,117 @@ import {
 } from '/app/actions/canvas.js';
 
 import { saveColors } from '/app/actions/drawpass.js';
-import { Button, Global } from '../styles/atoms';
+import { Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 import GifWindow from './GifWindow';
 import Title from './Title';
 
-const Container = styled.div`
-  margin: 0 auto;
-  overflow: hidden;
-  padding: 2.5rem 0;
-  width: calc(100vw - 5rem);
-`;
+function Flipbook(props) {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [canvasDims, setCanvasDims] = useState({ height: 1, width: 1 });
+  const [gifReady, setGifReady] = useState(false);
 
-const FlipbookContainer = styled.div`
-  height: calc(100% - 30rem);
-  width: calc(20rem * 233.33%);
+  useEffect(() => {
+    props.setCanFullscreen(true);
+    props.setCanClear(true);
+  }, []);
 
-  @media (min-width: 700px) {
-    height: calc(100% - 2rem);
-    width: 100%;
-  }
+  useEffect(() => {
+    const currentPage = props.pages[pageNumber - 1];
+    const newDataURL = currentPage ? currentPage.dataURL : '';
+    props.setDataURL(newDataURL);
+  }, [pageNumber, props.pages]);
 
-  @media (min-width: 900px) {
-    float: left;
-    max-width: calc(50% - 0.5rem);
-    width: 70rem;
-  }
-`;
+  const canvasEl = (
+    document.getElementById(props.containerID) &&
+    document.getElementById(props.containerID)
+      .querySelector('canvas[data-shadow="false"]')
+  );
 
-const TitleContainer = styled.div`
-  text-align: center;
-  width: 100%;
-`;
+  const prevButtonDisabled = pageNumber <= 1;
 
-class Flipbook extends React.Component {
-  constructor(props) {
-    super(props);
+  const addPage = () => {
+    const currentDataURL = canvasEl.toDataURL();
+    setGifReady(true);
+    props.addPage({ dataURL: currentDataURL, pageIndex: pageNumber });
+  };
 
-    this.state = { page: 1, dataURL: '', canvasDims: {}, gifReady: false };
-    this.throttle = false;
-  }
-
-  componentDidMount() {
-    this.props.setCanFullscreen(true);
-    this.props.setCanClear(true);
-  }
-
-  prevPage(canvasEl) {
-    if (this.state.page > 1) {
-      this.clearPage(canvasEl);
-
-      this.setState({
-        page: this.state.page - 1
-      }, () => {
-        const currentPage = this.props.pages[this.state.page - 1];
-        this.props.setDataURL(currentPage.dataURL);
-      });
-    }
-  }
-
-  addPage() {
-    this.setState({ gifReady: true });
-    this.props.addPage({
-      dataURL: this.state.dataURL,
-      id: this.state.page,
-    });
-  }
-
-  nextPage(canvasEl) {
-    this.setState({ dataURL: canvasEl.toDataURL() }, () => {
-      if (this.state.page - 1 === this.props.pages.length) {
-        this.addPage();
-      }
-
-      this.savePage();
-      this.clearPage(canvasEl);
-      this.setState({
-        dataURL: canvasEl.toDataURL(),
-        page: this.state.page + 1,
-      }, () => {
-        const currentPage = this.props.pages[this.state.page - 1];
-        const newDataURL = currentPage ? currentPage.dataURL : '';
-        this.props.setDataURL(newDataURL);
-      });
-    });
-  }
-
-  savePage() {
-    this.props.savePage({
-      dataURL: this.state.dataURL,
-      pageIndex: this.state.page - 1,
-    });
-  }
-
-  clearPage(canvasEl) {
+  const clearPage = () => {
     let shadowCanvas = canvasEl.parentElement.querySelector('canvas[data-shadow="true"]');
     let ctx = canvasEl.getContext('2d');
     let shadowCtx = shadowCanvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
     shadowCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-  }
+  };
 
-  getShadowCanvasDataURL() {
-    if (!this.props.pages.length) return;
-    if (this.state.page - 2 < 0) return;
+  const savePage = () => {
+    const currentDataURL = canvasEl.toDataURL();
 
-    return this.props.pages[this.state.page - 2].dataURL;
-  }
+    props.savePage({
+      dataURL: currentDataURL,
+      pageIndex: pageNumber - 1
+    });
+  };
 
-  PrevButton(canvasEl) {
-    return (
-      <Button
-        disabled={this.state.page > 1 ? false : 'disabled'}
-        onClick={() => this.prevPage(canvasEl)}
-        side='left'
-        hoverColor={'white'}
-        hoverBackground={'black'}
-      >prev</Button>
-    );
-  }
+  const nextPage = () => {
+    if (pageNumber - 1 === props.pages.length) {
+      addPage();
+    }
 
-  NextButton(canvasEl) {
-    return (
-      <Button
-        onClick={() => this.nextPage(canvasEl)}
-        side='right'
-        hoverColor={'white'}
-        hoverBackground={'black'}
-      >next</Button>
-    );
-  }
+    savePage();
+    clearPage();
 
-  render() {
-    const shadowDataURL = this.getShadowCanvasDataURL() || '';
+    setPageNumber((pageNumber) => pageNumber + 1);
+  };
 
-    return (
-      <Container>
-        <Helmet>
-          <title>Flipbook</title>
-          <meta name="description" content="Create your own hand-crafted animated gif" />
-        </Helmet>
+  const prevPage = () => {
+    if (pageNumber <= 1) return;
 
-        <Global backgroundColor='' />
-        <TitleContainer>
-          <Title />
-        </TitleContainer>
-        <FlipbookContainer>
-          <CanvasContainer
-            key={'flipbook'}
-            page={this.state.page}
-            next={canvasEl => this.NextButton(canvasEl)}
-            prev={canvasEl => this.PrevButton(canvasEl)}
-            shadowDataURL={shadowDataURL}
-            shadowCanvas
-            background='white'
-            setCanvasDims={dims => this.setState({ canvasDims: dims })}
-          />
-        </FlipbookContainer>
+    clearPage();
+    setPageNumber((pageNumber) => pageNumber - 1);
+  };
 
-        <GifWindow
-          height={this.state.canvasDims.height || 1}
-          width={this.state.canvasDims.width || 1}
-          store={this.props.store}
-          pages={this.props.pages}
-          ready={this.state.gifReady}
+  const shadowDataURL = useMemo(() => {
+    if (!props.pages.length) return;
+    if (pageNumber - 2 < 0) return;
+
+    return props.pages[pageNumber - 2].dataURL;
+  }, [pageNumber, props.pages]);
+
+  return (
+    <Container>
+      <Helmet>
+        <title>Flipbook</title>
+        <meta name="description" content="Create your own hand-crafted animated gif" />
+      </Helmet>
+
+      <Global backgroundColor='' />
+      <TitleContainer>
+        <Title />
+      </TitleContainer>
+      <FlipbookContainer>
+        <CanvasContainer
+          key={'flipbook'}
+          page={pageNumber}
+          next={() => <NextButton nextPage={nextPage} />}
+          prev={() => <PrevButton disabled={prevButtonDisabled} prevPage={prevPage} />}
+          shadowDataURL={shadowDataURL}
+          shadowCanvas
+          background='white'
+          setCanvasDims={dims => setCanvasDims({ canvasDims: dims })}
         />
-      </Container>
-    );
-  }
+      </FlipbookContainer>
+
+      <GifWindow
+        height={canvasDims.height}
+        width={canvasDims.width}
+        store={props.store}
+        pages={props.pages}
+        ready={gifReady}
+      />
+    </Container>
+  );
 }
 
 const mapStateToProps = (state) => {
