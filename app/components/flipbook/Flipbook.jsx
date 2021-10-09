@@ -62,13 +62,6 @@ class Flipbook extends React.Component {
     this.props.setCanClear(true);
   }
 
-  getCanvasEl() {
-    return (
-      document.getElementByID(this.props.containerID)
-        .querySelector('canvas[data-shadow="false"]')
-    );
-  }
-
   prevPage(canvasEl) {
     if (this.state.page > 1) {
       this.clearPage(canvasEl);
