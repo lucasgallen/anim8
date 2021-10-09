@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { msToMin } from '/app/helpers';
 import Loading from '/app/components/Loading';
 
-import { saveColors, setDataURL, setLoading } from '/app/actions/drawpass.js';
+import { saveColors, setLoading } from '/app/actions/drawpass.js';
+import { setDataURL } from '/app/actions/canvas.js';
 import useCreateSession from '/app/hooks/useCreateSession';
 import useOpenSession from '/app/hooks/useOpenSession';
 

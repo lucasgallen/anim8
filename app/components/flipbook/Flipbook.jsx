@@ -13,6 +13,7 @@ import {
 import {
   setCanFullscreen,
   setCanClear,
+  setDataURL,
 } from '/app/actions/canvas.js';
 
 import { saveColors } from '/app/actions/drawpass.js';
@@ -68,6 +69,9 @@ class Flipbook extends React.Component {
 
       this.setState({
         page: this.state.page - 1
+      }, () => {
+        const currentPage = this.props.pages[this.state.page - 1];
+        this.props.setDataURL(currentPage.dataURL);
       });
     }
   }
@@ -91,6 +95,10 @@ class Flipbook extends React.Component {
       this.setState({
         dataURL: canvasEl.toDataURL(),
         page: this.state.page + 1,
+      }, () => {
+        const currentPage = this.props.pages[this.state.page - 1];
+        const newDataURL = currentPage ? currentPage.dataURL : '';
+        this.props.setDataURL(newDataURL);
       });
     });
   }
@@ -109,12 +117,6 @@ class Flipbook extends React.Component {
 
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
     shadowCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-  }
-
-  getCanvasImage() {
-    if (this.state.page - 1 >= this.props.pages.length) return;
-
-    return this.props.pages[this.state.page - 1].dataURL;
   }
 
   getShadowCanvasDataURL() {
@@ -148,7 +150,6 @@ class Flipbook extends React.Component {
   }
 
   render() {
-    const dataURL = this.getCanvasImage() || this.state.dataURL;
     const shadowDataURL = this.getShadowCanvasDataURL() || '';
 
     return (
@@ -168,7 +169,6 @@ class Flipbook extends React.Component {
             page={this.state.page}
             next={canvasEl => this.NextButton(canvasEl)}
             prev={canvasEl => this.PrevButton(canvasEl)}
-            dataURL={dataURL}
             shadowDataURL={shadowDataURL}
             shadowCanvas
             background='white'
@@ -201,6 +201,7 @@ const mapDispatchToProps = (dispatch) => {
     addPage,
     saveColors,
     savePage,
+    setDataURL,
     setCanFullscreen,
     setCanClear,
     updateScreen

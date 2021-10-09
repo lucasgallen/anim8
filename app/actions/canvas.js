@@ -26,6 +26,13 @@ const setCanvasPosition = position => (
   }
 );
 
+const setDataURL = dataURL => (
+  {
+    type: 'SET_DATA_URL',
+    payload: dataURL,
+  }
+);
+
 const setDrawDisabled = drawDisabled => (
   {
     type: 'SET_DRAW_DISABLED',
@@ -52,6 +59,7 @@ export {
   setCanFullscreen,
   setCanMove,
   setCanvasPosition,
+  setDataURL,
   setDrawDisabled,
   setFullscreen,
   setIsLocked,
