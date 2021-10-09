@@ -43,7 +43,7 @@ function CanvasContainer(props) {
   useEffect(() => {
     fromReset.current = true;
     props.saveCanvas({ index: 0, dataURLs: [props.dataURL] });
-  }, [props.dataURL]);
+  }, [props.dataURL, props.page]);
 
   useEffect(() => {
     if (fromReset.current) {
