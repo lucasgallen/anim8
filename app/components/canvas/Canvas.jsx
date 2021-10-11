@@ -52,7 +52,7 @@ function Canvas(props) {
     canvasContext.lineWidth = width;
     canvasContext.beginPath();
     setIsPenDown(true);
-  }, [pen.alpha, pen.width, canvasContext]);
+  }, [pen.alpha, pen.width, memoizedRGB, canvasContext]);
 
   const drawPath = e => {
     const position = relativePosition(e);
