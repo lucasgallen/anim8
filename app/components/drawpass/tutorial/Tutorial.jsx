@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoading } from '/app/actions/drawpass';
 
@@ -15,11 +14,17 @@ import TutorialSlide from './TutorialSlide';
 import useCreateSession from '/app/hooks/useCreateSession';
 
 const Tutorial = props => {
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.loading);
   const [step, setStep] = useState(+props.step);
   const [slide, setSlide] = useState({});
   const [response, setResponse] = useState({ status: '' });
 
-  const handleCreate = useCreateSession(props.setLoading, ({ json, response }) => {
+  const dispatchSetLoading = useCallback(isLoading => (
+    dispatch(setLoading(isLoading))
+  ), [dispatch]);
+
+  const handleCreate = useCreateSession(dispatchSetLoading, ({ json, response }) => {
     if (!json || !response) return;
 
     if (json.data && json.data.id) {
@@ -85,21 +90,11 @@ const Tutorial = props => {
         last={step === slides.length - 1}
       />
       <NewSessionResponse
-        loading={props.loading}
+        loading={loading}
         response={response}
       />
     </>
   );
 };
 
-const mapStateToProps = state => (
-  {
-    loading: state.loading
-  }
-);
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ setLoading }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Tutorial);
+export default Tutorial;
