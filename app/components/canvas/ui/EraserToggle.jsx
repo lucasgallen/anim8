@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { savePen } from '/app/actions/drawpass';
 
 import { Button } from '/app/components/styles/atoms';
 
-function EraserToggle(props) {
-  const [isOn, setIsOn] = useState(props.pen.isEraser);
+function EraserToggle() {
+  const dispatch = useDispatch();
+  const pen = useSelector(state => state.pen);
+  const [isOn, setIsOn] = useState(pen.isEraser);
 
   const toggleEraser = () => {
     setIsOn(!isOn);
   };
 
   useEffect(() => {
-    props.savePen({ isEraser: isOn });
+    dispatch(savePen({ isEraser: isOn }));
   }, [isOn]);
 
   return (
@@ -23,15 +24,4 @@ function EraserToggle(props) {
     >{ isOn ? 'Eraser On' : 'Eraser Off'}</Button>
   );
 }
-
-const mapStateToProps = state => {
-  return {
-    pen: state.pen,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ savePen }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EraserToggle);
+export default EraserToggle;
