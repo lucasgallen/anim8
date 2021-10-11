@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import {
@@ -15,7 +14,6 @@ import PrevButton from './PrevButton';
 import {
   addPage,
   savePage,
-  updateScreen
 } from '../../actions/flipbook.js';
 
 import {
@@ -24,40 +22,48 @@ import {
   setDataURL,
 } from '/app/actions/canvas.js';
 
-import { saveColors } from '/app/actions/drawpass.js';
 import { Global } from '../styles/atoms';
 import CanvasContainer from '../canvas/CanvasContainer';
 import GifWindow from './GifWindow';
 import Title from './Title';
 
 function Flipbook(props) {
+  const dispatch = useDispatch();
+  const {
+    pages,
+    containerID,
+  } = useSelector(state => ({
+    pages: state.pages,
+    containerID: state.ui.canvasContainerID,
+  }));
+
   const [pageNumber, setPageNumber] = useState(1);
   const [canvasDims, setCanvasDims] = useState({ height: 1, width: 1 });
   const [gifReady, setGifReady] = useState(false);
 
   useEffect(() => {
-    props.setCanFullscreen(true);
-    props.setCanClear(true);
+    dispatch(setCanFullscreen(true));
+    dispatch(setCanClear(true));
   }, []);
 
   useEffect(() => {
-    const currentPage = props.pages[pageNumber - 1];
+    const currentPage = pages[pageNumber - 1];
     const newDataURL = currentPage ? currentPage.dataURL : '';
-    props.setDataURL(newDataURL);
-  }, [pageNumber, props.pages]);
+    dispatch(setDataURL(newDataURL));
+  }, [pageNumber, pages]);
 
   const canvasEl = (
-    document.getElementById(props.containerID) &&
-    document.getElementById(props.containerID)
+    document.getElementById(containerID) &&
+    document.getElementById(containerID)
       .querySelector('canvas[data-shadow="false"]')
   );
 
   const prevButtonDisabled = pageNumber <= 1;
 
-  const addPage = () => {
+  const dispatchAddPage = () => {
     const currentDataURL = canvasEl.toDataURL();
     setGifReady(true);
-    props.addPage({ dataURL: currentDataURL, pageIndex: pageNumber });
+    dispatch(addPage({ dataURL: currentDataURL, pageIndex: pageNumber }));
   };
 
   const clearPage = () => {
@@ -69,21 +75,21 @@ function Flipbook(props) {
     shadowCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
   };
 
-  const savePage = () => {
+  const dispatchSavePage = () => {
     const currentDataURL = canvasEl.toDataURL();
 
-    props.savePage({
+    dispatch(savePage({
       dataURL: currentDataURL,
       pageIndex: pageNumber - 1
-    });
+    }));
   };
 
   const nextPage = () => {
-    if (pageNumber - 1 === props.pages.length) {
-      addPage();
+    if (pageNumber - 1 === pages.length) {
+      dispatchAddPage();
     }
 
-    savePage();
+    dispatchSavePage();
     clearPage();
 
     setPageNumber((pageNumber) => pageNumber + 1);
@@ -97,11 +103,11 @@ function Flipbook(props) {
   };
 
   const shadowDataURL = useMemo(() => {
-    if (!props.pages.length) return;
+    if (!pages.length) return;
     if (pageNumber - 2 < 0) return;
 
-    return props.pages[pageNumber - 2].dataURL;
-  }, [pageNumber, props.pages]);
+    return pages[pageNumber - 2].dataURL;
+  }, [pageNumber, pages]);
 
   return (
     <Container>
@@ -131,31 +137,11 @@ function Flipbook(props) {
         height={canvasDims.height}
         width={canvasDims.width}
         store={props.store}
-        pages={props.pages}
+        pages={pages}
         ready={gifReady}
       />
     </Container>
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    pages: state.pages,
-    screen: state.screen,
-    containerID: state.ui.canvasContainerID,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    addPage,
-    saveColors,
-    savePage,
-    setDataURL,
-    setCanFullscreen,
-    setCanClear,
-    updateScreen
-  }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Flipbook);
+export default Flipbook;
