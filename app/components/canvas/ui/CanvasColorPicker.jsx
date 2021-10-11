@@ -7,11 +7,11 @@ import { rgbaColor } from '/app/helpers';
 import styled from 'styled-components';
 
 import 'rc-color-picker/assets/index.css';
-import { ColorPicker } from 'rc-color-picker';
 
 import {
   ColorCard,
   ColorCardContainer,
+  CustomColorPicker,
   PenButtonWrapper,
   PenIndicator,
   SaveColorButton,
@@ -20,41 +20,6 @@ import {
 const Container = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const CustomColorPicker = styled(ColorPicker)`
-  .rc-color-picker-panel {
-    max-width: 28rem;
-    width: 100%;
-  }
-
-  .rc-color-picker-panel-board-hsv {
-    height: 0px;
-    padding-bottom: 100%;
-    width: 100%;
-  }
-
-  .rc-color-picker-panel-wrap {
-    height: 6.5rem;
-
-    .rc-color-picker-panel-wrap-ribbon, .rc-color-picker-panel-wrap-alpha {
-      height: 3rem;
-      right: 8.1rem;
-    }
-  }
-
-  .rc-color-picker-panel-preview {
-    height: 6.5rem;
-    width: 6.5rem;
-
-    span, input[type=color] {
-      width: 100%;
-    }
-  }
-
-  .rc-color-picker-panel-wrap[style='height: 40px; margin-top: 6px;'] {
-    display: none;
-  }
 `;
 
 function initColorHash(colorArray) {
