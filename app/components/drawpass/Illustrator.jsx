@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import { setIdle } from '/app/actions/drawpass';
@@ -19,6 +18,19 @@ import SaveButton from './SaveButton';
 const MAX_IDLE_TIME_MS = readableNum('300_000');
 
 function Illustrator(props) {
+  const dispatch = useDispatch();
+  const {
+    canvas,
+    colors,
+    containerID,
+    pen
+  } = useSelector(state => ({
+    canvas: state.canvas,
+    colors: state.colors,
+    containerID: state.ui.canvasContainerID,
+    pen: state.pen,
+  }));
+
   const [canSave, setCanSave] = useState(false);
   const [saveLabel, setSaveLabel] = useState('save image');
   const [idleTimeout, setIdleTimeout] = useState();
@@ -28,7 +40,7 @@ function Illustrator(props) {
   const [ , setDataURL] = useStateCallback('');
 
   useEffect(() => {
-    props.setCanFullscreen(true);
+    dispatch(setCanFullscreen(true));
   }, []);
 
   useEffect(() => (() => {
@@ -42,16 +54,16 @@ function Illustrator(props) {
 
   useEffect(() => {
     const newTimeout = window.setTimeout(() => {
-      props.setIdle(true);
+      dispatch(setIdle(true));
     }, MAX_IDLE_TIME_MS);
 
     clearTimeout(idleTimeout);
     setIdleTimeout(newTimeout);
-  }, [props.pen, props.colors, props.canvas]);
+  }, [pen, colors, canvas]);
 
-  const canvas = (
-    document.getElementById(props.containerID) &&
-    document.getElementById(props.containerID)
+  const canvasEl = (
+    document.getElementById(containerID) &&
+    document.getElementById(containerID)
       .querySelector('canvas[data-shadow="false"]')
   );
 
@@ -63,7 +75,7 @@ function Illustrator(props) {
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({
-        colors: JSON.stringify({list: props.colors}),
+        colors: JSON.stringify({list: colors}),
         data_url: dataURL
       }),
     })
@@ -94,14 +106,14 @@ function Illustrator(props) {
 
   const handleSaveImage = useCallback(() => {
     const isOk = response.isOk;
-    const url = canvas.toDataURL('image/png', 0.9);
+    const url = canvasEl.toDataURL('image/png', 0.9);
 
     setIsSaving(true);
     setResponse({ message: '', isOk: isOk });
     setDataURL(url, url => (
       minWaitSave(url).then(response => handleSaveResponse(response))
     ));
-  }, [response.isOk, canvas]);
+  }, [response.isOk, canvasEl]);
 
   const save = useCallback(() => (
     <SaveButton {...{
@@ -114,7 +126,7 @@ function Illustrator(props) {
 
   const DownloadLink = useCallback(() => (
     <DownloadDrawing
-      dataURL={canvas && canvas.toDataURL()}
+      dataURL={canvasEl && canvasEl.toDataURL()}
       sessionID={props.slug}
     />
   ), [props.canvasContainerID, props.slug]);
@@ -143,17 +155,4 @@ function Illustrator(props) {
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ setIdle, setCanFullscreen }, dispatch);
-};
-
-const mapStateToProps = state => (
-  {
-    canvas: state.canvas,
-    colors: state.colors,
-    containerID: state.ui.canvasContainerID,
-    pen: state.pen,
-  }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Illustrator);
+export default Illustrator;
