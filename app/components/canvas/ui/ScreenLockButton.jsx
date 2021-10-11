@@ -1,6 +1,5 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { setIsLocked, setDrawDisabled } from '/app/actions/canvas';
@@ -15,37 +14,29 @@ const StyledButton = styled(Button)`
   z-index: 3;
 `;
 
-function ScreenLockButton(props) {
+function ScreenLockButton() {
+  const dispatch = useDispatch();
+  const {
+    isFullscreen,
+    isLocked,
+  } = useSelector(state => ({
+    isFullscreen: state.ui.fullscreen,
+    isLocked: state.ui.isLocked,
+  }));
+
   const toggleLock = () => {
-    props.setIsLocked(!props.isLocked);
-    props.setDrawDisabled(props.isLocked);
+    dispatch(setIsLocked(!isLocked));
+    dispatch(setDrawDisabled(isLocked));
   };
 
   return (
     <StyledButton
-      isFullscreen={props.isFullscreen}
+      isFullscreen={isFullscreen}
       onClick={toggleLock}
     >
-      {props.isLocked ? 'unlock' : 'lock'}
+      {isLocked ? 'unlock' : 'lock'}
     </StyledButton>
   );
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {
-      setDrawDisabled,
-      setIsLocked,
-    },
-    dispatch
-  );
-};
-
-const mapStateToProps = state => (
-  {
-    isFullscreen: state.ui.fullscreen,
-    isLocked: state.ui.isLocked,
-  }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenLockButton);
+export default ScreenLockButton;
