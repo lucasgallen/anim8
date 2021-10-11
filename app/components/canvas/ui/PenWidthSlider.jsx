@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { savePen } from '/app/actions/drawpass';
 import { rgbaColor } from '/app/helpers';
@@ -45,12 +44,28 @@ const RangeLabel = styled(Label)`
   width: 0;
 `;
 
-function PenWidthSlider(props) {
-  const [width, setWidth] = useState(props.pen.width || MIN_WIDTH);
+function PenWidthSlider() {
+  const dispatch = useDispatch();
+  const {
+    penColor, penWidth
+  } = useSelector(state => ({
+    penColor: {
+      color: state.pen.color,
+      alpha: state.pen.alpha,
+    },
+    penWidth: state.pen.width,
+  }));
+
+  const [width, setWidth] = useState(penWidth || MIN_WIDTH);
+  const [previewColor, setPreviewColor] = useState(rgbaColor(penColor));
 
   useEffect(() => {
-    props.savePen({ width: width });
+    dispatch(savePen({ width: width }));
   }, [width]);
+
+  useEffect(() => {
+    setPreviewColor(rgbaColor(penColor));
+  }, [penColor.color, penColor.alpha]);
 
   const handleChange = e => {
     setWidth(e.currentTarget.value);
@@ -69,21 +84,11 @@ function PenWidthSlider(props) {
         width={'20rem'}
       />
       <Preview
-        color={rgbaColor(props.pen)}
+        color={previewColor}
         width={previewWidth(width)}
       />
     </Container>
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    pen: state.pen,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ savePen }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PenWidthSlider);
+export default PenWidthSlider;
