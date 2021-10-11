@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoading } from '/app/actions/drawpass';
 
@@ -10,10 +9,16 @@ import { Container, ContainerGrid, Copy, Button, Divider } from './styles/newSes
 import useCreateSession from '/app/hooks/useCreateSession';
 
 function NewSessionPrompt(props) {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.loading);
   const [response, setResponse] = useState({ status: '' });
   const [id, setID] = useState();
 
-  const handleCreate = useCreateSession(props.setLoading, ({ json, response }) => {
+  const dispatchSetLoading = useCallback((isLoading) => (
+    dispatch(setLoading(isLoading))
+  ), [dispatch]);
+
+  const handleCreate = useCreateSession(dispatchSetLoading, ({ json, response }) => {
     if (!response || !json) return;
 
     if (json.data && json.data.id) {
@@ -34,7 +39,7 @@ function NewSessionPrompt(props) {
       <ContainerGrid>
         <Copy>Familiar?</Copy>
         <Button
-          loadingSession={props.loading}
+          loadingSession={loading}
           onClick={() => handleCreate()}
         >get drawing</Button>
 
@@ -42,26 +47,16 @@ function NewSessionPrompt(props) {
 
         <Copy>nope . . .</Copy>
         <Button
-          loadingSession={props.loading}
+          loadingSession={loading}
           onClick={props.toTutorial}
         >What is this?</Button>
       </ContainerGrid>
       <NewSessionResponse
-        loading={props.loading}
+        loading={loading}
         response={response}
       />
     </Container>
   );
 }
 
-const mapStateToProps = state => (
-  {
-    loading: state.loading
-  }
-);
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ setLoading }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NewSessionPrompt);
+export default NewSessionPrompt;
