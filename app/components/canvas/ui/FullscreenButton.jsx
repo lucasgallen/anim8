@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { Button } from '/app/components/styles/atoms';
@@ -12,8 +12,9 @@ const StyledButton = styled(Button)`
 `;
 
 function FullscreenButton(props) {
+  const containerID = useSelector(state => state.ui.canvasContainerID);
   const openFullscreen = () => {
-    const container = document.getElementById(props.containerId);
+    const container = document.getElementById(containerID);
     container.requestFullscreen();
   };
 
@@ -40,10 +41,4 @@ function FullscreenButton(props) {
   );
 }
 
-const mapStateToProps = state => (
-  {
-    containerId: state.ui.canvasContainerID,
-  }
-);
-
-export default connect(mapStateToProps)(FullscreenButton);
+export default FullscreenButton;
