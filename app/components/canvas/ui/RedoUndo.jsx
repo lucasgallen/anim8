@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { saveCanvas } from '/app/actions/drawpass';
@@ -18,33 +17,40 @@ const Container = styled.div`
   z-index: 3;
 `;
 
-function RedoUndo(props) {
+function RedoUndo() {
+  const dispatch = useDispatch();
+  const {
+    index,
+    dataURLs,
+  } = useSelector(state => ({
+    index: state.canvas.index,
+    dataURLs: state.canvas.dataURLs,
+  }));
+
   const [state, setState] = useState({ canRedo: false, canUndo: false });
 
   const handleRedo = () => {
-    const newIndex = props.canvas.index + 1;
-    const newState = { ...props.canvas, index: newIndex };
+    const newState = { index: index + 1 };
 
-    props.saveCanvas(newState);
+    dispatch(saveCanvas(newState));
   };
 
   const handleUndo = () => {
-    const newIndex = props.canvas.index - 1;
-    const newState = { ...props.canvas, index: newIndex };
+    const newState = { index: index - 1 };
 
-    props.saveCanvas(newState);
+    dispatch(saveCanvas(newState));
   };
 
   useEffect(() => {
     const indexState = {
-      current: props.canvas.index,
-      max: props.canvas.dataURLs.length - 1
+      current: index,
+      max: dataURLs.length - 1
     };
     const undo = (indexState.current > 0);
     const redo = (indexState.current < indexState.max);
 
     setState({ canRedo: redo, canUndo: undo });
-  }, [props.canvas.index, props.canvas.dataURLs]);
+  }, [index, dataURLs.length]);
 
   const disabled = isDisabled => {
     return isDisabled ? 'disabled' : false;
@@ -58,14 +64,4 @@ function RedoUndo(props) {
   );
 }
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ saveCanvas }, dispatch);
-};
-
-const mapStateToProps = state => (
-  {
-    canvas: state.canvas,
-  }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(RedoUndo);
+export default RedoUndo;
