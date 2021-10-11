@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { setCanMove } from '/app/actions/canvas';
@@ -35,6 +34,15 @@ const SaveContainer = styled.div`
 `;
 
 function CanvasUI(props) {
+  const dispatch = useDispatch();
+  const {
+    fullscreen,
+    canFullscreen,
+  } = useSelector(state => ({
+    fullscreen: state.ui.fullscreen,
+    canFullscreen: state.ui.canFullscreen,
+  }));
+
   const { next, prev } = props;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,60 +52,47 @@ function CanvasUI(props) {
   };
 
   useEffect(() => {
-    props.setCanMove(!menuOpen);
+    dispatch(setCanMove(!menuOpen));
   }, [menuOpen]);
 
   return (
     <>
       {
-        props.canFullscreen &&
+        canFullscreen &&
         <FullscreenButton
-          isFullscreen={props.fullscreen}
+          isFullscreen={fullscreen}
         />
       }
 
-      { !props.fullscreen &&
+      { !fullscreen &&
         <SaveContainer>
           { props.save() }
         </SaveContainer>
       }
 
-      { !props.fullscreen &&
+      { !fullscreen &&
         <Download>
           { props.downloadLink && props.downloadLink() }
         </Download>
       }
 
       <OpenMenu
-        fullscreen={props.fullscreen}
+        fullscreen={fullscreen}
         onClick={toggleMenu}
       >{ menuOpen ? 'Close' : 'Settings' }</OpenMenu>
 
       {
-        props.fullscreen &&
+        fullscreen &&
         <Overlay {...{ next, prev }} />
       }
 
       <Menu
         isOpen={menuOpen}
-        isFullscreen={props.fullscreen}
+        isFullscreen={fullscreen}
         toggleMenu={toggleMenu}
       />
     </>
   );
 }
 
-const mapStateToProps = state => (
-  {
-    fullscreen: state.ui.fullscreen,
-    canFullscreen: state.ui.canFullscreen,
-  }
-);
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ setCanMove }, dispatch);
-};
-
-const ConnectedCanvasUI = connect(mapStateToProps, mapDispatchToProps)(CanvasUI);
-
-export default React.memo(ConnectedCanvasUI);
+export default React.memo(CanvasUI);
