@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import CanvasColorPicker from './CanvasColorPicker';
@@ -27,10 +27,11 @@ const Container = styled.div`
 const SKIP_LENGTH_MS = 100;
 
 function Menu(props) {
+  const canvasContainerID = useSelector(state => state.ui.canvasContainerID);
   const [timedMenuSkip, setTimedMenuSkip] = useState(false);
 
   const container = useRef(null);
-  const colorPickerParent = document.getElementById(props.ui.canvasContainerID);
+  const colorPickerParent = document.getElementById(canvasContainerID);
 
   useEffect(() => {
     if (!timedMenuSkip) return;
@@ -65,10 +66,4 @@ function Menu(props) {
   );
 }
 
-const mapStateToProps = state => (
-  {
-    ui: state.ui,
-  }
-);
-
-export default connect(mapStateToProps)(Menu);
+export default Menu;
