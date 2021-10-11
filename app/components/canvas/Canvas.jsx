@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { hexToRGB } from '/app/helpers';
 import useStateCallback from '/app/hooks/useStateCallback';
@@ -9,6 +9,16 @@ import { StyledCanvas } from './styles';
 const DEFAULT_OP = 'source-over';
 
 function Canvas(props) {
+  const {
+    canvasPosition,
+    drawDisabled,
+    pen,
+  } = useSelector(state => ({
+    canvasPosition: state.ui.canvasPosition,
+    drawDisabled: state.ui.drawDisabled,
+    pen: state.pen,
+  }));
+
   const [canvasContext, setCanvasContext] = useState();
   const [isPenDown, setIsPenDown] = useState(false);
   const [ , setGlobalCompositeOp] = useStateCallback([DEFAULT_OP, '']);
@@ -30,11 +40,11 @@ function Canvas(props) {
     loadDrawing();
   }, [props.canvasDataURL]);
 
-  const memoizedRGB = useMemo(() => hexToRGB(props.pen.color), [props.pen.color]);
+  const memoizedRGB = useMemo(() => hexToRGB(pen.color), [pen.color]);
 
   const startPath = useCallback(() => {
-    const alpha = props.pen.alpha || 1;
-    const width = props.pen.width || 1;
+    const alpha = pen.alpha || 1;
+    const width = pen.width || 1;
 
     canvasContext.strokeStyle = `
       rgba(${memoizedRGB.red}, ${memoizedRGB.green}, ${memoizedRGB.blue}, ${alpha})
@@ -42,7 +52,7 @@ function Canvas(props) {
     canvasContext.lineWidth = width;
     canvasContext.beginPath();
     setIsPenDown(true);
-  }, [props.pen.alpha, props.pen.width, canvasContext]);
+  }, [pen.alpha, pen.width, canvasContext]);
 
   const drawPath = e => {
     const position = relativePosition(e);
@@ -55,7 +65,7 @@ function Canvas(props) {
   };
 
   const endPath = () => {
-    if (props.drawDisabled) return;
+    if (drawDisabled) return;
 
     setGlobalCompositeOp(['', 'endPath'], () => {
       if (!canvasContext) return;
@@ -72,7 +82,7 @@ function Canvas(props) {
     const position = relativePosition(e);
 
     canvasContext.beginPath();
-    canvasContext.arc(position.x, position.y, props.pen.width, 0, Math.PI*2, true);
+    canvasContext.arc(position.x, position.y, pen.width, 0, Math.PI*2, true);
     canvasContext.closePath();
     canvasContext.fill();
   }, [canvasContext]);
@@ -106,10 +116,10 @@ function Canvas(props) {
   };
 
   const handlePointerDown = useCallback((e) => {
-    if (props.drawDisabled) return;
+    if (drawDisabled) return;
 
     setIsPenDown(true);
-    if (props.pen.isEraser) {
+    if (pen.isEraser) {
       setGlobalCompositeOp(['destination-out', 'handlePointerDown'], ([globalComp, ]) => {
         if (!canvasContext) return;
 
@@ -124,17 +134,17 @@ function Canvas(props) {
         startPath();
       });
     }
-  }, [props.drawDisabled, props.pen.isEraser, canvasContext, startPath, eraseCircle]);
+  }, [drawDisabled, pen.isEraser, canvasContext, startPath, eraseCircle]);
 
   const handlePointerMove = useCallback((e) => {
     if (!isPenDown) return;
 
-    if (props.pen.isEraser) {
+    if (pen.isEraser) {
       eraseCircle(e);
     } else {
       drawPath(e);
     }
-  }, [isPenDown, props.pen.isEraser, eraseCircle, drawPath]);
+  }, [isPenDown, pen.isEraser, eraseCircle, drawPath]);
 
   return (
     <StyledCanvas
@@ -145,8 +155,8 @@ function Canvas(props) {
       onMouseUp={endPath}
       onTouchEnd={endPath}
       background={props.background}
-      left={props.canvasPosition.left}
-      top={props.canvasPosition.top}
+      left={canvasPosition.left}
+      top={canvasPosition.top}
       width={props.width}
       height={props.height}
       ref={canvas}
@@ -154,12 +164,4 @@ function Canvas(props) {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    canvasPosition: state.ui.canvasPosition,
-    drawDisabled: state.ui.drawDisabled,
-    pen: state.pen,
-  };
-};
-
-export default connect(mapStateToProps)(Canvas);
+export default Canvas;
