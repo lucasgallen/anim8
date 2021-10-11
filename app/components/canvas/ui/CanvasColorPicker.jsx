@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { addColor, savePen } from '/app/actions/drawpass';
 import { rgbaColor } from '/app/helpers';
@@ -31,28 +30,37 @@ function initColorHash(colorArray) {
 }
 
 function CanvasColorPicker(props) {
-  const { color, alpha } = props.pen;
+  const dispatch = useDispatch();
+  const {
+    colors,
+    pen,
+  } = useSelector(state => ({
+    colors: state.colors,
+    pen: state.pen,
+  }));
+
+  const { color, alpha } = pen;
   const [penColor, setPenColor] = useState({color, alpha});
   const [cardsActive, setCardsActive] = useState(false);
-  const [colorHash, setColorHash] = useState(initColorHash(props.colors));
+  const [colorHash, setColorHash] = useState(initColorHash(colors));
 
   useEffect(() => {
-    props.savePen(penColor);
+    dispatch(savePen(penColor));
   }, [penColor]);
 
   useEffect(() => {
-    const newColor = props.colors.slice(-1)[0];
+    const newColor = colors.slice(-1)[0];
     const newEntry = { [`${newColor.color}${newColor.alpha}`]: 1 };
 
     setColorHash({ ...colorHash, ...newEntry });
-  }, [props.colors]);
+  }, [colors]);
 
   const saveColor = e => {
     const colorKey = `${penColor.color}${penColor.alpha}`;
     if (colorHash[colorKey]) return;
 
     e.stopPropagation();
-    props.addColor(penColor);
+    dispatch(addColor(penColor));
   };
 
   const changeColor = e => {
@@ -62,11 +70,11 @@ function CanvasColorPicker(props) {
   const colorCards = () => {
     const maxSector = 20;
     const minSector = 5;
-    let sectorSize = Math.floor(360 / props.colors.length);
+    let sectorSize = Math.floor(360 / colors.length);
     sectorSize = sectorSize > maxSector ? maxSector : sectorSize;
     sectorSize = sectorSize < minSector ? minSector : sectorSize;
 
-    return props.colors.map((color, index) => (
+    return colors.map((color, index) => (
       <ColorCard
         data-index={index}
         rotation={index * sectorSize}
@@ -90,7 +98,7 @@ function CanvasColorPicker(props) {
 
   const pickColor = e => {
     const index = e.target.dataset['index'];
-    const pickedColor = props.colors[index];
+    const pickedColor = colors[index];
 
     if (!cardsActive) return;
 
@@ -123,7 +131,7 @@ function CanvasColorPicker(props) {
 
       <ColorCardContainer
         onClick={e => toggleCardContainer(e)}
-        colorCount={props.colors.length}
+        colorCount={colors.length}
         active={cardsActive}
       >
         { colorCards() }
@@ -132,15 +140,4 @@ function CanvasColorPicker(props) {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    colors: state.colors,
-    pen: state.pen,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ addColor, savePen }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasColorPicker);
+export default CanvasColorPicker;
