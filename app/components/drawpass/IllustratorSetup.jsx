@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { msToMin } from '/app/helpers';
 import Loading from '/app/components/Loading';
@@ -21,15 +20,28 @@ import MaybeNewSessionResponse from './illustrator/MaybeNewSessionResponse';
 const MAX_UPDATE_AGE_MINUTES = 60;
 
 function IllustratorSetup(props) {
+  const dispatch = useDispatch();
+  const {
+    idle,
+    loading,
+  } = useSelector(state => ({
+    idle: state.idle,
+    loading: state.loading
+  }));
+
   const [id, setID] = useState();
   const [ongoing, setOngoing] = useState(false);
   const [opened, setOpened] = useState(false);
   const [newSessionResponse, setNewSessionResponse] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
 
+  const dispatchSetLoading = useCallback(isLoading => (
+    dispatch(setLoading(isLoading))
+  ), [dispatch]);
+
   const openSession = useOpenSession(
     props.slug,
-    props.setLoading,
+    dispatchSetLoading,
     ({ json, res }) => handleOpenSession({ json, res }),
   );
 
@@ -47,10 +59,10 @@ function IllustratorSetup(props) {
   }, [id]);
 
   useEffect(() => {
-    if (!props.idle) return;
+    if (!idle) return;
 
     readySession();
-  }, [props.idle]);
+  }, [idle]);
 
   const forceReady = () => {
     readySession().then(() => refresh());
@@ -74,7 +86,7 @@ function IllustratorSetup(props) {
     window.location.reload();
   };
 
-  const createSession = useCreateSession(props.setLoading, ({ json, response }) => {
+  const createSession = useCreateSession(dispatchSetLoading, ({ json, response }) => {
     if (!response || !json) return;
 
     if (json.data && json.data.id) {
@@ -125,10 +137,10 @@ function IllustratorSetup(props) {
     const colorList = JSON.parse(data.relationships.shared_image.meta.colors) || {};
 
     if (!!dataURL && dataURL.length) {
-      props.setDataURL(dataURL);
+      dispatch(setDataURL(dataURL));
     }
     if (colorList.list) {
-      props.saveColors(colorList.list);
+      dispatch(saveColors(colorList.list));
     }
     setOpened(true);
   };
@@ -143,12 +155,12 @@ function IllustratorSetup(props) {
 
   return (
     <>
-      { props.loading && putLoader() }
+      { loading && putLoader() }
       <MaybeExpiredResponse
         {
           ...{
             handleCreateSession,
-            loading: props.loading,
+            loading,
             opened,
             sessionExpired,
           }
@@ -156,7 +168,7 @@ function IllustratorSetup(props) {
       />
       <MaybeIdleResponse {
         ...{
-          idle: props.idle,
+          idle,
           refresh,
         }
       } />
@@ -170,7 +182,7 @@ function IllustratorSetup(props) {
       <MaybeIllustrator
         {
           ...{
-            idle: props.idle,
+            idle,
             opened,
             sessionExpired,
             slug: props.slug,
@@ -180,7 +192,7 @@ function IllustratorSetup(props) {
       <MaybeNewSessionResponse
         {
           ...{
-            loading: props.loading,
+            loading,
             opened,
             newSessionResponse,
             sessionExpired,
@@ -191,15 +203,4 @@ function IllustratorSetup(props) {
   );
 }
 
-const mapStateToProps = state => (
-  {
-    idle: state.idle,
-    loading: state.loading
-  }
-);
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ saveColors, setDataURL, setLoading }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(IllustratorSetup);
+export default IllustratorSetup;
